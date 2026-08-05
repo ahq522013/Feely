@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقياس الحب اليومي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+        body { font-family: 'Tajawal', sans-serif; }
+    </style>
+
+    <!-- مكتبات Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
+</head>
+<body class="bg-gradient-to-br from-rose-50 via-pink-50 to-red-100 font-sans text-gray-800 antialiased min-h-screen flex flex-col justify-between selection:bg-rose-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-rose-100 py-3 px-6 sticky top-0 z-50">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2 space-x-reverse">
+                <span class="text-xl">💖</span>
+                <h1 class="text-base font-black text-rose-600">نبض اليوم</h1>
+            </div>
+            <div id="pairStatusBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-600">
+                غير مقترن
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="max-w-md mx-auto w-full p-4 flex-grow flex flex-col justify-center space-y-4">
+        
+        <!-- Pairing Card -->
+        <div id="pairingSection" class="bg-white/90 backdrop-blur-xl rounded-3xl p-6 shadow-lg border border-rose-100 space-y-4">
+            <h2 class="text-base font-bold text-gray-900 text-center">الاقتران بالشخص الآخر 🔗</h2>
+            <p class="text-xs text-gray-500 text-center">قم بإنشاء رمز واشاركه مع الشريك، أو أدخل الرمز الذي وصلك منه:</p>
+            
+            <div class="flex gap-2">
+                <input type="text" id="pairCodeInput" placeholder="أدخل رمز الاقتران (مثل: LOVE12)" 
+                       class="w-full px-3 py-2 text-xs border border-rose-200 rounded-xl outline-none focus:ring-2 focus:ring-rose-500">
+                <button onclick="connectPair()" class="bg-rose-600 text-white font-bold px-4 py-2 rounded-xl text-xs whitespace-nowrap">
+                    ربط
+                </button>
+            </div>
+            <button onclick="generateNewPairCode()" class="w-full text-center text-xs text-rose-600 font-bold underline">
+                إنشاء رمز جديد لي
+            </button>
+        </div>
+
+        <!-- Pulse Form Section (Visible after pairing) -->
+        <div id="appSection" class="hidden bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-rose-100 p-6 space-y-5">
+            
+            <div class="flex justify-between items-center border-b border-rose-100 pb-3">
+                <div>
+                    <h3 class="text-sm font-black text-gray-900">سجل نبضك اليوم 💌</h3>
+                    <p class="text-[11px] text-gray-500">سيصل للطرف الآخر فور حفظه</p>
+                </div>
+                <button onclick="requestNotificationPermission()" class="text-[10px] bg-rose-100 text-rose-700 px-2.5 py-1 rounded-lg font-bold">
+                    🔔 تفعيل الإشعارات
+                </button>
+            </div>
+
+            <form onsubmit="sendLovePulse(event)" class="space-y-4">
+                
+                <div class="bg-rose-50/50 p-4 rounded-2xl border border-rose-100 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-bold text-rose-900">درجة الحب اليوم</label>
+                        <span id="rangeDisplay" class="text-base font-black text-rose-600 bg-white px-2.5 py-0.5 rounded-lg shadow-xs">85%</span>
+                    </div>
+                    <input type="range" id="loveSlider" min="1" max="100" value="85" oninput="document.getElementById('rangeDisplay').textContent = this.value + '%'"
+                           class="w-full h-2 bg-rose-200 rounded-lg appearance-none cursor-pointer accent-rose-600">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">ملاحظة أو رسالة (اختياري)</label>
+                    <textarea id="loveNote" rows="2" placeholder="كلمة حلوة أو موقف أثر فيك..." 
+                              class="w-full px-3 py-2 text-xs border border-rose-200 rounded-xl outline-none focus:ring-2 focus:ring-rose-500 bg-rose-50/20"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold py-3 rounded-xl text-xs shadow-md active:scale-95 transition">
+                    إرسال النبضة فوريّاً 💖
+                </button>
+            </form>
+
+            <!-- Latest Received Pulse Box -->
+            <div id="receivedPulseBox" class="hidden bg-gradient-to-br from-pink-50 to-rose-100 p-4 rounded-2xl border border-rose-200 text-center space-y-1">
+                <p class="text-[10px] text-rose-500 font-bold">آخر نبضة مستلمة من الشريك 📬</p>
+                <div id="receivedScore" class="text-3xl font-black text-rose-600">0%</div>
+                <p id="receivedNote" class="text-xs text-rose-900 italic font-medium"></p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="bg-white/40 border-t border-rose-100/60 py-3 text-center text-xs text-rose-400">
+        مقياس الحب اليومي &copy; 2026
+    </footer>
+
+    <!-- Firebase Script Logic -->
+    <script>
+        // 1. ضع بيانات Firebase Config هنا
+const firebaseConfig = {
+  apiKey: "AIzaSyCZLJ3VX05H05lTFWt3obbqVK71_jgaffs",
+  authDomain: "feely-813ca.firebaseapp.com",
+  databaseURL: "https://feely-813ca-default-rtdb.firebaseio.com",
+  projectId: "feely-813ca",
+  storageBucket: "feely-813ca.firebasestorage.app",
+  messagingSenderId: "945704178477",
+  appId: "1:945704178477:web:7ec595932e9e56699539a4",
+  measurementId: "G-N8JF3818SX"
+};
+
+        // 2. ضع مفتاح VAPID Key المكون من نص طويل هنا
+        const VAPID_KEY = "BPkYkURSeV4Z0mzKfGfXjmC_eUWS25t6XjQDN9bsfS6gD2eebQiK-tIvWQSRIxEPSBHIyo26cz_50Xq0fvO8hEM";
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const messaging = firebase.messaging();
+
+        let currentPairId = localStorage.getItem('pair_id') || null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (currentPairId) {
+                initApp(currentPairId);
+            }
+        });
+
+        function generateNewPairCode() {
+            const randomCode = 'LOVE-' + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('pairCodeInput').value = randomCode;
+        }
+
+        function connectPair() {
+            const code = document.getElementById('pairCodeInput').value.trim();
+            if (!code) return alert('يرجى إدخال رمز الاقتران');
+            
+            localStorage.setItem('pair_id', code);
+            currentPairId = code;
+            initApp(code);
+        }
+
+        function initApp(pairId) {
+            document.getElementById('pairingSection').classList.add('hidden');
+            document.getElementById('appSection').classList.remove('hidden');
+            
+            const badge = document.getElementById('pairStatusBadge');
+            badge.textContent = `مقترن: ${pairId}`;
+            badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800";
+
+            listenForPulses(pairId);
+        }
+
+        function sendLovePulse(e) {
+            e.preventDefault();
+            const score = document.getElementById('loveSlider').value;
+            const note = document.getElementById('loveNote').value.trim();
+
+            db.ref('couples/' + currentPairId + '/latestPulse').set({
+                score: score,
+                note: note,
+                timestamp: Date.now()
+            }).then(() => {
+                alert('تم إرسال النبضة بنجاح! 💕');
+                document.getElementById('loveNote').value = '';
+            });
+        }
+
+        function listenForPulses(pairId) {
+            db.ref('couples/' + pairId + '/latestPulse').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const box = document.getElementById('receivedPulseBox');
+                    box.classList.remove('hidden');
+                    document.getElementById('receivedScore').textContent = `${data.score}%`;
+                    document.getElementById('receivedNote').textContent = data.note ? `"${data.note}"` : '';
+                }
+            });
+        }
+
+        function requestNotificationPermission() {
+            Notification.requestPermission().then((permission) => {
+                if (permission === 'granted') {
+                    messaging.getToken({ vapidKey: VAPID_KEY }).then((token) => {
+                        console.log('FCM Token:', token);
+                        alert('تم تفعيل الإشعارات بنجاح!');
+                    });
+                } else {
+                    alert('تم رفض إذن الإشعارات.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
