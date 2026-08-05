@@ -42,6 +42,14 @@
             box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.1);
         }
 
+        .light-input:disabled {
+            background-color: #fff1f2;
+            color: #e11d48;
+            border-color: #fecdd3;
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+
         input[type=range] {
             -webkit-appearance: none;
             background: transparent;
@@ -106,32 +114,23 @@
     <!-- Main Workspace -->
     <main class="max-w-md mx-auto w-full p-4 flex-grow flex flex-col justify-center space-y-4">
 
-        <!-- Handle Setup Card -->
+        <!-- Permanent Handle Display / Setup Card -->
         <div id="handleSetupCard" class="hidden light-card rounded-3xl p-5 space-y-3 relative overflow-hidden">
             <div class="text-center space-y-0.5">
-                <h2 class="text-xs font-bold text-rose-600 tracking-wide">اختر رمز الاستقبال الخاص بك 🔑</h2>
-                <p class="text-[11px] text-slate-500 font-light">يسمح بالحروف الإنجليزية، الأرقام والشرطة السفلية (_) • الحد الأدنى 5 خانات (باستثناء الرمز A)</p>
+                <h2 id="handleCardTitle" class="text-xs font-bold text-rose-600 tracking-wide">رمز الاستقبال الخاص بك 🔑</h2>
+                <p id="handleCardSubtitle" class="text-[11px] text-slate-500 font-light">يسمح بالحروف الإنجليزية، الأرقام والشرطة السفلية (_) • الحد الأدنى 5 خانات (باستثناء الرمز A)</p>
             </div>
             
             <div class="flex gap-2">
                 <input type="text" id="usernameInput" placeholder="مثال: ahmed_2026 أو A" 
                        class="light-input w-full px-4 py-2.5 text-xs rounded-2xl outline-none text-center font-bold tracking-widest text-rose-600 placeholder:text-slate-400">
-                <button onclick="registerHandle()" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-5 py-2.5 rounded-2xl text-xs whitespace-nowrap shadow-md shadow-rose-200 transition active:scale-95">
+                
+                <!-- Action Button: Switch between Save and Copy -->
+                <button id="handleActionBtn" onclick="registerHandle()" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-5 py-2.5 rounded-2xl text-xs whitespace-nowrap shadow-md shadow-rose-200 transition active:scale-95">
                     حفظ الدائم
                 </button>
             </div>
             <p id="handleStatusAlert" class="text-[10px] text-center hidden font-medium"></p>
-        </div>
-
-        <!-- User Profile Card -->
-        <div id="userProfileCard" class="hidden light-card rounded-3xl p-4 flex justify-between items-center border border-rose-100">
-            <div>
-                <span class="text-[10px] text-slate-400 block">رمز الاستقبال الدائم الخاص بك:</span>
-                <span id="userHandleDisplay" class="text-xs font-bold text-rose-600"></span>
-            </div>
-            <button onclick="copyMyLink()" class="text-[11px] bg-rose-50 text-rose-600 border border-rose-200 px-3 py-1 rounded-xl font-semibold hover:bg-rose-100 active:scale-95 transition">
-                نسخ الرابط 📋
-            </button>
         </div>
 
         <!-- Send Pulse Card -->
@@ -228,6 +227,7 @@
                 currentUser = user;
                 document.getElementById('googleLoginBtn').classList.add('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
+                document.getElementById('handleSetupCard').classList.remove('hidden');
                 checkUserHandle(user.uid);
             } else {
                 currentUser = null;
@@ -235,7 +235,6 @@
                 document.getElementById('googleLoginBtn').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.add('hidden');
                 document.getElementById('handleSetupCard').classList.add('hidden');
-                document.getElementById('userProfileCard').classList.add('hidden');
                 document.getElementById('pulsesList').innerHTML = '<p class="text-center text-xs text-slate-400 py-6 font-light">قم بتسجيل الدخول للاطلاع على نبضاتك الواردة بخصوصية</p>';
                 document.getElementById('pulsesCount').textContent = "0";
             }
@@ -255,23 +254,51 @@
                 const data = snapshot.val();
                 if (data && data.handle) {
                     userHandle = data.handle;
-                    // تم تسجيل الرمز سابقاً: إخفاء نموذج الإدخال لمنع التعديل نهائياً
-                    document.getElementById('handleSetupCard').classList.add('hidden');
-                    showUserProfile(userHandle);
+                    setHandleLockedState(userHandle);
                     listenForIncomingPulses(uid);
                 } else {
-                    // لم يتم تحديد رمز بعد: إظهار واجهة الإدخال
-                    document.getElementById('handleSetupCard').classList.remove('hidden');
-                    document.getElementById('userProfileCard').classList.add('hidden');
+                    setHandleEditableState();
                 }
             });
+        }
+
+        // إظهار حقل الإدخال في حالة القفل (غير قابل للتعديل) مع إتاحة زر النسخ
+        function setHandleLockedState(handle) {
+            const input = document.getElementById('usernameInput');
+            const btn = document.getElementById('handleActionBtn');
+            const subtitle = document.getElementById('handleCardSubtitle');
+            
+            input.value = handle;
+            input.disabled = true; // قفل التعديل نهائياً
+            
+            subtitle.textContent = "هذا الرمز مسجل باسمك ودائم، يمكنك نسخ رابطك الخاص ومشاركته";
+            
+            btn.textContent = "نسخ الرابط 📋";
+            btn.onclick = copyMyLink;
+            btn.className = "bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold px-4 py-2.5 rounded-2xl text-xs whitespace-nowrap transition active:scale-95";
+        }
+
+        // إظهار حقل الإدخال في حالة التحديد المبدئي
+        function setHandleEditableState() {
+            const input = document.getElementById('usernameInput');
+            const btn = document.getElementById('handleActionBtn');
+            const subtitle = document.getElementById('handleCardSubtitle');
+
+            input.value = '';
+            input.disabled = false;
+            
+            subtitle.textContent = "يسمح بالحروف الإنجليزية، الأرقام والشرطة السفلية (_) • الحد الأدنى 5 خانات (باستثناء الرمز A)";
+            
+            btn.textContent = "حفظ الدائم";
+            btn.onclick = registerHandle;
+            btn.className = "bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-5 py-2.5 rounded-2xl text-xs whitespace-nowrap shadow-md shadow-rose-200 transition active:scale-95";
         }
 
         function registerHandle() {
             const handle = document.getElementById('usernameInput').value.trim();
             const alertBox = document.getElementById('handleStatusAlert');
             
-            // 1. فحص الكاركترز المسموحة (حروف إنجليزية، أرقام، وشرطة سفلية فقط)
+            // 1. فحص الكاركترز المسموحة (حروف إنجليزية، أرقام، وشرطة سفلية)
             const validRegex = /^[a-zA-Z0-9_]+$/;
             if (!validRegex.test(handle)) {
                 alertBox.textContent = "يُسمح فقط بالحروف الإنجليزية، الأرقام والشرطة السفلية (_)";
@@ -292,7 +319,6 @@
                     alertBox.textContent = "هذا الرمز مسجل مسبقاً، يرجى اختيار رمز آخر";
                     alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
                 } else {
-                    // حفظ الرمز نهائياً
                     db.ref('handles/' + handle).set(currentUser.uid);
                     db.ref('users/' + currentUser.uid).set({
                         handle: handle,
@@ -300,23 +326,17 @@
                     });
 
                     userHandle = handle;
-                    // إخفاء حقل الإدخال لعدم السماح بالتعديل
-                    document.getElementById('handleSetupCard').classList.add('hidden');
-                    showUserProfile(handle);
+                    alertBox.className = "hidden";
+                    setHandleLockedState(userHandle);
                     listenForIncomingPulses(currentUser.uid);
                 }
             });
         }
 
-        function showUserProfile(handle) {
-            document.getElementById('userProfileCard').classList.remove('hidden');
-            document.getElementById('userHandleDisplay').textContent = window.location.origin + window.location.pathname + '?u=' + handle;
-        }
-
         function copyMyLink() {
-            const link = document.getElementById('userHandleDisplay').textContent;
+            const link = window.location.origin + window.location.pathname + '?u=' + userHandle;
             navigator.clipboard.writeText(link);
-            alert("تم نسخ رابطك الخاص بنجاح! 📋");
+            alert("تم نسخ رابطك الخاص بنجاح! 📋\n" + link);
         }
 
         function sendLovePulse(e) {
