@@ -126,7 +126,7 @@
                        class="light-input w-full px-4 py-2.5 text-xs rounded-2xl outline-none text-center font-bold tracking-widest text-rose-600 placeholder:text-slate-400">
                 
                 <button id="handleActionBtn" onclick="registerHandle()" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-5 py-2.5 rounded-2xl text-xs whitespace-nowrap shadow-md shadow-rose-200 transition active:scale-95">
-                    حفظ الدائم
+                    حفظ
                 </button>
             </div>
             <p id="handleStatusAlert" class="text-[10px] text-center hidden font-medium"></p>
@@ -268,9 +268,9 @@
             input.value = handle;
             input.disabled = true;
             
-            subtitle.textContent = "تم حفظ رمزك بنجاح، يمكنك الآن نسخ رابطك الخاص ومشاركته";
+            subtitle.textContent = "تم حفظ رمزك بنجاح، يمكنك الآن نسخ الرمز ومشاركته";
             
-            btn.innerHTML = '<span>نسخ الرابط</span> 📋';
+            btn.innerHTML = '<span>نسخ الرمز</span> 📋';
             btn.onclick = copyMyLink;
             btn.className = "bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold px-4 py-2.5 rounded-2xl text-xs whitespace-nowrap transition active:scale-95 flex items-center gap-1.5";
         }
@@ -283,7 +283,7 @@
             input.value = '';
             input.disabled = false;
             
-            subtitle.textContent = "يسمح بالحروف الإنجليزية، الأرقام والشرطة السفلية (_) • الحد الأدنى 5 خانات (باستثناء الرمز A)";
+            subtitle.textContent = "يسمح بالحروف الإنجليزية، الأرقام والشرطة السفلية (_) • الحد الأدنى 5 خانات";
             
             btn.textContent = "حفظ الدائم";
             btn.onclick = registerHandle;
@@ -302,7 +302,7 @@
             }
 
             if (handle !== 'A' && handle.length < 5) {
-                alertBox.textContent = "رمز الاستقبال يجب ألا يقل عن 5 خانات (باستثناء الرمز A)";
+                alertBox.textContent = "رمز الاستقبال يجب ألا يقل عن 5 خانات";
                 alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
                 return;
             }
