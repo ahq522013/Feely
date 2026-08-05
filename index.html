@@ -114,8 +114,8 @@
     <!-- Main Workspace -->
     <main class="max-w-md mx-auto w-full p-4 flex-grow flex flex-col justify-center space-y-4">
 
-        <!-- Permanent Handle Display / Setup Card -->
-        <div id="handleSetupCard" class="hidden light-card rounded-3xl p-5 space-y-3 relative overflow-hidden">
+        <!-- Permanently Visible Receiver Handle Card -->
+        <div id="handleSetupCard" class="light-card rounded-3xl p-5 space-y-3 relative overflow-hidden">
             <div class="text-center space-y-0.5">
                 <h2 id="handleCardTitle" class="text-xs font-bold text-rose-600 tracking-wide">رمز الاستقبال الخاص بك 🔑</h2>
                 <p id="handleCardSubtitle" class="text-[11px] text-slate-500 font-light">يسمح بالحروف الإنجليزية، الأرقام والشرطة السفلية (_) • الحد الأدنى 5 خانات (باستثناء الرمز A)</p>
@@ -125,7 +125,7 @@
                 <input type="text" id="usernameInput" placeholder="مثال: ahmed_2026 أو A" 
                        class="light-input w-full px-4 py-2.5 text-xs rounded-2xl outline-none text-center font-bold tracking-widest text-rose-600 placeholder:text-slate-400">
                 
-                <!-- Action Button: Switch between Save and Copy -->
+                <!-- Dynamic Button (Save / Copy) -->
                 <button id="handleActionBtn" onclick="registerHandle()" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-5 py-2.5 rounded-2xl text-xs whitespace-nowrap shadow-md shadow-rose-200 transition active:scale-95">
                     حفظ الدائم
                 </button>
@@ -212,13 +212,20 @@
         const auth = firebase.auth();
 
         let currentUser = null;
-        let userHandle = null;
+        let userHandle = localStorage.getItem('feely_user_handle') || null;
 
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const userParam = urlParams.get('u');
             if (userParam) {
                 document.getElementById('targetIdInput').value = userParam;
+            }
+
+            // فحص وجود رمز محفوظ سابقاً في جهاز المستخدم
+            if (userHandle) {
+                setHandleLockedState(userHandle);
+            } else {
+                setHandleEditableState();
             }
         });
 
@@ -227,14 +234,20 @@
                 currentUser = user;
                 document.getElementById('googleLoginBtn').classList.add('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
-                document.getElementById('handleSetupCard').classList.remove('hidden');
-                checkUserHandle(user.uid);
+                
+                // إذا وجد رمز محلي، قم بربطه بـ Firebase للمستخدم
+                if (userHandle) {
+                    db.ref('handles/' + userHandle).set(user.uid);
+                    db.ref('users/' + user.uid).set({
+                        handle: userHandle,
+                        email: user.email
+                    });
+                    listenForIncomingPulses(user.uid);
+                }
             } else {
                 currentUser = null;
-                userHandle = null;
                 document.getElementById('googleLoginBtn').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.add('hidden');
-                document.getElementById('handleSetupCard').classList.add('hidden');
                 document.getElementById('pulsesList').innerHTML = '<p class="text-center text-xs text-slate-400 py-6 font-light">قم بتسجيل الدخول للاطلاع على نبضاتك الواردة بخصوصية</p>';
                 document.getElementById('pulsesCount').textContent = "0";
             }
@@ -249,20 +262,7 @@
             auth.signOut();
         }
 
-        function checkUserHandle(uid) {
-            db.ref('users/' + uid).once('value', snapshot => {
-                const data = snapshot.val();
-                if (data && data.handle) {
-                    userHandle = data.handle;
-                    setHandleLockedState(userHandle);
-                    listenForIncomingPulses(uid);
-                } else {
-                    setHandleEditableState();
-                }
-            });
-        }
-
-        // إظهار حقل الإدخال في حالة القفل (غير قابل للتعديل) مع إتاحة زر النسخ
+        // قفل الخانة وإظهار أيقونة النسخ
         function setHandleLockedState(handle) {
             const input = document.getElementById('usernameInput');
             const btn = document.getElementById('handleActionBtn');
@@ -271,14 +271,14 @@
             input.value = handle;
             input.disabled = true; // قفل التعديل نهائياً
             
-            subtitle.textContent = "هذا الرمز مسجل باسمك ودائم، يمكنك نسخ رابطك الخاص ومشاركته";
+            subtitle.textContent = "تم حفظ رمزك بنجاح، يمكنك الآن نسخ رابطك الخاص ومشاركته";
             
-            btn.textContent = "نسخ الرابط 📋";
+            btn.innerHTML = '<span>نسخ الرابط</span> 📋';
             btn.onclick = copyMyLink;
-            btn.className = "bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold px-4 py-2.5 rounded-2xl text-xs whitespace-nowrap transition active:scale-95";
+            btn.className = "bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold px-4 py-2.5 rounded-2xl text-xs whitespace-nowrap transition active:scale-95 flex items-center gap-1.5";
         }
 
-        // إظهار حقل الإدخال في حالة التحديد المبدئي
+        // إتاحة الخانة للإدخال في المرة الأولى
         function setHandleEditableState() {
             const input = document.getElementById('usernameInput');
             const btn = document.getElementById('handleActionBtn');
@@ -298,7 +298,7 @@
             const handle = document.getElementById('usernameInput').value.trim();
             const alertBox = document.getElementById('handleStatusAlert');
             
-            // 1. فحص الكاركترز المسموحة (حروف إنجليزية، أرقام، وشرطة سفلية)
+            // 1. فحص الكاركترز المسموحة (حروف إنجليزية، أرقام، وشرطة سفلية فقط)
             const validRegex = /^[a-zA-Z0-9_]+$/;
             if (!validRegex.test(handle)) {
                 alertBox.textContent = "يُسمح فقط بالحروف الإنجليزية، الأرقام والشرطة السفلية (_)";
@@ -313,22 +313,31 @@
                 return;
             }
 
-            // 3. التحقق من التوفر في قاعدة البيانات
+            // 3. التحقق من عدم حجز الرمز مسبقاً في Firebase
             db.ref('handles/' + handle).once('value', snapshot => {
                 if (snapshot.exists()) {
                     alertBox.textContent = "هذا الرمز مسجل مسبقاً، يرجى اختيار رمز آخر";
                     alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
                 } else {
-                    db.ref('handles/' + handle).set(currentUser.uid);
-                    db.ref('users/' + currentUser.uid).set({
-                        handle: handle,
-                        email: currentUser.email
-                    });
-
+                    // حفظ الرمز محلياً لمنع التعديل نهائياً في هذا الجهاز
+                    localStorage.setItem('feely_user_handle', handle);
                     userHandle = handle;
+
+                    // إذا كان المستخدم مسجلاً الدخول، يتم الحفظ في Firebase
+                    if (currentUser) {
+                        db.ref('handles/' + handle).set(currentUser.uid);
+                        db.ref('users/' + currentUser.uid).set({
+                            handle: handle,
+                            email: currentUser.email
+                        });
+                        listenForIncomingPulses(currentUser.uid);
+                    } else {
+                        // حجز الرمز مؤقتاً بالقيم العامة
+                        db.ref('handles/' + handle).set('unregistered_user');
+                    }
+
                     alertBox.className = "hidden";
                     setHandleLockedState(userHandle);
-                    listenForIncomingPulses(currentUser.uid);
                 }
             });
         }
