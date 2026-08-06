@@ -84,6 +84,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <!-- مكتبة Firebase Messaging للإشعارات -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
 </head>
 <body class="light-bg text-slate-800 min-h-screen flex flex-col justify-between selection:bg-rose-500 selection:text-white antialiased">
 
@@ -217,6 +219,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const auth = firebase.auth();
+        const messaging = firebase.messaging();
 
         let currentUser = null;
         let userHandle = localStorage.getItem('feely_user_handle') || null;
@@ -224,6 +227,7 @@
         
         let incomingPulses = [];
         let sentPulses = JSON.parse(localStorage.getItem('feely_sent_pulses') || '[]');
+        let isFirstPulseLoad = true;
 
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -235,6 +239,7 @@
             if (userHandle) {
                 setHandleLockedState(userHandle);
                 listenForIncomingPulses(userHandle);
+                initPushNotifications(userHandle);
             } else {
                 setHandleEditableState();
             }
@@ -255,6 +260,7 @@
                         email: user.email
                     });
                     listenForIncomingPulses(userHandle);
+                    initPushNotifications(userHandle);
                 }
             } else {
                 currentUser = null;
@@ -340,6 +346,7 @@
                     alertBox.className = "hidden";
                     setHandleLockedState(userHandle);
                     listenForIncomingPulses(userHandle);
+                    initPushNotifications(userHandle);
                 }
             });
         }
@@ -415,11 +422,51 @@
                     Object.keys(data).forEach(key => {
                         incomingPulses.unshift(data[key]);
                     });
+                    
+                    // إرسال إشعار للمستخدم عند وصول نبضة جديدة والموقع مفتوح
+                    if (!isFirstPulseLoad && incomingPulses.length > 0) {
+                        const latestPulse = incomingPulses[0];
+                        showLocalNotification(latestPulse);
+                    }
                 }
+                isFirstPulseLoad = false;
+                
                 if (activeTab === 'incoming') {
                     renderPulsesList();
                 }
             });
+        }
+
+        // تفعيل طلب الإشعارات وحفظ التوكن
+        function initPushNotifications(handle) {
+            if ("Notification" in window) {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === 'granted' && 'serviceWorker' in navigator) {
+                        navigator.serviceWorker.register('/firebase-messaging-sw.js')
+                        .then((registration) => {
+                            return messaging.getToken({ serviceWorkerRegistration: registration });
+                        })
+                        .then((currentToken) => {
+                            if (currentToken) {
+                                db.ref('fcmTokens/' + handle).set(currentToken);
+                            }
+                        })
+                        .catch((err) => {
+                            console.log('ملاحظة: تفعيل Service Worker يتطلب استضافة HTTPS', err);
+                        });
+                    }
+                });
+            }
+        }
+
+        // إظهار إشعار النظام المباشر
+        function showLocalNotification(pulse) {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification("نبضة جديدة 💖", {
+                    body: `من: ${pulse.sender} (${pulse.score}%)` + (pulse.note ? `\n"${pulse.note}"` : ''),
+                    icon: "https://cdn-icons-png.flaticon.com/512/2589/2589175.png"
+                });
+            }
         }
 
         function renderPulsesList() {
