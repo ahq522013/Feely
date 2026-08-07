@@ -130,6 +130,9 @@
                 <button id="handleActionBtn" onclick="registerHandle()" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-5 py-2.5 rounded-2xl text-xs whitespace-nowrap shadow-md shadow-rose-200 transition active:scale-95">
                     حفظ
                 </button>
+                <button id="shareLinkBtn" onclick="shareMyLink()" class="hidden bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold px-3 py-2.5 rounded-2xl text-xs whitespace-nowrap shadow-md shadow-rose-200 transition active:scale-95">
+                    مشاركة 📲
+                </button>
             </div>
             <p id="handleStatusAlert" class="text-[10px] text-center hidden font-medium"></p>
         </div>
@@ -219,7 +222,12 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const auth = firebase.auth();
-        const messaging = firebase.messaging();
+        let messaging = null;
+        try {
+            messaging = firebase.messaging();
+        } catch (e) {
+            console.log("Firebase Messaging not supported in this browser context.");
+        }
 
         let currentUser = null;
         let userHandle = localStorage.getItem('feely_user_handle') || null;
@@ -281,6 +289,7 @@
         function setHandleLockedState(handle) {
             const input = document.getElementById('usernameInput');
             const btn = document.getElementById('handleActionBtn');
+            const shareBtn = document.getElementById('shareLinkBtn');
             const subtitle = document.getElementById('handleCardSubtitle');
             
             input.value = handle;
@@ -288,14 +297,19 @@
             
             subtitle.textContent = "تم حفظ رمزك بنجاح، يمكنك الآن نسخ الرمز ومشاركته";
             
-            btn.innerHTML = '<span>نسخ الرمز</span> 📋';
+            btn.innerHTML = '<span>نسخ</span> 📋';
             btn.onclick = copyMyLink;
-            btn.className = "bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold px-4 py-2.5 rounded-2xl text-xs whitespace-nowrap transition active:scale-95 flex items-center gap-1.5";
+            btn.className = "bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold px-3 py-2.5 rounded-2xl text-xs whitespace-nowrap transition active:scale-95 flex items-center gap-1";
+
+            if (shareBtn) {
+                shareBtn.classList.remove('hidden');
+            }
         }
 
         function setHandleEditableState() {
             const input = document.getElementById('usernameInput');
             const btn = document.getElementById('handleActionBtn');
+            const shareBtn = document.getElementById('shareLinkBtn');
             const subtitle = document.getElementById('handleCardSubtitle');
 
             input.value = '';
@@ -306,6 +320,10 @@
             btn.textContent = "حفظ";
             btn.onclick = registerHandle;
             btn.className = "bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-5 py-2.5 rounded-2xl text-xs whitespace-nowrap shadow-md shadow-rose-200 transition active:scale-95";
+
+            if (shareBtn) {
+                shareBtn.classList.add('hidden');
+            }
         }
 
         function registerHandle() {
@@ -351,10 +369,27 @@
             });
         }
 
+        function getMyShareableLink() {
+            return window.location.origin + window.location.pathname + '?u=' + userHandle;
+        }
+
         function copyMyLink() {
-            const link = window.location.origin + window.location.pathname + '?u=' + userHandle;
+            const link = getMyShareableLink();
             navigator.clipboard.writeText(link);
             alert("تم نسخ رابطك الخاص بنجاح! 📋\n" + link);
+        }
+
+        function shareMyLink() {
+            const link = getMyShareableLink();
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Feely - شاركني نبضات الحب 💖',
+                    text: 'أرسل لي نبضة حب عبر هذا الرابط:',
+                    url: link
+                }).catch(() => {});
+            } else {
+                copyMyLink();
+            }
         }
 
         function switchPulseTab(tab) {
@@ -439,12 +474,15 @@
 
         // تفعيل طلب الإشعارات وحفظ التوكن
         function initPushNotifications(handle) {
-            if ("Notification" in window) {
+            if ("Notification" in window && messaging) {
                 Notification.requestPermission().then((permission) => {
                     if (permission === 'granted' && 'serviceWorker' in navigator) {
                         navigator.serviceWorker.register('/firebase-messaging-sw.js')
                         .then((registration) => {
-                            return messaging.getToken({ serviceWorkerRegistration: registration });
+                            return messaging.getToken({ 
+                                serviceWorkerRegistration: registration,
+                                vapidKey: 'BD8T3W-78T3W-EXAMPLE-VAPID-KEY' // استبدل المفتاح الخاص بك هنا عند الربط الفعلي بـ FCM
+                            });
                         })
                         .then((currentToken) => {
                             if (currentToken) {
@@ -452,7 +490,7 @@
                             }
                         })
                         .catch((err) => {
-                            console.log('ملاحظة: تفعيل Service Worker يتطلب استضافة HTTPS', err);
+                            console.log('ملاحظة: تفعيل Service Worker يتطلب استضافة HTTPS والمفتاح VAPID الصحيح.', err);
                         });
                     }
                 });
@@ -480,7 +518,7 @@
             if (currentData.length === 0) {
                 const emptyText = activeTab === 'incoming' 
                     ? (userHandle ? 'لا توجد نبضات واصلة حتى الآن' : 'قم بحفظ رمز الاستقبال لمشاهدة النبضات الواردة')
-                    : 'لم قم بإرسال أي نبضات بعد';
+                    : 'لم تقم بإرسال أي نبضات بعد';
                 list.innerHTML = `<p class="text-center text-xs text-slate-400 py-6 font-light">${emptyText}</p>`;
                 return;
             }
