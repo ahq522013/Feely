@@ -8,10 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap');
-        
-        body { 
-            font-family: 'Readex Pro', sans-serif; 
-        }
+        body { font-family: 'Readex Pro', sans-serif; }
 
         .light-bg {
             background-color: #fcf8fa;
@@ -50,29 +47,17 @@
             opacity: 0.9;
         }
 
-        input[type=range] {
-            -webkit-appearance: none;
-            background: transparent;
-        }
+        input[type=range] { -webkit-appearance: none; background: transparent; }
         input[type=range]:focus { outline: none; }
         input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 8px;
-            cursor: pointer;
-            background: linear-gradient(90deg, #f43f5e, #fb7185);
-            border-radius: 999px;
+            width: 100%; height: 8px; cursor: pointer;
+            background: linear-gradient(90deg, #f43f5e, #fb7185); border-radius: 999px;
         }
         input[type=range]::-webkit-slider-thumb {
-            height: 22px;
-            width: 22px;
-            border-radius: 50%;
-            background: #ffffff;
-            border: 2px solid #f43f5e;
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -7px;
+            height: 22px; width: 22px; border-radius: 50%;
+            background: #ffffff; border: 2px solid #f43f5e; cursor: pointer;
+            -webkit-appearance: none; margin-top: -7px;
             box-shadow: 0 4px 10px rgba(244, 63, 94, 0.25);
-            transition: transform 0.1s ease;
         }
 
         ::-webkit-scrollbar { width: 5px; }
@@ -107,9 +92,9 @@
                     <span id="bellBadge" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-rose-500 border-2 border-white rounded-full"></span>
                 </button>
 
-                <!-- أزرار الحساب -->
+                <!-- أزرار تسجيل الدخول الخارجي -->
                 <div id="authStatusContainer">
-                    <button id="googleLoginBtn" onclick="loginWithGoogle()" class="text-xs bg-white hover:bg-rose-50 text-slate-700 border border-rose-200 px-3 py-2 rounded-xl font-medium transition shadow-xs flex items-center gap-1.5">
+                    <button id="openAuthModalBtn" onclick="openAuthModal()" class="text-xs bg-white hover:bg-rose-50 text-slate-700 border border-rose-200 px-3 py-2 rounded-xl font-medium transition shadow-xs flex items-center gap-1.5">
                         <span>🔑</span>
                         <span>تسجيل الدخول</span>
                     </button>
@@ -188,7 +173,7 @@
             </form>
         </div>
 
-        <!-- Pulses Feed (Incoming & Sent Tabs) -->
+        <!-- Pulses Feed -->
         <div class="light-card rounded-3xl p-5 space-y-3">
             <div class="flex justify-between items-center border-b border-rose-100 pb-2.5">
                 <div class="flex gap-2 bg-rose-50/80 p-1 rounded-xl border border-rose-100">
@@ -202,13 +187,54 @@
                 <span id="pulsesCount" class="text-[10px] bg-rose-100 text-rose-700 border border-rose-200 px-2.5 py-0.5 rounded-full font-bold">0</span>
             </div>
 
-            <!-- List Container -->
             <div id="pulsesList" class="space-y-2 max-h-60 overflow-y-auto pr-1">
                 <p id="authNotice" class="text-center text-xs text-slate-400 py-6 font-light">قم بحفظ رمز الاستقبال لمشاهدة النبضات الواردة</p>
             </div>
         </div>
 
     </main>
+
+    <!-- Modal نافذة تسجيل الدخول والإنشاء -->
+    <div id="authModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 border border-rose-100 shadow-2xl relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
+            
+            <div class="text-center space-y-1">
+                <h3 class="text-base font-bold text-slate-900" id="authModalTitle">تسجيل الدخول / إنشاء حساب</h3>
+                <p class="text-xs text-slate-500">احفظ رمزك واسترجعه في أي وقت ومن أي جهاز</p>
+            </div>
+
+            <!-- زر Google -->
+            <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-medium py-2.5 rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-xs">
+                <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                <span>متابعة باستخدام Google</span>
+            </button>
+
+            <div class="flex items-center my-3">
+                <div class="flex-grow border-t border-slate-100"></div>
+                <span class="px-3 text-[10px] text-slate-400">أو بالبريد الإلكتروني</span>
+                <div class="flex-grow border-t border-slate-100"></div>
+            </div>
+
+            <!-- نموذج البريد وكلمة المرور -->
+            <form onsubmit="handleEmailAuth(event)" class="space-y-3">
+                <input type="email" id="authEmail" placeholder="البريد الإلكتروني" required
+                       class="light-input w-full px-3.5 py-2.5 text-xs rounded-xl outline-none">
+                <input type="password" id="authPassword" placeholder="كلمة المرور (6 خانات فأكثر)" required minlength="6"
+                       class="light-input w-full px-3.5 py-2.5 text-xs rounded-xl outline-none">
+                
+                <div class="flex gap-2 pt-1">
+                    <button type="submit" onclick="authActionType='login'" class="w-1/2 bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs transition">
+                        تسجيل الدخول
+                    </button>
+                    <button type="submit" onclick="authActionType='signup'" class="w-1/2 bg-rose-500 hover:bg-rose-600 text-white font-bold py-2.5 rounded-xl text-xs transition">
+                        حساب جديد
+                    </button>
+                </div>
+            </form>
+            <p id="authErrorMsg" class="text-[10px] text-center text-rose-500 hidden font-medium"></p>
+        </div>
+    </div>
 
     <footer class="py-3 text-center text-[11px] text-slate-400 border-t border-rose-100 bg-white/50">
         Feely App &copy; 2026 • صُمم بحب
@@ -231,15 +257,12 @@
         const db = firebase.database();
         const auth = firebase.auth();
         let messaging = null;
-        try {
-            messaging = firebase.messaging();
-        } catch (e) {
-            console.log("Firebase Messaging not supported in this browser context.");
-        }
+        try { messaging = firebase.messaging(); } catch (e) {}
 
         let currentUser = null;
         let userHandle = localStorage.getItem('feely_user_handle') || null;
         let activeTab = 'incoming';
+        let authActionType = 'login';
         
         let incomingPulses = [];
         let sentPulses = JSON.parse(localStorage.getItem('feely_sent_pulses') || '[]');
@@ -248,9 +271,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const userParam = urlParams.get('u');
-            if (userParam) {
-                document.getElementById('targetIdInput').value = userParam;
-            }
+            if (userParam) document.getElementById('targetIdInput').value = userParam;
 
             if (userHandle) {
                 setHandleLockedState(userHandle);
@@ -264,36 +285,75 @@
             renderPulsesList();
         });
 
+        // مراقبة حالة تسجيل الدخول واستعادة الرمز المرتبط بالـ UID تلقائياً
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
-                document.getElementById('googleLoginBtn').classList.add('hidden');
+                document.getElementById('openAuthModalBtn').classList.add('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
-                
-                if (userHandle) {
-                    db.ref('handles/' + userHandle).set(user.uid);
-                    db.ref('users/' + user.uid).set({
-                        handle: userHandle,
-                        email: user.email
-                    });
-                    listenForIncomingPulses(userHandle);
-                    initPushNotifications(userHandle);
-                }
+                closeAuthModal();
+
+                // البحث عن الرمز المسجل باسم هذا المستخدم لاستعادته حتى لو تم مسح الكوكيز
+                db.ref('users/' + user.uid + '/handle').once('value', snapshot => {
+                    if (snapshot.exists()) {
+                        const savedHandle = snapshot.val();
+                        localStorage.setItem('feely_user_handle', savedHandle);
+                        userHandle = savedHandle;
+                        setHandleLockedState(userHandle);
+                        listenForIncomingPulses(userHandle);
+                        initPushNotifications(userHandle);
+                    } else if (userHandle) {
+                        // ربط الرمز الحالي بالحساب الجديد
+                        db.ref('handles/' + userHandle).set(user.uid);
+                        db.ref('users/' + user.uid).set({ handle: userHandle, email: user.email });
+                    }
+                });
             } else {
                 currentUser = null;
-                document.getElementById('googleLoginBtn').classList.remove('hidden');
+                document.getElementById('openAuthModalBtn').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.add('hidden');
             }
         });
 
-        function loginWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(err => alert("حدث خطأ في التسجيل: " + err.message));
+        // فتح وإغلاق نافذة تسجيل الدخول
+        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
+        function closeAuthModal() { 
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('authErrorMsg').classList.add('hidden');
         }
 
-        function logout() {
-            auth.signOut();
+        // 1. تسجيل الدخول بـ Google
+        function loginWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(err => {
+                showAuthError(err.message);
+            });
         }
+
+        // 2. تسجيل الدخول أو إنشاء حساب بالبريد الإلكتروني
+        function handleEmailAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const errBox = document.getElementById('authErrorMsg');
+            errBox.classList.add('hidden');
+
+            if (authActionType === 'signup') {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .catch(err => showAuthError("خطأ في الإنشاء: " + err.message));
+            } else {
+                auth.signInWithEmailAndPassword(email, password)
+                    .catch(err => showAuthError("بيانات الدخول غير صحيحة"));
+            }
+        }
+
+        function showAuthError(msg) {
+            const errBox = document.getElementById('authErrorMsg');
+            errBox.textContent = msg;
+            errBox.classList.remove('hidden');
+        }
+
+        function logout() { auth.signOut(); }
 
         function setHandleLockedState(handle) {
             const input = document.getElementById('usernameInput');
@@ -303,16 +363,13 @@
             
             input.value = handle;
             input.disabled = true;
-            
             subtitle.textContent = "تم حفظ رمزك بنجاح، يمكنك الآن نسخ الرمز ومشاركته";
             
             btn.innerHTML = '<span>نسخ</span> 📋';
             btn.onclick = copyMyLink;
             btn.className = "bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold px-3 py-2.5 rounded-2xl text-xs whitespace-nowrap transition active:scale-95 flex items-center gap-1";
 
-            if (shareBtn) {
-                shareBtn.classList.remove('hidden');
-            }
+            if (shareBtn) shareBtn.classList.remove('hidden');
         }
 
         function setHandleEditableState() {
@@ -323,16 +380,13 @@
 
             input.value = '';
             input.disabled = false;
-            
             subtitle.textContent = "يسمح بالحروف الإنجليزية، الأرقام والشرطة السفلية (_) • الحد الأدنى 5 خانات";
             
             btn.textContent = "حفظ";
             btn.onclick = registerHandle;
             btn.className = "bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-5 py-2.5 rounded-2xl text-xs whitespace-nowrap shadow-md shadow-rose-200 transition active:scale-95";
 
-            if (shareBtn) {
-                shareBtn.classList.add('hidden');
-            }
+            if (shareBtn) shareBtn.classList.add('hidden');
         }
 
         function registerHandle() {
@@ -353,8 +407,20 @@
             }
 
             db.ref('handles/' + handle).once('value', snapshot => {
-                if (snapshot.exists() && snapshot.val() !== 'registered') {
-                    alertBox.textContent = "هذا الرمز مسجل مسبقاً، يرجى اختيار رمز آخر";
+                const ownerUid = snapshot.val();
+                
+                // السماح باستعادة الرمز إذا كان المستخدِم هو المالك الأصلي في Firebase
+                if (snapshot.exists() && currentUser && ownerUid === currentUser.uid) {
+                    localStorage.setItem('feely_user_handle', handle);
+                    userHandle = handle;
+                    setHandleLockedState(userHandle);
+                    listenForIncomingPulses(userHandle);
+                    initPushNotifications(userHandle);
+                    return;
+                }
+
+                if (snapshot.exists()) {
+                    alertBox.textContent = "هذا الرمز مسجل مسبقاً، يرجى تسجيل الدخول بحسابك لاستعادته";
                     alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
                 } else {
                     localStorage.setItem('feely_user_handle', handle);
@@ -364,10 +430,7 @@
                     db.ref('handles/' + handle).set(ownerId);
 
                     if (currentUser) {
-                        db.ref('users/' + currentUser.uid).set({
-                            handle: handle,
-                            email: currentUser.email
-                        });
+                        db.ref('users/' + currentUser.uid).set({ handle: handle, email: currentUser.email });
                     }
 
                     alertBox.className = "hidden";
@@ -378,9 +441,7 @@
             });
         }
 
-        function getMyShareableLink() {
-            return window.location.origin + window.location.pathname + '?u=' + userHandle;
-        }
+        function getMyShareableLink() { return window.location.origin + window.location.pathname + '?u=' + userHandle; }
 
         function copyMyLink() {
             const link = getMyShareableLink();
@@ -391,14 +452,8 @@
         function shareMyLink() {
             const link = getMyShareableLink();
             if (navigator.share) {
-                navigator.share({
-                    title: 'Feely - شاركني نبضات الحب 💖',
-                    text: 'أرسل لي نبضة حب عبر هذا الرابط:',
-                    url: link
-                }).catch(() => {});
-            } else {
-                copyMyLink();
-            }
+                navigator.share({ title: 'Feely - شاركني نبضات الحب 💖', text: 'أرسل لي نبضة حب عبر هذا الرابط:', url: link }).catch(() => {});
+            } else { copyMyLink(); }
         }
 
         function switchPulseTab(tab) {
@@ -413,7 +468,6 @@
                 sentBtn.className = "px-3 py-1 rounded-lg text-xs font-bold transition bg-white text-rose-600 shadow-xs";
                 incomingBtn.className = "px-3 py-1 rounded-lg text-xs font-bold transition text-slate-500 hover:text-rose-600";
             }
-
             renderPulsesList();
         }
 
@@ -427,31 +481,17 @@
             if (!targetHandle) return alert('يرجى إدخال رمز المستلم');
 
             db.ref('handles/' + targetHandle).once('value', snapshot => {
-                if (!snapshot.exists()) {
-                    return alert('رمز المستلم غير موجود، تأكد من صحة الرمز');
-                }
+                if (!snapshot.exists()) return alert('رمز المستلم غير موجود، تأكد من صحة الرمز');
 
-                const pulseData = {
-                    target: targetHandle,
-                    sender: senderName,
-                    score: score,
-                    note: note,
-                    timestamp: Date.now()
-                };
+                const pulseData = { target: targetHandle, sender: senderName, score: score, note: note, timestamp: Date.now() };
 
                 db.ref('pulses/' + targetHandle).push(pulseData).then(() => {
                     sentPulses.unshift(pulseData);
                     localStorage.setItem('feely_sent_pulses', JSON.stringify(sentPulses));
-
                     alert('تم إرسال النبضة بنجاح! 💕');
                     document.getElementById('loveNote').value = '';
-
-                    if (activeTab === 'sent') {
-                        renderPulsesList();
-                    }
-                }).catch(err => {
-                    alert('حدث خطأ أثناء الإرسال: ' + err.message);
-                });
+                    if (activeTab === 'sent') renderPulsesList();
+                }).catch(err => alert('حدث خطأ أثناء الإرسال: ' + err.message));
             });
         }
 
@@ -460,53 +500,33 @@
                 incomingPulses = [];
                 const data = snapshot.val();
                 if (data) {
-                    Object.keys(data).forEach(key => {
-                        incomingPulses.unshift(data[key]);
-                    });
-                    
-                    if (!isFirstPulseLoad && incomingPulses.length > 0) {
-                        const latestPulse = incomingPulses[0];
-                        showLocalNotification(latestPulse);
-                    }
+                    Object.keys(data).forEach(key => incomingPulses.unshift(data[key]));
+                    if (!isFirstPulseLoad && incomingPulses.length > 0) showLocalNotification(incomingPulses[0]);
                 }
                 isFirstPulseLoad = false;
-                
-                if (activeTab === 'incoming') {
-                    renderPulsesList();
-                }
+                if (activeTab === 'incoming') renderPulsesList();
             });
         }
 
-        // تحديث مظهر جرس الإشعارات
         function updateBellUI() {
             const bellBadge = document.getElementById('bellBadge');
             const bellBtn = document.getElementById('notificationBellBtn');
 
-            if (!("Notification" in window)) {
-                bellBtn.style.display = 'none';
-                return;
-            }
+            if (!("Notification" in window)) { bellBtn.style.display = 'none'; return; }
 
             if (Notification.permission === "granted") {
                 bellBadge.classList.remove('hidden');
                 bellBtn.className = "w-9 h-9 rounded-2xl bg-rose-100 border border-rose-300 flex items-center justify-center text-rose-600 transition relative";
-                bellBtn.title = "الإشعارات مفعلة 🔔";
             } else {
                 bellBadge.classList.add('hidden');
                 bellBtn.className = "w-9 h-9 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-200 transition relative";
-                bellBtn.title = "اضغط لتفعيل الإشعارات 🔔";
             }
         }
 
-        // الضغط على الجرس لتفعيل الإشعارات
         function toggleNotificationPermission() {
-            if (!("Notification" in window)) {
-                return alert("المتصفح لديك لا يدعم الإشعارات");
-            }
-
-            if (Notification.permission === "granted") {
-                alert("الإشعارات مفعلة بالفعل على هذا المتصفح 👍");
-            } else if (Notification.permission !== "denied") {
+            if (!("Notification" in window)) return alert("المتصفح لا يدعم الإشعارات");
+            if (Notification.permission === "granted") alert("الإشعارات مفعلة بالفعل 👍");
+            else {
                 Notification.requestPermission().then((permission) => {
                     updateBellUI();
                     if (permission === "granted" && userHandle) {
@@ -514,8 +534,6 @@
                         alert("تم تفعيل الإشعارات بنجاح! 🔔");
                     }
                 });
-            } else {
-                alert("تم إغلاق الإشعارات من إعدادات المتصفح، يرجى السماح بها من إعدادات الموقع لتصلك النبضات أولاً بأول.");
             }
         }
 
@@ -524,21 +542,11 @@
                 Notification.requestPermission().then((permission) => {
                     updateBellUI();
                     if (permission === 'granted' && 'serviceWorker' in navigator) {
-                        navigator.serviceWorker.register('/firebase-messaging-sw.js')
-                        .then((registration) => {
-                            return messaging.getToken({ 
-                                serviceWorkerRegistration: registration,
-                                vapidKey: 'BD8T3W-78T3W-EXAMPLE-VAPID-KEY'
-                            });
-                        })
-                        .then((currentToken) => {
-                            if (currentToken) {
-                                db.ref('fcmTokens/' + handle).set(currentToken);
-                            }
-                        })
-                        .catch((err) => {
-                            console.log('ملاحظة: Service Worker يعمل عند الاستضافة على HTTPS مع المفتاح الصحيح.', err);
-                        });
+                        navigator.serviceWorker.register('/firebase-messaging-sw.js').then((registration) => {
+                            return messaging.getToken({ serviceWorkerRegistration: registration, vapidKey: 'BD8T3W-78T3W-EXAMPLE-VAPID-KEY' });
+                        }).then((currentToken) => {
+                            if (currentToken) db.ref('fcmTokens/' + handle).set(currentToken);
+                        }).catch(err => console.log('ملاحظة: يتطلب HTTPS والمفتاح الصحيح.', err));
                     }
                 });
             }
