@@ -86,17 +86,15 @@
             </div>
             
             <div class="flex items-center gap-2">
-                <!-- زر جرس الإشعارات -->
                 <button id="notificationBellBtn" onclick="toggleNotificationPermission()" title="تفعيل الإشعارات" class="w-9 h-9 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 hover:bg-rose-100 transition relative">
                     <span id="bellIcon" class="text-base">🔔</span>
                     <span id="bellBadge" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-rose-500 border-2 border-white rounded-full"></span>
                 </button>
 
-                <!-- أزرار الحساب -->
                 <div id="authStatusContainer">
                     <button id="openAuthModalBtn" onclick="openAuthModal()" class="text-xs bg-white hover:bg-rose-50 text-slate-700 border border-rose-200 px-3 py-2 rounded-xl font-medium transition shadow-xs flex items-center gap-1.5">
                         <span>🔑</span>
-                        <span>تسجيل الدخول</span>
+                        <span>تسجيل / دخول</span>
                     </button>
                     <button id="logoutBtn" onclick="logout()" class="hidden text-xs bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-3 py-2 rounded-xl font-medium transition">
                         تسجيل الخروج
@@ -194,14 +192,14 @@
 
     </main>
 
-    <!-- Modal نافذة تسجيل الدخول والإنشاء -->
+    <!-- Modal نافذة تسجيل الدخول الذكية -->
     <div id="authModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 border border-rose-100 shadow-2xl relative">
             <button onclick="closeAuthModal()" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
             
             <div class="text-center space-y-1">
-                <h3 class="text-base font-bold text-slate-900" id="authModalTitle">تسجيل الدخول / إنشاء حساب</h3>
-                <p class="text-xs text-slate-500">سجل أولاً لتتمكن من اختيار رمز الاستقبال الخاص بك</p>
+                <h3 class="text-base font-bold text-slate-900">مرحباً بك في Feely</h3>
+                <p class="text-xs text-slate-500">أدخل بريدك الإلكتروني وسيتم توجيهك تلقائياً</p>
             </div>
 
             <!-- زر Google -->
@@ -216,21 +214,16 @@
                 <div class="flex-grow border-t border-slate-100"></div>
             </div>
 
-            <!-- نموذج البريد وكلمة المرور -->
-            <form onsubmit="handleEmailAuth(event)" class="space-y-3">
+            <!-- نموذج البريد الذكي -->
+            <form onsubmit="handleSmartEmailAuth(event)" class="space-y-3">
                 <input type="email" id="authEmail" placeholder="البريد الإلكتروني" required
                        class="light-input w-full px-3.5 py-2.5 text-xs rounded-xl outline-none">
                 <input type="password" id="authPassword" placeholder="كلمة المرور (6 خانات فأكثر)" required minlength="6"
                        class="light-input w-full px-3.5 py-2.5 text-xs rounded-xl outline-none">
                 
-                <div class="flex gap-2 pt-1">
-                    <button type="submit" onclick="authActionType='login'" class="w-1/2 bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs transition">
-                        تسجيل الدخول
-                    </button>
-                    <button type="submit" onclick="authActionType='signup'" class="w-1/2 bg-rose-500 hover:bg-rose-600 text-white font-bold py-2.5 rounded-xl text-xs transition">
-                        حساب جديد
-                    </button>
-                </div>
+                <button type="submit" id="smartAuthBtn" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md shadow-rose-200">
+                    متابعة (تسجيل / دخول)
+                </button>
             </form>
             <p id="authErrorMsg" class="text-[10px] text-center text-rose-500 hidden font-medium"></p>
         </div>
@@ -262,7 +255,6 @@
         let currentUser = null;
         let userHandle = localStorage.getItem('feely_user_handle') || null;
         let activeTab = 'incoming';
-        let authActionType = 'login';
         
         let incomingPulses = [];
         let sentPulses = JSON.parse(localStorage.getItem('feely_sent_pulses') || '[]');
@@ -277,7 +269,6 @@
             renderPulsesList();
         });
 
-        // مراقبة حالة تسجيل الدخول واستعادة الرمز المرتبط بالـ UID تلقائياً
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
@@ -285,7 +276,6 @@
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 closeAuthModal();
 
-                // البحث عن الرمز المسجل باسم هذا المستخدم لاستعادته
                 db.ref('users/' + user.uid + '/handle').once('value', snapshot => {
                     if (snapshot.exists()) {
                         const savedHandle = snapshot.val();
@@ -295,7 +285,6 @@
                         listenForIncomingPulses(userHandle);
                         initPushNotifications(userHandle);
                     } else {
-                        // إذا لم يحفظ مستخدم مسجل دخوله أي رمز بعد
                         setHandleEditableState();
                     }
                 });
@@ -323,20 +312,51 @@
             });
         }
 
-        function handleEmailAuth(e) {
+        // دالة التسجيل الذكية: تجرّب تسجيل الدخول أولاً، فإذا كان الحساب جديداً تُنشئه تلقائياً
+        function handleSmartEmailAuth(e) {
             e.preventDefault();
-            const email = document.getElementById('authEmail').value;
+            const email = document.getElementById('authEmail').value.trim();
             const password = document.getElementById('authPassword').value;
+            const btn = document.getElementById('smartAuthBtn');
             const errBox = document.getElementById('authErrorMsg');
+            
             errBox.classList.add('hidden');
+            btn.disabled = true;
+            btn.textContent = "جاري التحقق...";
 
-            if (authActionType === 'signup') {
-                auth.createUserWithEmailAndPassword(email, password)
-                    .catch(err => showAuthError("خطأ في الإنشاء: " + err.message));
-            } else {
-                auth.signInWithEmailAndPassword(email, password)
-                    .catch(err => showAuthError("بيانات الدخول غير صحيحة"));
-            }
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    btn.disabled = false;
+                    btn.textContent = "متابعة (تسجيل / دخول)";
+                })
+                .catch(err => {
+                    // إذا كان الخطأ أن الحساب غير موجود (user-not-found)، قم بإنشائه فوراً
+                    if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .then(() => {
+                                alert("تم إنشاء حسابك الجديد بنجاح! 🎉");
+                                btn.disabled = false;
+                                btn.textContent = "متابعة (تسجيل / دخول)";
+                            })
+                            .catch(signUpErr => {
+                                btn.disabled = false;
+                                btn.textContent = "متابعة (تسجيل / دخول)";
+                                if (signUpErr.code === 'auth/email-already-in-use') {
+                                    showAuthError("كلمة المرور غير صحيحة لمستخدم هذا البريد");
+                                } else {
+                                    showAuthError("خطأ في الإنشاء: " + signUpErr.message);
+                                }
+                            });
+                    } else if (err.code === 'auth/wrong-password') {
+                        btn.disabled = false;
+                        btn.textContent = "متابعة (تسجيل / دخول)";
+                        showAuthError("كلمة المرور غير صحيحة لهذا البريد الإلكتروني");
+                    } else {
+                        btn.disabled = false;
+                        btn.textContent = "متابعة (تسجيل / دخول)";
+                        showAuthError(err.message);
+                    }
+                });
         }
 
         function showAuthError(msg) {
@@ -388,9 +408,7 @@
             if (shareBtn) shareBtn.classList.add('hidden');
         }
 
-        // تسجيل الرمز حصرياً للمستخدمين المسجلين
         function registerHandle() {
-            // 🛑 1. إجبار تسجيل الدخول أولاً
             if (!currentUser) {
                 alert("عذراً، يجب عليك تسجيل الدخول أو إنشاء حساب أولاً لتتمكن من حجز رمز الاستقبال! 🔑");
                 openAuthModal();
@@ -423,7 +441,6 @@
                     localStorage.setItem('feely_user_handle', handle);
                     userHandle = handle;
 
-                    // ربط الرمز بالـ UID الخاص بالمستخدم الحالي حصراً
                     db.ref('handles/' + handle).set(currentUser.uid);
                     db.ref('users/' + currentUser.uid).set({ handle: handle, email: currentUser.email });
 
