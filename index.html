@@ -89,22 +89,24 @@
     <!-- Main Workspace -->
     <main class="w-full max-w-md mx-auto px-4 py-6 space-y-4 flex-grow">
 
-        <!-- Heart Streak Card -->
+        <!-- Heart Streak & Total Hearts Counter Card -->
         <section class="minimal-card p-4 flex items-center justify-between bg-[#fbf1f2]/60 border border-rose-100/80">
             <div class="flex items-center gap-3">
                 <div class="relative w-11 h-11 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-xs border border-rose-100">
                     <span id="streakHeartIcon" class="transition-transform duration-300">❤️</span>
                 </div>
                 <div class="text-right">
-                    <div class="flex items-center gap-1.5">
+                    <div class="flex items-center gap-1.5 flex-wrap">
                         <h3 class="text-xs font-bold text-slate-900" id="streakTitle">ستريك المشاعر</h3>
                         <span class="text-xs font-black text-rose-500 bg-rose-100/80 px-2 py-0.5 rounded-full" id="streakDaysBadge">0 أيام</span>
+                        <!-- عداد القلوب الواردة الجديد -->
+                        <span class="text-xs font-black text-emerald-600 bg-emerald-100/80 px-2 py-0.5 rounded-full" id="totalHeartsReceivedBadge">وصلك 0 ❤️</span>
                     </div>
                     <p class="text-[10px] text-slate-400 mt-0.5" id="streakSubtitle">أرسل نبضة يومياً للحفاظ على الستريك</p>
                 </div>
             </div>
             
-            <span id="streakStatusBadge" class="text-[10px] font-bold text-rose-500 bg-rose-50 border border-rose-100 px-2.5 py-1 rounded-full animate-pulse">
+            <span id="streakStatusBadge" class="text-[10px] font-bold text-rose-500 bg-rose-50 border border-rose-100 px-2.5 py-1 rounded-full animate-pulse shrink-0">
                 جاهز للنبض 💓
             </span>
         </section>
@@ -343,6 +345,14 @@
                 subtitle.textContent = "أرسل نبضة اليوم للحفاظ على الستريك";
                 heartIcon.textContent = "❤️";
                 heartIcon.className = "transition-transform duration-300 scale-100";
+            }
+        }
+
+        // تحديث عداد القلوب الواردة
+        function updateTotalHeartsCountUI(count) {
+            const badge = document.getElementById('totalHeartsReceivedBadge');
+            if (badge) {
+                badge.textContent = `وصلك ${count} ❤️`;
             }
         }
         // ======================================================
@@ -628,6 +638,10 @@
                     if (!isFirstPulseLoad && incomingPulses.length > 0) showLocalNotification(incomingPulses[0]);
                 }
                 isFirstPulseLoad = false;
+                
+                // تحديث عداد القلوب التي تم استقبالها فوراً
+                updateTotalHeartsCountUI(incomingPulses.length);
+
                 if (activeTab === 'incoming') renderPulsesList();
             });
         }
