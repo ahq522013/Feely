@@ -10,32 +10,32 @@
         @import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700;800;900&display=swap');
         body { font-family: 'Readex Pro', sans-serif; }
 
-        /* Glassmorphism Styles (v0 Theme) */
-        .glass {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+        /* Dark Glassmorphism Styles (v0 Dark Theme Matching Screenshot) */
+        .glass-dark {
+            background: rgba(22, 17, 28, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
         }
 
-        .light-input {
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            color: #0f172a;
+        .dark-input {
+            background: rgba(30, 24, 40, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
             transition: all 0.25s ease;
         }
 
-        .light-input:focus {
-            border-color: var(--emo, #f43f5e);
-            box-shadow: 0 0 0 4px var(--emo-soft, rgba(244, 63, 94, 0.15));
-            background: #ffffff;
+        .dark-input:focus {
+            border-color: var(--emo, #ff4b81);
+            box-shadow: 0 0 0 4px var(--emo-soft, rgba(255, 75, 129, 0.2));
+            background: rgba(38, 30, 50, 0.8);
         }
 
-        .light-input:disabled {
-            background-color: #f8fafc;
-            color: #f43f5e;
-            border-color: #fecdd3;
+        .dark-input:disabled {
+            background-color: rgba(255, 255, 255, 0.03);
+            color: #ff4b81;
+            border-color: rgba(255, 75, 129, 0.3);
             cursor: not-allowed;
             opacity: 0.9;
         }
@@ -44,19 +44,16 @@
         input[type=range] { -webkit-appearance: none; background: transparent; }
         input[type=range]:focus { outline: none; }
         input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 10px; cursor: pointer;
+            width: 100%; height: 8px; cursor: pointer;
             border-radius: 999px;
-            background: rgba(226, 232, 240, 0.6);
+            background: rgba(255, 255, 255, 0.1);
         }
         input[type=range]::-webkit-slider-thumb {
-            height: 24px; width: 24px; border-radius: 50%;
-            background: #ffffff; border: 3px solid var(--emo, #f43f5e); cursor: pointer;
+            height: 22px; width: 22px; border-radius: 50%;
+            background: #ffffff; border: 3px solid var(--emo, #ff4b81); cursor: pointer;
             -webkit-appearance: none; margin-top: -7px;
-            box-shadow: 0 4px 12px var(--emo-soft, rgba(244, 63, 94, 0.3));
+            box-shadow: 0 4px 12px var(--emo-soft, rgba(255, 75, 129, 0.4));
             transition: transform 0.1s ease;
-        }
-        input[type=range]::-webkit-slider-thumb:active {
-            transform: scale(1.15);
         }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -80,8 +77,8 @@
         }
 
         ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #f8fafc; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: #0d0914; }
+        ::-webkit-scrollbar-thumb { background: #2a2038; border-radius: 10px; }
     </style>
 
     <!-- Firebase SDKs -->
@@ -90,171 +87,165 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
 </head>
-<body class="bg-[#fcf8fa] text-slate-800 min-h-screen flex flex-col justify-between selection:bg-rose-500 selection:text-white antialiased relative overflow-x-hidden">
+<body class="bg-[#0b0712] text-slate-100 min-h-screen flex flex-col justify-between selection:bg-pink-500 selection:text-white antialiased relative overflow-x-hidden">
 
-    <!-- Ambient Glowing Background (يتغير ديناميكياً مع الشعور والشدة) -->
-    <div id="ambientBg" class="pointer-events-none fixed inset-0 -z-10 transition-all duration-700 opacity-30"></div>
+    <!-- Ambient Ambient Glow Background -->
+    <div id="ambientBg" class="pointer-events-none fixed inset-0 -z-10 transition-all duration-700 opacity-20"></div>
 
-    <!-- SiteHeader Component -->
+    <!-- Header (مطابق للصورة) -->
     <header class="sticky top-0 z-30 mx-auto w-full max-w-md px-4 pt-4">
-        <div class="glass flex items-center justify-between rounded-3xl px-3.5 py-2.5 shadow-lg shadow-black/5">
-            <div class="flex items-center gap-2.5">
-                <span id="headerIconBg" class="grid size-10 place-items-center rounded-2xl transition-all duration-500 shadow-md">
-                    <span id="headerIcon" class="text-lg">💖</span>
-                </span>
-                <div class="leading-tight">
-                    <p class="text-lg font-black tracking-tight text-slate-900">Feely</p>
-                    <p class="text-[11px] font-medium text-slate-500">عبّر عن مشاعرك</p>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-2">
-                <button id="notificationBellBtn" onclick="toggleNotificationPermission()" title="الإشعارات" 
-                        class="relative grid size-10 place-items-center rounded-2xl bg-slate-100 text-slate-700 transition hover:bg-slate-200">
-                    <span id="bellIcon" class="text-base">🔔</span>
-                    <span id="bellBadge" class="hidden absolute right-2.5 top-2.5 size-2.5 rounded-full bg-rose-500 ring-2 ring-white"></span>
+        <div class="glass-dark flex items-center justify-between rounded-full px-4 py-2.5 shadow-xl">
+            <!-- Login Actions -->
+            <div id="authStatusContainer" class="flex items-center gap-2">
+                <button id="openAuthModalBtn" onclick="openAuthModal()" class="h-9 rounded-full bg-white text-slate-950 px-4 font-bold text-xs hover:bg-slate-200 transition flex items-center gap-1.5 shadow-sm">
+                    <span>[➔</span>
+                    <span>دخول</span>
+                </button>
+                <button id="logoutBtn" onclick="logout()" class="hidden h-9 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 px-4 font-bold text-xs hover:bg-rose-500/30 transition">
+                    خروج
                 </button>
 
-                <div id="authStatusContainer">
-                    <button id="openAuthModalBtn" onclick="openAuthModal()" class="h-10 gap-1.5 rounded-2xl bg-slate-900 px-4 font-bold text-white text-xs hover:bg-slate-800 transition flex items-center shadow-sm">
-                        <span>🔑</span>
-                        <span>دخول</span>
-                    </button>
-                    <button id="logoutBtn" onclick="logout()" class="hidden h-10 rounded-2xl bg-rose-50 text-rose-600 border border-rose-200 px-3.5 font-bold text-xs hover:bg-rose-100 transition">
-                        خروج
-                    </button>
+                <button id="notificationBellBtn" onclick="toggleNotificationPermission()" title="الإشعارات" 
+                        class="relative grid size-9 place-items-center rounded-full bg-white/5 text-slate-300 hover:bg-white/10 transition">
+                    <span id="bellIcon" class="text-sm">🔔</span>
+                    <span id="bellBadge" class="hidden absolute right-2 top-2 size-2 rounded-full bg-pink-500"></span>
+                </button>
+            </div>
+
+            <!-- Brand -->
+            <div class="flex items-center gap-2.5">
+                <div class="leading-tight text-right">
+                    <p class="text-base font-black tracking-tight text-white">Feely</p>
+                    <p class="text-[10px] font-medium text-slate-400">عبّر عن مشاعرك</p>
                 </div>
+                <span id="headerIconBg" class="grid size-10 place-items-center rounded-full transition-all duration-500 bg-pink-500 text-white text-lg shadow-lg shadow-pink-500/30">
+                    <span id="headerIcon">♡</span>
+                </span>
             </div>
         </div>
     </header>
 
     <!-- Main Workspace -->
-    <main class="mx-auto grid w-full max-w-md gap-4 px-4 pt-4 flex-grow">
+    <main class="mx-auto grid w-full max-w-md gap-5 px-4 pt-4 flex-grow">
 
-        <!-- ReceiveCodeCard Component -->
-        <section class="glass rounded-3xl p-5 shadow-xl shadow-black/5 space-y-4">
-            <div class="flex items-center gap-3">
-                <span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-rose-50 text-rose-600 text-lg border border-rose-100">
+        <!-- ReceiveCodeCard Component (مطابق للصورة) -->
+        <section class="glass-dark rounded-[32px] p-5 space-y-4">
+            <div class="flex items-center justify-between">
+                <span class="grid size-10 shrink-0 place-items-center rounded-full bg-amber-500/10 text-amber-400 text-base border border-amber-500/20">
                     🔑
                 </span>
-                <div>
-                    <h2 class="text-base font-black text-slate-900" id="handleCardTitle">رمز الاستقبال الخاص بك</h2>
-                    <p class="text-xs text-slate-500" id="handleCardSubtitle">شاركه لتصلك نبضات مشاعر من الآخرين</p>
+                <div class="text-right">
+                    <h2 class="text-base font-black text-white" id="handleCardTitle">رمز الاستقبال الخاص بك</h2>
+                    <p class="text-xs text-slate-400" id="handleCardSubtitle">شاركه لتصلك نبضات مشاعر من الآخرين</p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 rounded-2xl border border-dashed border-rose-300/70 bg-white/60 p-2">
-                <button type="button" onclick="generateRandomCode()" class="grid size-10 place-items-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition" title="توليد رمز جديد">
-                    🔄
+            <div class="flex items-center justify-between rounded-full border border-dashed border-pink-500/30 bg-white/5 px-4 py-2.5">
+                <button type="button" onclick="copyCodeToClipboard()" class="text-slate-400 hover:text-white transition text-sm" title="نسخ الرمز">
+                    📋
                 </button>
                 <input type="text" id="usernameInput" 
-                       class="flex-1 bg-transparent text-center font-mono text-lg font-black tracking-widest text-slate-900 outline-none uppercase"
-                       placeholder="FEELY1">
-                <button type="button" onclick="copyCodeToClipboard()" class="grid size-10 place-items-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition" title="نسخ الرمز">
-                    📋
+                       class="bg-transparent text-center font-mono text-base font-black tracking-[0.25em] text-white outline-none uppercase w-full px-2"
+                       placeholder="F E E L - Y O U">
+                <button type="button" onclick="generateRandomCode()" class="text-slate-400 hover:text-white transition text-sm" title="توليد رمز جديد">
+                    🔄
                 </button>
             </div>
 
             <div class="flex gap-2">
                 <button id="handleActionBtn" onclick="registerHandle()" 
-                        class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-2xl text-xs shadow-md transition active:scale-98">
+                        class="w-full bg-white/10 hover:bg-white/15 text-white font-bold py-3 rounded-full text-xs transition active:scale-98 border border-white/10">
                     حفظ الرمز
                 </button>
                 <button id="shareLinkBtn" onclick="shareMyLink()" 
-                        class="hidden bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold px-4 py-3 rounded-2xl text-xs whitespace-nowrap shadow-md transition active:scale-98">
+                        class="hidden bg-pink-500 hover:bg-pink-600 text-white font-bold px-5 py-3 rounded-full text-xs whitespace-nowrap transition active:scale-98 shadow-lg shadow-pink-500/20">
                     مشاركة 📲
                 </button>
             </div>
             <p id="handleStatusAlert" class="text-[10px] text-center hidden font-medium"></p>
         </section>
 
-        <!-- SendPulseCard Component + EmotionPicker + EmotionOrb -->
-        <section id="sendPulseSection" class="glass rounded-3xl p-5 shadow-xl shadow-black/5 space-y-4">
-            <div class="flex items-center gap-3">
-                <span id="sendSectionIconBg" class="grid size-11 shrink-0 place-items-center rounded-2xl text-xl transition-all duration-300">
-                    <span id="sendSectionIcon">💖</span>
+        <!-- SendPulseCard Component (مطابق لخيارات الصورة) -->
+        <section id="sendPulseSection" class="glass-dark rounded-[32px] p-5 space-y-4">
+            <div class="flex items-center justify-between">
+                <span id="sendSectionIconBg" class="grid size-10 shrink-0 place-items-center rounded-full text-lg transition-all duration-300 bg-pink-500/10 text-pink-400 border border-pink-500/20">
+                    <span id="sendSectionIcon">♡</span>
                 </span>
-                <div>
-                    <h2 class="text-base font-black text-slate-900" id="sendPulseTitle">إرسال نبضة حب</h2>
-                    <p class="text-xs text-slate-500">اختر شعورك وعبّر عنه بصدق الآن</p>
+                <div class="text-right">
+                    <h2 class="text-base font-black text-white" id="sendPulseTitle">إرسال نبضة حب</h2>
+                    <p class="text-xs text-slate-400">اختر شعورك وعبّر عنه بصدق الآن</p>
                 </div>
             </div>
 
-            <!-- EmotionPicker Carousel -->
-            <div class="space-y-1.5">
-                <span class="block text-xs font-bold text-slate-500 px-1">اختر نوع الشعور:</span>
-                <div id="emotionPicker" class="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1"></div>
-            </div>
+            <!-- EmotionPicker Horizontal List (المشاعر الـ 7 المطابقة للصورة) -->
+            <div id="emotionPicker" class="no-scrollbar -mx-1 flex gap-2.5 overflow-x-auto px-1 py-1"></div>
 
-            <!-- EmotionOrb Component (Live Orb Preview) -->
-            <div class="grid place-items-center rounded-3xl bg-white/40 border border-slate-100 py-4">
-                <div class="relative grid place-items-center w-32 h-32" aria-hidden="true">
+            <!-- EmotionOrb Preview -->
+            <div class="grid place-items-center rounded-3xl bg-white/5 border border-white/5 py-4">
+                <div class="relative grid place-items-center w-28 h-28" aria-hidden="true">
                     <span id="orbGlow" class="absolute inset-0 rounded-full blur-xl transition-all duration-300"></span>
-                    <span id="orbRing1" class="animate-ring absolute rounded-full w-24 h-24"></span>
-                    <span id="orbRing2" class="animate-ring absolute rounded-full w-24 h-24"></span>
-                    <div id="orbCore" class="animate-breathe relative grid place-items-center rounded-full w-20 h-20 shadow-lg text-white text-3xl transition-all duration-300">
+                    <span id="orbRing1" class="animate-ring absolute rounded-full w-20 h-20"></span>
+                    <span id="orbRing2" class="animate-ring absolute rounded-full w-20 h-20"></span>
+                    <div id="orbCore" class="animate-breathe relative grid place-items-center rounded-full w-16 h-16 shadow-lg text-white text-2xl transition-all duration-300">
                         <span id="orbIcon">💖</span>
                     </div>
                 </div>
-                <div id="moodLabel" class="mt-2 text-xs font-bold text-slate-700">حب صادق</div>
+                <div id="moodLabel" class="mt-2 text-xs font-bold text-slate-300">حب صادق</div>
             </div>
 
             <form onsubmit="sendLovePulse(event)" class="grid gap-3.5">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="mb-1 block text-xs font-bold text-slate-500">رمز المستلم</label>
+                        <label class="mb-1 block text-xs font-bold text-slate-400 text-right">رمز المستلم</label>
                         <input type="text" id="targetIdInput" required placeholder="ABC123"
-                               class="light-input w-full rounded-2xl px-4 py-3 text-center font-mono font-bold tracking-widest text-slate-900 outline-none uppercase text-xs">
+                               class="dark-input w-full rounded-2xl px-4 py-2.5 text-center font-mono font-bold tracking-widest text-white outline-none uppercase text-xs">
                     </div>
                     <div>
-                        <label class="mb-1 block text-xs font-bold text-slate-500">اسمك</label>
+                        <label class="mb-1 block text-xs font-bold text-slate-400 text-right">اسمك</label>
                         <input type="text" id="senderNameInput" placeholder="اختياري"
-                               class="light-input w-full rounded-2xl px-4 py-3 text-slate-900 outline-none text-xs">
+                               class="dark-input w-full rounded-2xl px-4 py-2.5 text-white outline-none text-xs text-right">
                     </div>
                 </div>
 
                 <!-- Intensity Slider -->
-                <div class="rounded-2xl bg-white/50 border border-slate-100 p-4 space-y-2">
+                <div class="rounded-2xl bg-white/5 border border-white/5 p-3.5 space-y-2">
                     <div class="flex items-center justify-between">
-                        <span id="meterLabel" class="text-xs font-bold text-slate-700">درجة الحب اليوم</span>
-                        <span id="rangeDisplay" class="rounded-full px-3 py-0.5 text-xs font-black text-white shadow-xs">85%</span>
+                        <span id="rangeDisplay" class="rounded-full px-2.5 py-0.5 text-xs font-black text-white">85%</span>
+                        <span id="meterLabel" class="text-xs font-bold text-slate-300">درجة الحب اليوم</span>
                     </div>
                     <input type="range" id="loveSlider" min="0" max="100" value="85" oninput="updateOrb(this.value)" class="w-full">
                 </div>
 
                 <div>
-                    <label class="mb-1 block text-xs font-bold text-slate-500">رسالة خاصة (اختياري)</label>
+                    <label class="mb-1 block text-xs font-bold text-slate-400 text-right">رسالة خاصة (اختياري)</label>
                     <textarea id="loveNote" rows="2" maxlength="140" placeholder="اكتب ما في قلبك…"
-                              class="light-input w-full resize-none rounded-2xl px-4 py-3 text-slate-900 outline-none text-xs"></textarea>
+                              class="dark-input w-full resize-none rounded-2xl px-4 py-2.5 text-white outline-none text-xs text-right"></textarea>
                 </div>
 
                 <button type="submit" id="submitBtn" 
-                        class="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl py-3.5 text-xs font-black text-white shadow-lg transition active:scale-98">
+                        class="w-full py-3.5 rounded-full text-xs font-black text-white transition active:scale-98 bg-pink-500 hover:bg-pink-600 shadow-lg shadow-pink-500/25">
                     <span>إرسال النبضة فوراً</span>
-                    <span id="btnIcon" class="text-sm">💖</span>
                 </button>
             </form>
         </section>
 
         <!-- PulseInbox Component -->
-        <section class="glass rounded-3xl p-5 shadow-xl shadow-black/5 space-y-4">
-            <div class="grid grid-cols-2 gap-1 rounded-2xl bg-slate-200/50 p-1">
+        <section class="glass-dark rounded-[32px] p-5 space-y-4">
+            <div class="grid grid-cols-2 gap-1 rounded-full bg-white/5 p-1 border border-white/5">
                 <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" 
-                        class="flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition bg-slate-900 text-white shadow-sm">
-                    <span>📥</span>
+                        class="flex items-center justify-center gap-2 rounded-full py-2 text-xs font-bold transition bg-white text-slate-950 shadow-sm">
                     <span>الواردة</span>
                 </button>
                 <button id="tabSentBtn" onclick="switchPulseTab('sent')" 
-                        class="flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition text-slate-500 hover:text-slate-900">
-                    <span>📤</span>
+                        class="flex items-center justify-center gap-2 rounded-full py-2 text-xs font-bold transition text-slate-400 hover:text-white">
                     <span>المرسلة</span>
-                    <span id="pulsesCount" class="grid size-4 place-items-center rounded-full bg-slate-200 text-[10px] text-slate-700 font-black">0</span>
+                    <span id="pulsesCount" class="grid size-4 place-items-center rounded-full bg-white/10 text-[10px] text-white font-black">0</span>
                 </button>
             </div>
 
             <div id="pulsesList" class="space-y-2 max-h-60 overflow-y-auto pr-1">
                 <div class="flex flex-col items-center gap-2 py-8 text-center">
-                    <span class="grid size-12 place-items-center rounded-full bg-rose-50 text-rose-500 text-xl">✨</span>
+                    <span class="grid size-12 place-items-center rounded-full bg-white/5 text-slate-400 text-xl">✨</span>
                     <p id="authNotice" class="text-xs font-medium text-slate-400">سجّل الدخول واحفظ رمزك لمشاهدة النبضات الواردة</p>
                 </div>
             </div>
@@ -262,59 +253,61 @@
 
     </main>
 
-    <!-- Modal نافذة التوثيق -->
-    <div id="authModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 border border-rose-100 shadow-2xl relative">
-            <button onclick="closeAuthModal()" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
+    <!-- Modal نافذة التوثيق الداكنة -->
+    <div id="authModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-[#16111c] rounded-[32px] max-w-sm w-full p-6 space-y-4 border border-white/10 shadow-2xl relative text-right">
+            <button onclick="closeAuthModal()" class="absolute top-4 left-4 text-slate-400 hover:text-white text-sm font-bold">✕</button>
             
             <div class="text-center space-y-1.5">
-                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 text-xl flex items-center justify-center mx-auto mb-1 border border-rose-100">
+                <div class="w-12 h-12 rounded-2xl bg-white/5 text-pink-400 text-xl flex items-center justify-center mx-auto mb-1 border border-white/10">
                     🛡️
                 </div>
-                <h3 class="text-sm font-bold text-slate-900" id="authModalTitle">احفظ رمزك واحْمِ حسابك</h3>
-                <p class="text-xs text-slate-500 leading-relaxed" id="authModalSubtitle">
+                <h3 class="text-sm font-bold text-white" id="authModalTitle">احفظ رمزك واحْمِ حسابك</h3>
+                <p class="text-xs text-slate-400 leading-relaxed" id="authModalSubtitle">
                     ربط الرمز بحسابك يضمن لك استعادته ونبضاتك دائماً عند مسح سجل المتصفح أو تغيير الجوال.
                 </p>
             </div>
 
-            <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-medium py-2.5 rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-xs active:scale-98">
+            <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-bold py-2.5 rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-sm">
                 <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
                 <span>ربط سريع بواسطة Google</span>
             </button>
 
             <div class="flex items-center my-2">
-                <div class="flex-grow border-t border-slate-100"></div>
-                <span class="px-3 text-[10px] text-slate-400">أو بالبريد الإلكتروني</span>
-                <div class="flex-grow border-t border-slate-100"></div>
+                <div class="flex-grow border-t border-white/10"></div>
+                <span class="px-3 text-[10px] text-slate-500">أو بالبريد الإلكتروني</span>
+                <div class="flex-grow border-t border-white/10"></div>
             </div>
 
             <form onsubmit="handleSmartEmailAuth(event)" class="space-y-2.5">
                 <input type="email" id="authEmail" required placeholder="name@example.com"
-                       class="light-input w-full px-3.5 py-2.5 text-xs rounded-xl outline-none">
+                       class="dark-input w-full px-3.5 py-2.5 text-xs rounded-xl outline-none text-right">
                 <input type="password" id="authPassword" required minlength="6" placeholder="••••••••"
-                       class="light-input w-full px-3.5 py-2.5 text-xs rounded-xl outline-none">
+                       class="dark-input w-full px-3.5 py-2.5 text-xs rounded-xl outline-none text-right">
                 
-                <button type="submit" id="smartAuthBtn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+                <button type="submit" id="smartAuthBtn" class="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
                     تأكيد وحفظ الرمز
                 </button>
             </form>
-            <p id="authErrorMsg" class="text-[10px] text-center text-rose-500 hidden font-medium"></p>
+            <p id="authErrorMsg" class="text-[10px] text-center text-rose-400 hidden font-medium"></p>
         </div>
     </div>
 
-    <footer class="mt-8 text-center text-xs text-slate-400 border-t border-rose-100/60 bg-white/40 py-4">
+    <footer class="mt-8 text-center text-xs text-slate-500 border-t border-white/5 py-4">
         كل مشاعرك تستحق أن تُقال • Feely App &copy; 2026
     </footer>
 
-    <!-- Complete JavaScript & Firebase Logic -->
+    <!-- Complete JavaScript Logic -->
     <script>
-        // Emotions System Definition
+        // المشاعر الـ 7 المطابقة تماماً للصورة
         const EMOTIONS = [
-            { id: 'love', pulseWord: 'حب', meter: 'درجة الحب اليوم', icon: '💖', color: '#f43f5e', color2: '#fb7185', soft: 'rgba(244, 63, 94, 0.2)', moods: ['اهتمام خفيف', 'حب صادق', 'عشق جارف'] },
-            { id: 'miss', pulseWord: 'اشتياق', meter: 'مستوى الشوق', icon: '🥺', color: '#8b5cf6', color2: '#a78bfa', soft: 'rgba(139, 92, 246, 0.2)', moods: ['تفكير عابر', 'اشتياق كبير', 'شوق لا يُطاق'] },
-            { id: 'grateful', pulseWord: 'امتنان', meter: 'درجة التقدير', icon: '🤍', color: '#0ea5e9', color2: '#38bdf8', soft: 'rgba(14, 165, 233, 0.2)', moods: ['شكر لطيف', 'امتنان عميق', 'تقدير بلا حدود'] },
-            { id: 'apology', pulseWord: 'اعتذار', meter: 'صدق الاعتذار', icon: '🕊️', color: '#64748b', color2: '#94a3b8', soft: 'rgba(100, 116, 139, 0.2)', moods: ['أسف بسيط', 'اعتذار صادق', 'ندم شديد'] },
-            { id: 'joy', pulseWord: 'فرح', meter: 'مستوى السعادة', icon: '✨', color: '#f59e0b', color2: '#fbbf24', soft: 'rgba(245, 158, 11, 0.2)', moods: ['ابتسامة', 'فرحة كبيرة', 'بهجة عارمة'] }
+            { id: 'love', pulseWord: 'حب', meter: 'درجة الحب اليوم', icon: '♡', color: '#ff4b81', color2: '#ff6e99', soft: 'rgba(255, 75, 129, 0.25)', moods: ['اهتمام خفيف', 'حب صادق', 'عشق جارف'] },
+            { id: 'miss', pulseWord: 'شوق', meter: 'مستوى الشوق', icon: '🌙', color: '#9d4edd', color2: '#c77dff', soft: 'rgba(157, 78, 221, 0.25)', moods: ['تفكير عابر', 'اشتياق كبير', 'شوق لا يُطاق'] },
+            { id: 'joy', pulseWord: 'فرح', meter: 'مستوى السعادة', icon: '☀️', color: '#f59e0b', color2: '#fbbf24', soft: 'rgba(245, 158, 11, 0.25)', moods: ['ابتسامة', 'فرحة كبيرة', 'بهجة عارمة'] },
+            { id: 'grateful', pulseWord: 'امتنان', meter: 'درجة التقدير', icon: '🤲', color: '#10b981', color2: '#34d399', soft: 'rgba(16, 185, 129, 0.25)', moods: ['شكر لطيف', 'امتنان عميق', 'تقدير بلا حدود'] },
+            { id: 'jealousy', pulseWord: 'غيرة', meter: 'مستوى الغيرة', icon: '👁️', color: '#06b6d4', color2: '#22d3ee', soft: 'rgba(6, 182, 212, 0.25)', moods: ['غيرة بسيطة', 'اهتمام زائد', 'غيرة شديدة'] },
+            { id: 'anger', pulseWord: 'غضب', meter: 'درجة الانزعاج', icon: '🔥', color: '#ef4444', color2: '#f87171', soft: 'rgba(239, 68, 68, 0.25)', moods: ['عتاب بسيط', 'زعل واضح', 'غضب شديد'] },
+            { id: 'sadness', pulseWord: 'حزن', meter: 'مستوى الضيق', icon: '🌧️', color: '#3b82f6', color2: '#60a5fa', soft: 'rgba(59, 130, 246, 0.25)', moods: ['ضيق خفيف', 'حزن عميق', 'كسرة خاطرة'] }
         ];
 
         let selectedEmotion = EMOTIONS[0];
@@ -356,7 +349,6 @@
             renderPulsesList();
         });
 
-        // TimeAgo Helper
         function timeAgo(ts) {
             const s = Math.floor((Date.now() - ts) / 1000);
             if (s < 60) return 'الآن';
@@ -367,7 +359,6 @@
             return new Date(ts).toLocaleDateString('ar-SA');
         }
 
-        // Random Code Generator
         function generateRandomCode() {
             const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
             const code = Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
@@ -381,7 +372,6 @@
             alert("تم نسخ الرمز للحافظة: " + val);
         }
 
-        // Render Emotion Picker Carousel
         function renderEmotionPicker() {
             const container = document.getElementById('emotionPicker');
             container.innerHTML = '';
@@ -391,20 +381,20 @@
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.onclick = () => selectEmotion(emotion);
-                btn.className = `group flex shrink-0 flex-col items-center gap-1 rounded-2xl border px-3.5 py-2 transition active:scale-95 ${
-                    active ? 'border-transparent text-white shadow-md' : 'border-slate-200/80 bg-white/60 text-slate-500 hover:text-slate-900'
+                btn.className = `group flex shrink-0 flex-col items-center gap-1.5 rounded-2xl border px-3 py-2.5 transition active:scale-95 ${
+                    active ? 'border-transparent text-white shadow-lg' : 'border-white/10 bg-white/5 text-slate-400 hover:text-white'
                 }`;
 
                 if (active) {
                     btn.style.background = `linear-gradient(145deg, ${emotion.color}, ${emotion.color2})`;
-                    btn.style.boxShadow = `0 6px 16px ${emotion.soft}`;
+                    btn.style.boxShadow = `0 8px 20px ${emotion.soft}`;
                 }
 
                 btn.innerHTML = `
-                    <span class="grid size-8 place-items-center rounded-xl text-base" style="background: ${active ? 'rgba(255,255,255,0.2)' : emotion.soft}">
+                    <span class="grid size-9 place-items-center rounded-xl text-base" style="background: ${active ? 'rgba(255,255,255,0.2)' : emotion.soft}; color: ${active ? '#fff' : emotion.color}">
                         ${emotion.icon}
                     </span>
-                    <span class="text-[11px] font-bold">${emotion.pulseWord}</span>
+                    <span class="text-xs font-bold">${emotion.pulseWord}</span>
                 `;
                 container.appendChild(btn);
             });
@@ -416,12 +406,10 @@
             updateOrb(document.getElementById('loveSlider').value);
         }
 
-        // Update Orb, Colors & Background Dynamically
         function updateOrb(val) {
             const intensity = Number(val);
             document.getElementById('rangeDisplay').textContent = intensity + '%';
 
-            // Mood Label Calculation
             let moodIndex = 0;
             if (intensity > 70) moodIndex = 2;
             else if (intensity > 35) moodIndex = 1;
@@ -433,33 +421,28 @@
             const glow = 0.2 + (intensity / 100) * 0.6;
             const scale = 0.86 + (intensity / 100) * 0.16;
 
-            // DOM Elements
             const orbGlow = document.getElementById('orbGlow');
             const orbCore = document.getElementById('orbCore');
             const orbRing1 = document.getElementById('orbRing1');
             const orbRing2 = document.getElementById('orbRing2');
             const orbIcon = document.getElementById('orbIcon');
-            const btnIcon = document.getElementById('btnIcon');
             const submitBtn = document.getElementById('submitBtn');
-            const rangeDisplay = document.getElementById('rangeDisplay');
             const ambientBg = document.getElementById('ambientBg');
             const headerIconBg = document.getElementById('headerIconBg');
             const headerIcon = document.getElementById('headerIcon');
             const sendSectionIconBg = document.getElementById('sendSectionIconBg');
             const sendSectionIcon = document.getElementById('sendSectionIcon');
 
-            // Set CSS Variables for inputs
             document.getElementById('sendPulseSection').style.setProperty('--emo', selectedEmotion.color);
             document.getElementById('sendPulseSection').style.setProperty('--emo-soft', selectedEmotion.soft);
 
             if (orbGlow && orbCore) {
                 orbIcon.textContent = selectedEmotion.icon;
-                if(btnIcon) btnIcon.textContent = selectedEmotion.icon;
                 if(headerIcon) headerIcon.textContent = selectedEmotion.icon;
                 if(sendSectionIcon) sendSectionIcon.textContent = selectedEmotion.icon;
 
                 if(headerIconBg) {
-                    headerIconBg.style.background = `linear-gradient(145deg, ${selectedEmotion.color}, ${selectedEmotion.color2})`;
+                    headerIconBg.style.background = selectedEmotion.color;
                     headerIconBg.style.boxShadow = `0 6px 16px ${selectedEmotion.soft}`;
                 }
                 if(sendSectionIconBg) {
@@ -482,9 +465,6 @@
                 orbRing2.style.setProperty('--pulse-speed', `${speed * 1.4}s`);
                 orbRing2.style.animationDelay = `${speed * 0.6}s`;
 
-                rangeDisplay.style.background = selectedEmotion.color;
-                rangeDisplay.style.boxShadow = `0 2px 10px ${selectedEmotion.soft}`;
-
                 submitBtn.style.background = `linear-gradient(105deg, ${selectedEmotion.color}, ${selectedEmotion.color2})`;
                 submitBtn.style.boxShadow = `0 10px 26px ${selectedEmotion.soft}`;
 
@@ -494,7 +474,7 @@
             if (navigator.vibrate) navigator.vibrate(10);
         }
 
-        // Firebase Auth Logic
+        // Auth Logic
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
@@ -610,13 +590,13 @@
             const validRegex = /^[a-zA-Z0-9_]+$/;
             if (!validRegex.test(handle)) {
                 alertBox.textContent = "يُسمح فقط بالحروف الإنجليزية، الأرقام والشرطة السفلية (_)";
-                alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
+                alertBox.className = "text-[10px] text-center font-medium text-rose-400 block";
                 return;
             }
 
             if (handle !== 'A' && handle.length < 5) {
                 alertBox.textContent = "رمز الاستقبال يجب ألا يقل عن 5 خانات";
-                alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
+                alertBox.className = "text-[10px] text-center font-medium text-rose-400 block";
                 return;
             }
 
@@ -625,7 +605,7 @@
                 
                 if (snapshot.exists() && (!currentUser || ownerUid !== currentUser.uid)) {
                     alertBox.textContent = "هذا الرمز مسجل مسبقاً، اختر رمزاً آخر";
-                    alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
+                    alertBox.className = "text-[10px] text-center font-medium text-rose-400 block";
                 } else {
                     alertBox.className = "hidden";
                     
@@ -666,7 +646,7 @@
             
             btn.innerHTML = '<span>نسخ الرمز</span> 📋';
             btn.onclick = copyMyLink;
-            btn.className = "w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 rounded-2xl text-xs transition flex items-center justify-center gap-1 border border-slate-200";
+            btn.className = "w-full bg-white/10 hover:bg-white/15 text-white font-bold py-3 rounded-full text-xs transition flex items-center justify-center gap-1 border border-white/10";
 
             if (shareBtn) shareBtn.classList.remove('hidden');
         }
@@ -683,7 +663,7 @@
             
             btn.textContent = "حفظ الرمز";
             btn.onclick = registerHandle;
-            btn.className = "w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-2xl text-xs shadow-md transition active:scale-98";
+            btn.className = "w-full bg-white/10 hover:bg-white/15 text-white font-bold py-3 rounded-full text-xs transition active:scale-98 border border-white/10";
 
             if (shareBtn) shareBtn.classList.add('hidden');
         }
@@ -699,7 +679,7 @@
         function shareMyLink() {
             const link = getMyShareableLink();
             if (navigator.share) {
-                navigator.share({ title: 'Feely - شاركني نبضات الحب 💖', text: 'أرسل لي نبضة مشاعر عبر هذا الرابط:', url: link }).catch(() => {});
+                navigator.share({ title: 'Feely - شاركني نبضات المشاعر 💖', text: 'أرسل لي نبضة مشاعر عبر هذا الرابط:', url: link }).catch(() => {});
             } else { copyMyLink(); }
         }
 
@@ -709,11 +689,11 @@
             const sentBtn = document.getElementById('tabSentBtn');
 
             if (tab === 'incoming') {
-                incomingBtn.className = "flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition bg-slate-900 text-white shadow-sm";
-                sentBtn.className = "flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition text-slate-500 hover:text-slate-900";
+                incomingBtn.className = "flex items-center justify-center gap-2 rounded-full py-2 text-xs font-bold transition bg-white text-slate-950 shadow-sm";
+                sentBtn.className = "flex items-center justify-center gap-2 rounded-full py-2 text-xs font-bold transition text-slate-400 hover:text-white";
             } else {
-                sentBtn.className = "flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition bg-slate-900 text-white shadow-sm";
-                incomingBtn.className = "flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition text-slate-500 hover:text-slate-900";
+                sentBtn.className = "flex items-center justify-center gap-2 rounded-full py-2 text-xs font-bold transition bg-white text-slate-950 shadow-sm";
+                incomingBtn.className = "flex items-center justify-center gap-2 rounded-full py-2 text-xs font-bold transition text-slate-400 hover:text-white";
             }
             renderPulsesList();
         }
@@ -768,9 +748,8 @@
 
         function updateBellUI() {
             const bellBadge = document.getElementById('bellBadge');
-            const bellBtn = document.getElementById('notificationBellBtn');
 
-            if (!("Notification" in window)) { bellBtn.style.display = 'none'; return; }
+            if (!("Notification" in window)) return;
 
             if (Notification.permission === "granted") {
                 bellBadge.classList.remove('hidden');
@@ -832,7 +811,7 @@
                     : 'لم ترسل أي نبضة بعد — ابدأ بالتعبير عن مشاعرك!';
                 list.innerHTML = `
                     <div class="flex flex-col items-center gap-2 py-8 text-center">
-                        <span class="grid size-12 place-items-center rounded-full bg-slate-100 text-slate-400 text-xl">✨</span>
+                        <span class="grid size-12 place-items-center rounded-full bg-white/5 text-slate-400 text-xl">✨</span>
                         <p class="text-xs font-medium text-slate-400">${emptyText}</p>
                     </div>
                 `;
@@ -840,30 +819,30 @@
             }
 
             currentData.forEach(item => {
-                const emoIcon = item.emotionIcon || '💖';
+                const emoIcon = item.emotionIcon || '♡';
                 const emoLabel = item.emotionLabel || 'حب';
-                const emoColor = item.color || '#f43f5e';
-                const emoSoft = item.soft || 'rgba(244, 63, 94, 0.2)';
+                const emoColor = item.color || '#ff4b81';
+                const emoSoft = item.soft || 'rgba(255, 75, 129, 0.25)';
                 const formattedTime = timeAgo(item.timestamp);
 
                 const titleText = activeTab === 'incoming' 
-                    ? `نبضة ${emoLabel} من <span class="font-mono font-bold">${item.sender}</span>`
-                    : `نبضة ${emoLabel} إلى <span class="font-mono font-bold">${item.target}</span>`;
+                    ? `نبضة ${emoLabel} من <span class="font-mono font-bold text-white">${item.sender}</span>`
+                    : `نبضة ${emoLabel} إلى <span class="font-mono font-bold text-white">${item.target}</span>`;
 
                 const pulseCard = document.createElement('div');
-                pulseCard.className = "flex items-start gap-3 rounded-2xl border border-slate-100 bg-white/70 p-3 shadow-2xs hover:border-slate-300 transition";
+                pulseCard.className = "flex items-start gap-3 rounded-2xl border border-white/5 bg-white/5 p-3 hover:border-white/10 transition text-right";
                 pulseCard.innerHTML = `
                     <span class="grid size-10 shrink-0 place-items-center rounded-xl text-lg" style="background: ${emoSoft}; color: ${emoColor};">
                         ${emoIcon}
                     </span>
                     <div class="min-w-0 flex-1">
                         <div class="flex items-center justify-between gap-2">
-                            <p class="truncate text-xs font-bold text-slate-900">${titleText}</p>
-                            <span class="shrink-0 text-[10px] text-slate-400 font-medium">${formattedTime}</span>
+                            <span class="shrink-0 text-[10px] text-slate-500 font-medium">${formattedTime}</span>
+                            <p class="truncate text-xs font-bold text-slate-200">${titleText}</p>
                         </div>
-                        <p class="mt-0.5 truncate text-xs text-slate-500">${item.note ? `"${item.note}"` : 'بدون رسالة'}</p>
+                        <p class="mt-0.5 truncate text-xs text-slate-400">${item.note ? `"${item.note}"` : 'بدون رسالة'}</p>
                     </div>
-                    <span class="shrink-0 self-center rounded-full px-2.5 py-1 text-[11px] font-black text-white shadow-xs" style="background: ${emoColor};">
+                    <span class="shrink-0 self-center rounded-full px-2.5 py-1 text-[11px] font-black text-white shadow-sm" style="background: ${emoColor};">
                         ${item.score}%
                     </span>
                 `;
