@@ -92,7 +92,7 @@
                     <span id="bellBadge" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-rose-500 border-2 border-white rounded-full"></span>
                 </button>
 
-                <!-- أزرار تسجيل الدخول الخارجي -->
+                <!-- أزرار الحساب -->
                 <div id="authStatusContainer">
                     <button id="openAuthModalBtn" onclick="openAuthModal()" class="text-xs bg-white hover:bg-rose-50 text-slate-700 border border-rose-200 px-3 py-2 rounded-xl font-medium transition shadow-xs flex items-center gap-1.5">
                         <span>🔑</span>
@@ -113,7 +113,7 @@
         <div id="handleSetupCard" class="light-card rounded-3xl p-5 space-y-3 relative overflow-hidden">
             <div class="text-center space-y-0.5">
                 <h2 id="handleCardTitle" class="text-xs font-bold text-rose-600 tracking-wide">رمز الاستقبال الخاص بك 🔑</h2>
-                <p id="handleCardSubtitle" class="text-[11px] text-slate-500 font-light">يسمح بالحروف الإنجليزية، الأرقام والشرطة السفلية (_) • الحد الأدنى 5 خانات</p>
+                <p id="handleCardSubtitle" class="text-[11px] text-slate-500 font-light">يجب تسجيل الدخول أولاً لحفظ رمزك • الحد الأدنى 5 خانات</p>
             </div>
             
             <div class="flex gap-2">
@@ -188,7 +188,7 @@
             </div>
 
             <div id="pulsesList" class="space-y-2 max-h-60 overflow-y-auto pr-1">
-                <p id="authNotice" class="text-center text-xs text-slate-400 py-6 font-light">قم بحفظ رمز الاستقبال لمشاهدة النبضات الواردة</p>
+                <p id="authNotice" class="text-center text-xs text-slate-400 py-6 font-light">سجل الدخول واحفظ رمزك لمشاهدة النبضات الواردة</p>
             </div>
         </div>
 
@@ -201,7 +201,7 @@
             
             <div class="text-center space-y-1">
                 <h3 class="text-base font-bold text-slate-900" id="authModalTitle">تسجيل الدخول / إنشاء حساب</h3>
-                <p class="text-xs text-slate-500">احفظ رمزك واسترجعه في أي وقت ومن أي جهاز</p>
+                <p class="text-xs text-slate-500">سجل أولاً لتتمكن من اختيار رمز الاستقبال الخاص بك</p>
             </div>
 
             <!-- زر Google -->
@@ -273,14 +273,6 @@
             const userParam = urlParams.get('u');
             if (userParam) document.getElementById('targetIdInput').value = userParam;
 
-            if (userHandle) {
-                setHandleLockedState(userHandle);
-                listenForIncomingPulses(userHandle);
-                initPushNotifications(userHandle);
-            } else {
-                setHandleEditableState();
-            }
-
             updateBellUI();
             renderPulsesList();
         });
@@ -293,7 +285,7 @@
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 closeAuthModal();
 
-                // البحث عن الرمز المسجل باسم هذا المستخدم لاستعادته حتى لو تم مسح الكوكيز
+                // البحث عن الرمز المسجل باسم هذا المستخدم لاستعادته
                 db.ref('users/' + user.uid + '/handle').once('value', snapshot => {
                     if (snapshot.exists()) {
                         const savedHandle = snapshot.val();
@@ -302,27 +294,28 @@
                         setHandleLockedState(userHandle);
                         listenForIncomingPulses(userHandle);
                         initPushNotifications(userHandle);
-                    } else if (userHandle) {
-                        // ربط الرمز الحالي بالحساب الجديد
-                        db.ref('handles/' + userHandle).set(user.uid);
-                        db.ref('users/' + user.uid).set({ handle: userHandle, email: user.email });
+                    } else {
+                        // إذا لم يحفظ مستخدم مسجل دخوله أي رمز بعد
+                        setHandleEditableState();
                     }
                 });
             } else {
                 currentUser = null;
+                userHandle = null;
+                localStorage.removeItem('feely_user_handle');
                 document.getElementById('openAuthModalBtn').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.add('hidden');
+                setHandleEditableState();
+                renderPulsesList();
             }
         });
 
-        // فتح وإغلاق نافذة تسجيل الدخول
         function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
         function closeAuthModal() { 
             document.getElementById('authModal').classList.add('hidden');
             document.getElementById('authErrorMsg').classList.add('hidden');
         }
 
-        // 1. تسجيل الدخول بـ Google
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider).catch(err => {
@@ -330,7 +323,6 @@
             });
         }
 
-        // 2. تسجيل الدخول أو إنشاء حساب بالبريد الإلكتروني
         function handleEmailAuth(e) {
             e.preventDefault();
             const email = document.getElementById('authEmail').value;
@@ -353,7 +345,12 @@
             errBox.classList.remove('hidden');
         }
 
-        function logout() { auth.signOut(); }
+        function logout() { 
+            auth.signOut().then(() => {
+                alert("تم تسجيل الخروج بنجاح");
+                location.reload();
+            }); 
+        }
 
         function setHandleLockedState(handle) {
             const input = document.getElementById('usernameInput');
@@ -380,7 +377,9 @@
 
             input.value = '';
             input.disabled = false;
-            subtitle.textContent = "يسمح بالحروف الإنجليزية، الأرقام والشرطة السفلية (_) • الحد الأدنى 5 خانات";
+            subtitle.textContent = currentUser 
+                ? "يسمح بالحروف الإنجليزية، الأرقام والشرطة السفلية (_) • الحد الأدنى 5 خانات" 
+                : "⚠️ يجب تسجيل الدخول أولاً لتتمكن من اختيار رمز وحفظه";
             
             btn.textContent = "حفظ";
             btn.onclick = registerHandle;
@@ -389,7 +388,15 @@
             if (shareBtn) shareBtn.classList.add('hidden');
         }
 
+        // تسجيل الرمز حصرياً للمستخدمين المسجلين
         function registerHandle() {
+            // 🛑 1. إجبار تسجيل الدخول أولاً
+            if (!currentUser) {
+                alert("عذراً، يجب عليك تسجيل الدخول أو إنشاء حساب أولاً لتتمكن من حجز رمز الاستقبال! 🔑");
+                openAuthModal();
+                return;
+            }
+
             const handle = document.getElementById('usernameInput').value.trim();
             const alertBox = document.getElementById('handleStatusAlert');
             
@@ -409,29 +416,16 @@
             db.ref('handles/' + handle).once('value', snapshot => {
                 const ownerUid = snapshot.val();
                 
-                // السماح باستعادة الرمز إذا كان المستخدِم هو المالك الأصلي في Firebase
-                if (snapshot.exists() && currentUser && ownerUid === currentUser.uid) {
-                    localStorage.setItem('feely_user_handle', handle);
-                    userHandle = handle;
-                    setHandleLockedState(userHandle);
-                    listenForIncomingPulses(userHandle);
-                    initPushNotifications(userHandle);
-                    return;
-                }
-
-                if (snapshot.exists()) {
-                    alertBox.textContent = "هذا الرمز مسجل مسبقاً، يرجى تسجيل الدخول بحسابك لاستعادته";
+                if (snapshot.exists() && ownerUid !== currentUser.uid) {
+                    alertBox.textContent = "هذا الرمز مسجل مسبقاً لمستخدم آخر، اختر رمزاً آخر";
                     alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
                 } else {
                     localStorage.setItem('feely_user_handle', handle);
                     userHandle = handle;
 
-                    const ownerId = currentUser ? currentUser.uid : 'anonymous_registered';
-                    db.ref('handles/' + handle).set(ownerId);
-
-                    if (currentUser) {
-                        db.ref('users/' + currentUser.uid).set({ handle: handle, email: currentUser.email });
-                    }
+                    // ربط الرمز بالـ UID الخاص بالمستخدم الحالي حصراً
+                    db.ref('handles/' + handle).set(currentUser.uid);
+                    db.ref('users/' + currentUser.uid).set({ handle: handle, email: currentUser.email });
 
                     alertBox.className = "hidden";
                     setHandleLockedState(userHandle);
@@ -571,7 +565,7 @@
 
             if (currentData.length === 0) {
                 const emptyText = activeTab === 'incoming' 
-                    ? (userHandle ? 'لا توجد نبضات واصلة حتى الآن' : 'قم بحفظ رمز الاستقبال لمشاهدة النبضات الواردة')
+                    ? (currentUser ? (userHandle ? 'لا توجد نبضات واصلة حتى الآن' : 'قم بحفظ رمز الاستقبال لمشاهدة النبضات الواردة') : 'سجل الدخول واحفظ رمزك لمشاهدة النبضات الواردة')
                     : 'لم تقم بإرسال أي نبضات بعد';
                 list.innerHTML = `<p class="text-center text-xs text-slate-400 py-6 font-light">${emptyText}</p>`;
                 return;
