@@ -8,58 +8,48 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Readex Pro', sans-serif; }
+        body { font-family: 'Readex Pro', sans-serif; background-color: #fdf8f8; }
 
         .minimal-card {
             background: #ffffff;
             border-radius: 36px;
-            box-shadow: 0 10px 30px -10px rgba(244, 63, 94, 0.08);
-            border: 1px solid rgba(254, 226, 226, 0.6);
+            box-shadow: 0 10px 30px -10px rgba(230, 150, 160, 0.12);
+            border: 1px solid rgba(252, 230, 233, 0.8);
         }
 
         .minimal-input {
-            background: #faf5f6;
-            border: 1px solid #fecdd3;
-            color: #1e293b;
-            border-radius: 999px;
+            background: #fbf1f2;
+            border: 1px solid transparent;
+            color: #4a3e3e;
+            border-radius: 24px;
             transition: all 0.2s ease;
         }
 
         .minimal-input:focus {
-            border-color: #f43f5e;
+            border-color: #f49fa9;
             background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.1);
+            box-shadow: 0 0 0 4px rgba(244, 159, 169, 0.15);
         }
 
-        .minimal-input:disabled {
-            background-color: #fff1f2;
-            color: #e11d48;
-            cursor: not-allowed;
-            opacity: 0.9;
-        }
-
-        /* Custom Soft Slider */
+        /* Custom Soft Slider matching image */
         input[type=range] { -webkit-appearance: none; background: transparent; }
         input[type=range]:focus { outline: none; }
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%; height: 8px; cursor: pointer;
             border-radius: 999px;
-            background: #fce7f3;
+            background: #fcedee;
         }
         input[type=range]::-webkit-slider-thumb {
-            height: 22px; width: 22px; border-radius: 50%;
+            height: 24px; width: 24px; border-radius: 50%;
             background: #ffffff; border: 4px solid #f43f5e; cursor: pointer;
-            -webkit-appearance: none; margin-top: -7px;
-            box-shadow: 0 4px 10px rgba(244, 63, 94, 0.25);
+            -webkit-appearance: none; margin-top: -8px;
+            box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
             transition: transform 0.1s ease;
-        }
-        input[type=range]::-webkit-slider-thumb:active {
-            transform: scale(1.15);
         }
 
         ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #faf5f6; }
-        ::-webkit-scrollbar-thumb { background: #fecdd3; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: #fdf8f8; }
+        ::-webkit-scrollbar-thumb { background: #f8c8d0; border-radius: 10px; }
     </style>
 
     <!-- Firebase SDKs -->
@@ -68,11 +58,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
 </head>
-<body class="bg-[#f7f4f5] text-slate-800 min-h-screen flex flex-col justify-between selection:bg-rose-500 selection:text-white antialiased">
+<body class="text-slate-800 min-h-screen flex flex-col justify-between antialiased">
 
-    <!-- Header (مطابق للصورة) -->
+    <!-- Header -->
     <header class="w-full max-w-md mx-auto px-6 pt-6 flex justify-between items-center">
-        <!-- Login Action -->
         <div id="authStatusContainer" class="flex items-center gap-2">
             <button id="openAuthModalBtn" onclick="openAuthModal()" class="flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/80 px-4 py-2 rounded-full transition shadow-xs">
                 <span>[➔</span>
@@ -89,7 +78,6 @@
             </button>
         </div>
 
-        <!-- Brand Logo -->
         <div class="flex items-center gap-2">
             <h1 class="text-xl font-black text-slate-900 tracking-tight">Feely</h1>
             <div class="w-9 h-9 rounded-full bg-rose-500 flex items-center justify-center text-white text-lg shadow-md shadow-rose-200">
@@ -98,17 +86,17 @@
         </div>
     </header>
 
-    <!-- Main Content Workspace -->
+    <!-- Main Workspace -->
     <main class="w-full max-w-md mx-auto px-4 py-6 space-y-5 flex-grow">
 
-        <!-- Receive Code Card (مطابق للصورة) -->
+        <!-- Receive Code Card -->
         <section class="minimal-card p-6 relative overflow-hidden">
             <div class="text-right space-y-1 mb-3">
                 <p class="text-xs font-bold text-slate-400">رمزك الخاص — شاركه لتصلك النبضات</p>
             </div>
 
             <div class="flex items-center justify-between gap-3">
-                <button type="button" id="copyBtn" onclick="copyMyLink()" class="flex items-center gap-1.5 bg-[#f5ebed] hover:bg-[#ebdce0] text-slate-700 font-bold px-4 py-2.5 rounded-2xl text-xs transition active:scale-95">
+                <button type="button" id="copyBtn" onclick="copyMyLink()" class="flex items-center gap-1.5 bg-[#f7e8ea] hover:bg-[#f0dade] text-slate-700 font-bold px-4 py-2.5 rounded-2xl text-xs transition active:scale-95">
                     <span>📋</span>
                     <span>نسخ</span>
                 </button>
@@ -124,22 +112,21 @@
                 <button id="handleActionBtn" onclick="registerHandle()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-2xl text-xs shadow-md transition active:scale-95">
                     حفظ الرمز
                 </button>
-                <button id="shareLinkBtn" onclick="shareMyLink()" class="hidden bg-rose-500 hover:bg-rose-600 text-white font-bold px-4 py-3 rounded-2xl text-xs whitespace-nowrap shadow-md transition active:scale-95">
+                <button id="shareLinkBtn" onclick="shareMyLink()" class="hidden bg-[#f4a2ab] hover:bg-[#f2919c] text-white font-bold px-4 py-3 rounded-2xl text-xs whitespace-nowrap shadow-md transition active:scale-95">
                     مشاركة 📲
                 </button>
             </div>
             <p id="handleStatusAlert" class="text-[10px] text-center hidden font-medium mt-2"></p>
         </section>
 
-        <!-- Send Pulse Card (مطابق للصورة) -->
+        <!-- Send Pulse Card (مطابق تماماً للجزء العلوي بالصورة) -->
         <section class="minimal-card p-6 space-y-5">
-            <!-- Big Central Heart -->
             <div class="text-center space-y-1.5 pt-2">
                 <div class="inline-flex items-center justify-center w-20 h-20 text-5xl animate-pulse">
                     ❤️
                 </div>
                 <h2 class="text-xl font-black text-slate-900">أرسل نبضة حب</h2>
-                <p id="moodLabel" class="text-xs font-bold text-rose-500">حب كبير</p>
+                <p id="moodLabel" class="text-xs font-bold text-[#f43f5e]">حب كبير</p>
             </div>
 
             <form onsubmit="sendLovePulse(event)" class="space-y-4">
@@ -155,47 +142,56 @@
                            class="minimal-input w-full px-4 py-3 text-right text-xs text-slate-800 outline-none">
                 </div>
 
-                <!-- Slider Section -->
+                <!-- Slider -->
                 <div class="space-y-2 pt-1">
                     <div class="flex justify-between items-center text-xs font-bold">
-                        <span id="rangeDisplay" class="text-rose-500 font-black">75%</span>
+                        <span id="rangeDisplay" class="text-[#f43f5e] font-black">75%</span>
                         <span class="text-slate-900">درجة الحب</span>
                     </div>
                     <input type="range" id="loveSlider" min="1" max="100" value="75" oninput="updateOrb(this.value)" class="w-full">
                 </div>
 
+                <!-- Input Field: رسالة (اختياري) -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 text-right mb-1.5">رسالة خاصة (اختياري)</label>
-                    <textarea id="loveNote" rows="2" maxlength="140" placeholder="اكتب ما في قلبك…"
-                              class="minimal-input w-full px-4 py-3 text-right text-xs text-slate-800 outline-none resize-none rounded-3xl"></textarea>
+                    <label class="block text-xs font-bold text-slate-500 text-right mb-1.5">رسالة (اختياري)</label>
+                    <textarea id="loveNote" rows="3" maxlength="140" placeholder="اكتب ما في قلبك…"
+                              class="minimal-input w-full p-4 text-right text-xs text-slate-800 outline-none resize-none rounded-3xl"></textarea>
                 </div>
 
-                <button type="submit" id="submitBtn" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-3.5 rounded-full text-xs shadow-lg shadow-rose-200 transition active:scale-98">
-                    إرسال النبضة فوراً
+                <!-- Submit Button: إرسال النبضة (نفس اللون والشكل بالصورة) -->
+                <button type="submit" id="submitBtn" class="w-full bg-[#f39fa9] hover:bg-[#f18d98] text-white font-bold py-3.5 rounded-full text-sm flex items-center justify-center gap-2 transition active:scale-98 shadow-xs">
+                    <span>إرسال النبضة</span>
+                    <svg class="w-4 h-4 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
                 </button>
             </form>
         </section>
 
-        <!-- Pulse Inbox Feed -->
-        <section class="minimal-card p-5 space-y-3">
-            <div class="flex justify-between items-center border-b border-rose-100 pb-2.5">
-                <div class="flex gap-1.5 bg-rose-50/60 p-1 rounded-full border border-rose-100">
-                    <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="px-4 py-1.5 rounded-full text-xs font-bold transition bg-white text-rose-600 shadow-xs">
-                        الواردة 📬
-                    </button>
-                    <button id="tabSentBtn" onclick="switchPulseTab('sent')" class="px-4 py-1.5 rounded-full text-xs font-bold transition text-slate-400 hover:text-slate-700">
-                        المرسلة 📤
-                    </button>
-                </div>
-                <span id="pulsesCount" class="text-[10px] bg-rose-100 text-rose-700 font-bold px-2.5 py-0.5 rounded-full">0</span>
+        <!-- Pulse Inbox Section (مطابق تماماً للجزء السفلي بالصورة) -->
+        <section class="minimal-card p-5 space-y-4">
+            <!-- Tabs Container -->
+            <div class="bg-[#fbf1f2] p-1.5 rounded-full flex gap-1">
+                <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="flex-1 py-2.5 rounded-full text-xs font-bold transition bg-white text-slate-900 shadow-xs">
+                    الواردة
+                </button>
+                <button id="tabSentBtn" onclick="switchPulseTab('sent')" class="flex-1 py-2.5 rounded-full text-xs font-bold transition text-slate-500 hover:text-slate-800">
+                    المرسلة
+                </button>
             </div>
 
+            <!-- List Area -->
             <div id="pulsesList" class="space-y-2 max-h-60 overflow-y-auto pr-1">
-                <p id="authNotice" class="text-center text-xs text-slate-400 py-6 font-light">سجّل الدخول واحفظ رمزك لمشاهدة النبضات الواردة</p>
+                <p id="authNotice" class="text-center text-xs text-slate-400 py-8 font-medium">سجّل الدخول لمشاهدة النبضات الواردة</p>
             </div>
         </section>
 
     </main>
+
+    <!-- Footer (طابق الشعار والنص بالصورة تماماً) -->
+    <footer class="mt-6 text-center text-xs text-slate-400 py-5">
+        صُمم بحب · Feely App © 2026
+    </footer>
 
     <!-- Auth Modal -->
     <div id="authModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
@@ -236,10 +232,6 @@
             <p id="authErrorMsg" class="text-[10px] text-center text-rose-500 hidden font-medium"></p>
         </div>
     </div>
-
-    <footer class="mt-8 text-center text-xs text-slate-400 border-t border-rose-100/60 bg-white/40 py-4">
-        كل مشاعرك تستحق أن تُقال • Feely App &copy; 2026
-    </footer>
 
     <!-- Firebase Script Logic -->
     <script>
@@ -301,7 +293,6 @@
             if (navigator.vibrate) navigator.vibrate(10);
         }
 
-        // Firebase Auth Logic
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
@@ -512,11 +503,11 @@
             const sentBtn = document.getElementById('tabSentBtn');
 
             if (tab === 'incoming') {
-                incomingBtn.className = "px-4 py-1.5 rounded-full text-xs font-bold transition bg-white text-rose-600 shadow-xs";
-                sentBtn.className = "px-4 py-1.5 rounded-full text-xs font-bold transition text-slate-400 hover:text-slate-700";
+                incomingBtn.className = "flex-1 py-2.5 rounded-full text-xs font-bold transition bg-white text-slate-900 shadow-xs";
+                sentBtn.className = "flex-1 py-2.5 rounded-full text-xs font-bold transition text-slate-500 hover:text-slate-800";
             } else {
-                sentBtn.className = "px-4 py-1.5 rounded-full text-xs font-bold transition bg-white text-rose-600 shadow-xs";
-                incomingBtn.className = "px-4 py-1.5 rounded-full text-xs font-bold transition text-slate-400 hover:text-slate-700";
+                sentBtn.className = "flex-1 py-2.5 rounded-full text-xs font-bold transition bg-white text-slate-900 shadow-xs";
+                incomingBtn.className = "flex-1 py-2.5 rounded-full text-xs font-bold transition text-slate-500 hover:text-slate-800";
             }
             renderPulsesList();
         }
@@ -618,17 +609,13 @@
             list.innerHTML = '';
 
             const currentData = activeTab === 'incoming' ? incomingPulses : sentPulses;
-            countLabel.textContent = currentData.length;
 
             if (currentData.length === 0) {
                 const emptyText = activeTab === 'incoming' 
-                    ? (userHandle ? 'لا توجد نبضات واصلة حتى الآن' : 'سجّل الدخول واحفظ رمزك لمشاهدة النبضات الواردة')
+                    ? (userHandle ? 'لا توجد نبضات واصلة حتى الآن' : 'سجّل الدخول لمشاهدة النبضات الواردة')
                     : 'لم ترسل أي نبضة بعد — ابدأ بالتعبير عن مشاعرك!';
                 list.innerHTML = `
-                    <div class="flex flex-col items-center gap-2 py-6 text-center">
-                        <span class="grid size-10 place-items-center rounded-full bg-rose-50 text-rose-500 text-lg">✨</span>
-                        <p class="text-xs font-medium text-slate-400">${emptyText}</p>
-                    </div>
+                    <p class="text-center text-xs text-slate-400 py-6 font-medium">${emptyText}</p>
                 `;
                 return;
             }
@@ -640,9 +627,9 @@
                     : `نبضة حب إلى <span class="font-mono font-bold text-slate-900">${item.target}</span>`;
 
                 const pulseCard = document.createElement('div');
-                pulseCard.className = "flex items-start gap-3 rounded-2xl border border-rose-100 bg-white/80 p-3 shadow-2xs hover:border-rose-300 transition text-right";
+                pulseCard.className = "flex items-start gap-3 rounded-2xl border border-rose-100 bg-[#fbf1f2]/50 p-3 hover:border-rose-300 transition text-right";
                 pulseCard.innerHTML = `
-                    <span class="grid size-9 shrink-0 place-items-center rounded-xl bg-rose-50 text-rose-500 text-base">
+                    <span class="grid size-9 shrink-0 place-items-center rounded-xl bg-white text-rose-500 text-base shadow-2xs">
                         ❤️
                     </span>
                     <div class="min-w-0 flex-1">
@@ -652,7 +639,7 @@
                         </div>
                         <p class="mt-0.5 truncate text-xs text-slate-500">${item.note ? `"${item.note}"` : 'بدون رسالة'}</p>
                     </div>
-                    <span class="shrink-0 self-center rounded-full px-2.5 py-1 text-[11px] font-black text-white bg-rose-500 shadow-xs">
+                    <span class="shrink-0 self-center rounded-full px-2.5 py-1 text-[11px] font-black text-white bg-[#f39fa9]">
                         ${item.score}%
                     </span>
                 `;
