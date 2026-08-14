@@ -89,26 +89,18 @@
     <!-- Main Workspace -->
     <main class="w-full max-w-md mx-auto px-4 py-6 space-y-4 flex-grow">
 
-        <!-- Heart Streak & Total Hearts Counter Card -->
+        <!-- Top Stats (إجمالي القلوب المستلمة) -->
         <section class="minimal-card p-4 flex items-center justify-between bg-[#fbf1f2]/60 border border-rose-100/80">
             <div class="flex items-center gap-3">
                 <div class="relative w-11 h-11 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-xs border border-rose-100">
-                    <span id="streakHeartIcon" class="transition-transform duration-300">❤️</span>
+                    <span>💌</span>
                 </div>
                 <div class="text-right">
-                    <div class="flex items-center gap-1.5 flex-wrap">
-                        <h3 class="text-xs font-bold text-slate-900" id="streakTitle">ستريك المشاعر</h3>
-                        <span class="text-xs font-black text-rose-500 bg-rose-100/80 px-2 py-0.5 rounded-full" id="streakDaysBadge">0 أيام</span>
-                        <!-- عداد القلوب الواردة الجديد -->
-                        <span class="text-xs font-black text-emerald-600 bg-emerald-100/80 px-2 py-0.5 rounded-full" id="totalHeartsReceivedBadge">وصلك 0 ❤️</span>
-                    </div>
-                    <p class="text-[10px] text-slate-400 mt-0.5" id="streakSubtitle">أرسل نبضة يومياً للحفاظ على الستريك</p>
+                    <h3 class="text-xs font-bold text-slate-900">مجموع القلوب المستلمة</h3>
+                    <p class="text-[10px] text-slate-400 mt-0.5">كل المشاعر التي وصلت لرمزك الخاص</p>
                 </div>
             </div>
-            
-            <span id="streakStatusBadge" class="text-[10px] font-bold text-rose-500 bg-rose-50 border border-rose-100 px-2.5 py-1 rounded-full animate-pulse shrink-0">
-                جاهز للنبض 💓
-            </span>
+            <span class="text-xs font-black text-rose-500 bg-rose-100 px-3 py-1.5 rounded-full" id="totalHeartsReceivedBadge">0 ❤️</span>
         </section>
 
         <!-- Receive Code Card -->
@@ -153,8 +145,14 @@
 
             <form onsubmit="sendLovePulse(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 text-right mb-1.5">رمز المستلم</label>
-                    <input type="text" id="targetIdInput" required placeholder="ABC123"
+                    <div class="flex justify-between items-center mb-1.5">
+                        <!-- مؤشر الستريك التفاعلي مع المستلم -->
+                        <span id="targetStreakIndicator" class="hidden text-[11px] font-black text-rose-500 bg-rose-50 border border-rose-200/60 px-2 py-0.5 rounded-full">
+                            ❤️ ستريك: 0 أيام
+                        </span>
+                        <label class="block text-xs font-bold text-slate-400 text-right">رمز المستلم</label>
+                    </div>
+                    <input type="text" id="targetIdInput" required placeholder="ABC123" oninput="checkTargetStreak(this.value)"
                            class="minimal-input w-full px-4 py-3.5 text-center font-mono font-bold tracking-widest text-slate-800 text-sm outline-none uppercase">
                 </div>
 
@@ -252,7 +250,7 @@
         </div>
     </div>
 
-    <!-- Firebase Script & Heart Streak Logic -->
+    <!-- Firebase Script & Individual Streak Logic -->
     <script>
         const firebaseConfig = {
           apiKey: "AIzaSyCZLJ3VX05H05lTFWt3obbqVK71_jgaffs",
@@ -283,79 +281,64 @@
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const userParam = urlParams.get('u');
-            if (userParam) document.getElementById('targetIdInput').value = userParam.toUpperCase();
+            if (userParam) {
+                document.getElementById('targetIdInput').value = userParam.toUpperCase();
+                checkTargetStreak(userParam.toUpperCase());
+            }
 
             updateOrb(75);
             updateBellUI();
             renderPulsesList();
-            updateHeartStreak();
         });
 
-        // ================= HEART STREAK LOGIC =================
-        function updateHeartStreak() {
-            const lastDate = localStorage.getItem('feely_last_pulse_date');
-            let streak = parseInt(localStorage.getItem('feely_streak_count') || '0');
+        // ================= INDIVIDUAL STREAK LOGIC =================
+        function getPairKey(target) {
+            return `feely_streak_target_${target.toUpperCase()}`;
+        }
+
+        function checkTargetStreak(target) {
+            const trimmed = target.trim().toUpperCase();
+            const badge = document.getElementById('targetStreakIndicator');
+            
+            if (trimmed.length < 3) {
+                badge.classList.add('hidden');
+                return;
+            }
+
+            const data = JSON.parse(localStorage.getItem(getPairKey(trimmed)) || '{"streak": 0, "lastDate": ""}');
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+            const today = new Date().toDateString();
+
+            let currentStreak = data.streak;
+            if (data.lastDate && data.lastDate !== today && data.lastDate !== yesterday) {
+                currentStreak = 0; // انقطع الستريك
+            }
+
+            badge.textContent = `❤️ ستريك: ${currentStreak} أيام`;
+            badge.classList.remove('hidden');
+        }
+
+        function recordTargetStreak(target) {
+            const trimmed = target.trim().toUpperCase();
+            const pairKey = getPairKey(trimmed);
+            const data = JSON.parse(localStorage.getItem(pairKey) || '{"streak": 0, "lastDate": ""}');
             
             const today = new Date().toDateString();
             const yesterday = new Date(Date.now() - 86400000).toDateString();
 
-            if (lastDate === today) {
-                renderHeartStreakUI(streak, true);
-            } else if (lastDate === yesterday) {
-                renderHeartStreakUI(streak, false);
-            } else if (lastDate) {
-                streak = 0;
-                localStorage.setItem('feely_streak_count', '0');
-                renderHeartStreakUI(0, false);
+            let newStreak = data.streak;
+            if (data.lastDate === yesterday) {
+                newStreak += 1;
+            } else if (data.lastDate === today) {
+                // تم الإرسال اليوم بالفعل مسبقاً
             } else {
-                renderHeartStreakUI(0, false);
+                newStreak = 1;
             }
+
+            localStorage.setItem(pairKey, JSON.stringify({ streak: newStreak, lastDate: today }));
+            checkTargetStreak(target);
         }
-
-        function recordPulseSentForStreak() {
-            const today = new Date().toDateString();
-            const lastDate = localStorage.getItem('feely_last_pulse_date');
-            let streak = parseInt(localStorage.getItem('feely_streak_count') || '0');
-
-            if (lastDate !== today) {
-                streak += 1;
-                localStorage.setItem('feely_streak_count', streak.toString());
-                localStorage.setItem('feely_last_pulse_date', today);
-            }
-            renderHeartStreakUI(streak, true);
-        }
-
-        function renderHeartStreakUI(days, isDoneToday) {
-            const daysBadge = document.getElementById('streakDaysBadge');
-            const statusBadge = document.getElementById('streakStatusBadge');
-            const subtitle = document.getElementById('streakSubtitle');
-            const heartIcon = document.getElementById('streakHeartIcon');
-
-            daysBadge.textContent = `${days} أيام`;
-
-            if (isDoneToday) {
-                statusBadge.textContent = "مُكتمل اليوم ✨";
-                statusBadge.className = "text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full";
-                subtitle.textContent = "نبضك مستمر لليوم، أحسنت!";
-                heartIcon.textContent = "💖";
-                heartIcon.className = "transition-transform duration-300 scale-110 drop-shadow-xs";
-            } else {
-                statusBadge.textContent = "جاهز للنبض 💓";
-                statusBadge.className = "text-[10px] font-bold text-rose-500 bg-rose-50 border border-rose-100 px-2.5 py-1 rounded-full animate-pulse";
-                subtitle.textContent = "أرسل نبضة اليوم للحفاظ على الستريك";
-                heartIcon.textContent = "❤️";
-                heartIcon.className = "transition-transform duration-300 scale-100";
-            }
-        }
-
-        // تحديث عداد القلوب الواردة
-        function updateTotalHeartsCountUI(count) {
-            const badge = document.getElementById('totalHeartsReceivedBadge');
-            if (badge) {
-                badge.textContent = `وصلك ${count} ❤️`;
-            }
-        }
-        // ======================================================
+        // ===========================================================
 
         function timeAgo(ts) {
             const s = Math.floor((Date.now() - ts) / 1000);
@@ -621,8 +604,8 @@
                 db.ref('pulses/' + targetHandle).push(pulseData).then(() => {
                     sentPulses.unshift(pulseData);
                     localStorage.setItem('feely_sent_pulses', JSON.stringify(sentPulses));
-                    recordPulseSentForStreak();
-                    alert('تم إرسال نبضة الحب بنجاح! 💕');
+                    recordTargetStreak(targetHandle); // زيادة ستريك هذا الشخص تحديداً
+                    alert(`تم إرسال نبضة الحب إلى (${targetHandle}) بنجاح! 💕`);
                     document.getElementById('loveNote').value = '';
                     if (activeTab === 'sent') renderPulsesList();
                 }).catch(err => alert('حدث خطأ أثناء الإرسال: ' + err.message));
@@ -639,8 +622,9 @@
                 }
                 isFirstPulseLoad = false;
                 
-                // تحديث عداد القلوب التي تم استقبالها فوراً
-                updateTotalHeartsCountUI(incomingPulses.length);
+                // تحديث عداد القلوب الإجمالي المستلمة
+                const countBadge = document.getElementById('totalHeartsReceivedBadge');
+                if (countBadge) countBadge.textContent = `${incomingPulses.length} ❤️`;
 
                 if (activeTab === 'incoming') renderPulsesList();
             });
@@ -712,7 +696,16 @@
 
             currentData.forEach(item => {
                 const formattedTime = timeAgo(item.timestamp);
-                const titleText = activeTab === 'incoming' 
+                const isIncoming = activeTab === 'incoming';
+                const targetOrSender = isIncoming ? item.sender : item.target;
+
+                // قراءة الستريك الخاص بهذا الشخص
+                const pairData = JSON.parse(localStorage.getItem(getPairKey(targetOrSender)) || '{"streak": 0}');
+                const streakBadge = pairData.streak > 0 
+                    ? `<span class="text-[10px] bg-rose-50 border border-rose-100 text-rose-500 font-black px-2 py-0.5 rounded-full">❤️ ${pairData.streak}</span>` 
+                    : '';
+
+                const titleText = isIncoming 
                     ? `نبضة حب من <span class="font-mono font-bold text-slate-900">${item.sender}</span>`
                     : `نبضة حب إلى <span class="font-mono font-bold text-slate-900">${item.target}</span>`;
 
@@ -724,7 +717,10 @@
                     </span>
                     <div class="min-w-0 flex-1">
                         <div class="flex items-center justify-between gap-2">
-                            <span class="shrink-0 text-[10px] text-slate-400 font-medium">${formattedTime}</span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="shrink-0 text-[10px] text-slate-400 font-medium">${formattedTime}</span>
+                                ${streakBadge}
+                            </div>
                             <p class="truncate text-xs font-bold text-slate-800">${titleText}</p>
                         </div>
                         <p class="mt-0.5 truncate text-xs text-slate-500">${item.note ? `"${item.note}"` : 'بدون رسالة'}</p>
