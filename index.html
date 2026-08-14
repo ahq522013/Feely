@@ -65,7 +65,7 @@
         <div id="authStatusContainer" class="flex items-center gap-2">
             <button id="openAuthModalBtn" onclick="openAuthModal()" class="flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/80 px-4 py-2 rounded-full transition shadow-xs">
                 <span>[➔</span>
-                <span>دخول</span>
+                <span>دخول (اختياري)</span>
             </button>
             <button id="logoutBtn" onclick="logout()" class="hidden text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-3.5 py-2 rounded-full transition">
                 خروج
@@ -97,7 +97,7 @@
                 </div>
                 <div class="text-right">
                     <h3 class="text-xs font-bold text-slate-900">مجموع القلوب المستلمة</h3>
-                    <p class="text-[10px] text-slate-400 mt-0.5">كل المشاعر التي وصلت لرمزك الخاص</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5" id="userAccountSubtitle">كل المشاعر التي وصلت لرمزك</p>
                 </div>
             </div>
             <span class="text-xs font-black text-rose-500 bg-rose-100 px-3 py-1.5 rounded-full" id="totalHeartsReceivedBadge">0 ❤️</span>
@@ -124,7 +124,7 @@
 
             <div class="flex gap-2 mt-4">
                 <button id="handleActionBtn" onclick="registerHandle()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-2xl text-xs shadow-md transition active:scale-95">
-                    حفظ الرمز
+                    حفظ الرمز وتفعيله فوراً
                 </button>
                 <button id="shareLinkBtn" onclick="shareMyLink()" class="hidden bg-[#f4a2ab] hover:bg-[#f2919c] text-white font-bold px-4 py-3 rounded-2xl text-xs whitespace-nowrap shadow-md transition active:scale-95">
                     مشاركة 📲
@@ -146,7 +146,6 @@
             <form onsubmit="sendLovePulse(event)" class="space-y-4">
                 <div>
                     <div class="flex justify-between items-center mb-1.5">
-                        <!-- مؤشر الستريك التفاعلي مع المستلم -->
                         <span id="targetStreakIndicator" class="hidden text-[11px] font-black text-rose-500 bg-rose-50 border border-rose-200/60 px-2 py-0.5 rounded-full">
                             ❤️ ستريك: 0 أيام
                         </span>
@@ -199,7 +198,7 @@
             </div>
 
             <div id="pulsesList" class="space-y-2 max-h-60 overflow-y-auto pr-1">
-                <p id="authNotice" class="text-center text-xs text-slate-400 py-6 font-medium">سجّل الدخول لمشاهدة النبضات الواردة</p>
+                <p id="authNotice" class="text-center text-xs text-slate-400 py-6 font-medium">احفظ رمزك أعلاه لمشاهدة النبضات الواردة</p>
             </div>
         </section>
 
@@ -210,7 +209,7 @@
         صُمم بحب · Feely App © 2026
     </footer>
 
-    <!-- Auth Modal -->
+    <!-- Auth Modal (اختياري) -->
     <div id="authModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 border border-rose-100 shadow-2xl relative text-right">
             <button onclick="closeAuthModal()" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
@@ -219,15 +218,15 @@
                 <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 text-xl flex items-center justify-center mx-auto mb-1 border border-rose-100">
                     🛡️
                 </div>
-                <h3 class="text-sm font-bold text-slate-900" id="authModalTitle">احفظ رمزك واحْمِ حسابك</h3>
-                <p class="text-xs text-slate-500 leading-relaxed" id="authModalSubtitle">
-                    ربط الرمز بحسابك يضمن لك استعادته ونبضاتك دائماً عند مسح سجل المتصفح أو تغيير الجوال.
+                <h3 class="text-sm font-bold text-slate-900">ربط الحساب (اختياري)</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    يمكنك ربط رمزك بـ Google أو بريدك لحفظه بشكل دائم واسترجاعه في أي وقت.
                 </p>
             </div>
 
             <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-medium py-2.5 rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-xs active:scale-98">
                 <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-                <span>ربط سريع بواسطة Google</span>
+                <span>متابعة بواسطة Google</span>
             </button>
 
             <div class="flex items-center my-2">
@@ -237,20 +236,20 @@
             </div>
 
             <form onsubmit="handleSmartEmailAuth(event)" class="space-y-2.5">
-                <input type="email" id="authEmail" required placeholder="name@example.com"
+                <input type="email" id="authEmail" required placeholder="البريد الإلكتروني"
                        class="minimal-input w-full px-3.5 py-2.5 text-xs outline-none text-right">
-                <input type="password" id="authPassword" required minlength="6" placeholder="••••••••"
+                <input type="password" id="authPassword" required minlength="6" placeholder="كلمة المرور"
                        class="minimal-input w-full px-3.5 py-2.5 text-xs outline-none text-right">
                 
                 <button type="submit" id="smartAuthBtn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
-                    تأكيد وحفظ الرمز
+                    دخول / حفظ
                 </button>
             </form>
             <p id="authErrorMsg" class="text-[10px] text-center text-rose-500 hidden font-medium"></p>
         </div>
     </div>
 
-    <!-- Firebase Script & Individual Streak Logic -->
+    <!-- Firebase Script Logic -->
     <script>
         const firebaseConfig = {
           apiKey: "AIzaSyCZLJ3VX05H05lTFWt3obbqVK71_jgaffs",
@@ -271,7 +270,6 @@
 
         let currentUser = null;
         let userHandle = localStorage.getItem('feely_user_handle') || null;
-        let pendingHandleToSave = null;
         let activeTab = 'incoming';
         
         let incomingPulses = [];
@@ -286,12 +284,17 @@
                 checkTargetStreak(userParam.toUpperCase());
             }
 
+            // استعادة الرمز المحفوظ في الجهاز مسبقاً
+            if (userHandle) {
+                setHandleLockedState(userHandle);
+                listenForIncomingPulses(userHandle);
+            }
+
             updateOrb(75);
             updateBellUI();
             renderPulsesList();
         });
 
-        // ================= INDIVIDUAL STREAK LOGIC =================
         function getPairKey(target) {
             return `feely_streak_target_${target.toUpperCase()}`;
         }
@@ -311,7 +314,7 @@
 
             let currentStreak = data.streak;
             if (data.lastDate && data.lastDate !== today && data.lastDate !== yesterday) {
-                currentStreak = 0; // انقطع الستريك
+                currentStreak = 0;
             }
 
             badge.textContent = `❤️ ستريك: ${currentStreak} أيام`;
@@ -330,7 +333,7 @@
             if (data.lastDate === yesterday) {
                 newStreak += 1;
             } else if (data.lastDate === today) {
-                // تم الإرسال اليوم بالفعل مسبقاً
+                // Sent today
             } else {
                 newStreak = 1;
             }
@@ -338,7 +341,6 @@
             localStorage.setItem(pairKey, JSON.stringify({ streak: newStreak, lastDate: today }));
             checkTargetStreak(target);
         }
-        // ===========================================================
 
         function timeAgo(ts) {
             const s = Math.floor((Date.now() - ts) / 1000);
@@ -362,47 +364,38 @@
             if (navigator.vibrate) navigator.vibrate(10);
         }
 
+        // ================= AUTH LOGIC (اختياري) =================
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
                 document.getElementById('openAuthModalBtn').classList.add('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
+                document.getElementById('userAccountSubtitle').textContent = user.email || 'متصل بحساب Google';
                 closeAuthModal();
 
-                if (pendingHandleToSave) {
-                    commitHandleRegistration(pendingHandleToSave);
-                    pendingHandleToSave = null;
-                } else {
-                    db.ref('users/' + user.uid + '/handle').once('value', snapshot => {
-                        if (snapshot.exists()) {
-                            const savedHandle = snapshot.val();
-                            localStorage.setItem('feely_user_handle', savedHandle);
-                            userHandle = savedHandle;
-                            setHandleLockedState(userHandle);
-                            listenForIncomingPulses(userHandle);
-                            initPushNotifications(userHandle);
-                        } else {
-                            setHandleEditableState();
-                        }
-                    });
-                }
+                // إذا كان لدى المستخدم رمز مسجل بحسابه، يتم جلبه
+                db.ref('users/' + user.uid + '/handle').once('value', snapshot => {
+                    if (snapshot.exists()) {
+                        const savedHandle = snapshot.val();
+                        userHandle = savedHandle;
+                        localStorage.setItem('feely_user_handle', userHandle);
+                        setHandleLockedState(userHandle);
+                        listenForIncomingPulses(userHandle);
+                        initPushNotifications(userHandle);
+                    } else if (userHandle) {
+                        // ربط الرمز الحالي بالحساب
+                        db.ref('users/' + user.uid + '/handle').set(userHandle);
+                    }
+                });
             } else {
                 currentUser = null;
-                userHandle = null;
-                localStorage.removeItem('feely_user_handle');
                 document.getElementById('openAuthModalBtn').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.add('hidden');
-                setHandleEditableState();
-                renderPulsesList();
+                document.getElementById('userAccountSubtitle').textContent = 'كل المشاعر التي وصلت لرمزك';
             }
         });
 
-        function openAuthModal(title, subtitle) { 
-            if (title) document.getElementById('authModalTitle').textContent = title;
-            if (subtitle) document.getElementById('authModalSubtitle').textContent = subtitle;
-            document.getElementById('authModal').classList.remove('hidden'); 
-        }
-
+        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
         function closeAuthModal() { 
             document.getElementById('authModal').classList.add('hidden');
             document.getElementById('authErrorMsg').classList.add('hidden');
@@ -422,36 +415,28 @@
             
             errBox.classList.add('hidden');
             btn.disabled = true;
-            btn.textContent = "جاري الحفظ والربط...";
+            btn.textContent = "جاري التحقق...";
 
             auth.signInWithEmailAndPassword(email, password)
                 .then(() => {
                     btn.disabled = false;
-                    btn.textContent = "تأكيد وحفظ الرمز";
+                    btn.textContent = "دخول / حفظ";
                 })
                 .catch(err => {
                     if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
                         auth.createUserWithEmailAndPassword(email, password)
                             .then(() => {
                                 btn.disabled = false;
-                                btn.textContent = "تأكيد وحفظ الرمز";
+                                btn.textContent = "دخول / حفظ";
                             })
                             .catch(signUpErr => {
                                 btn.disabled = false;
-                                btn.textContent = "تأكيد وحفظ الرمز";
-                                if (signUpErr.code === 'auth/email-already-in-use') {
-                                    showAuthError("كلمة المرور غير صحيحة لهذا البريد");
-                                } else {
-                                    showAuthError("خطأ: " + signUpErr.message);
-                                }
+                                btn.textContent = "دخول / حفظ";
+                                showAuthError(signUpErr.message);
                             });
-                    } else if (err.code === 'auth/wrong-password') {
-                        btn.disabled = false;
-                        btn.textContent = "تأكيد وحفظ الرمز";
-                        showAuthError("كلمة المرور غير صحيحة لهذا البريد");
                     } else {
                         btn.disabled = false;
-                        btn.textContent = "تأكيد وحفظ الرمز";
+                        btn.textContent = "دخول / حفظ";
                         showAuthError(err.message);
                     }
                 });
@@ -465,11 +450,12 @@
 
         function logout() { 
             auth.signOut().then(() => {
-                alert("تم تسجيل الخروج بنجاح");
+                alert("تم تسجيل الخروج");
                 location.reload();
             }); 
         }
 
+        // ================= HANDLE REGISTRATION (مباشر واختياري بالكامل) =================
         function registerHandle() {
             const handle = document.getElementById('usernameInput').value.trim().toUpperCase();
             const alertBox = document.getElementById('handleStatusAlert');
@@ -481,44 +467,33 @@
                 return;
             }
 
-            if (handle !== 'A' && handle.length < 5) {
-                alertBox.textContent = "رمز الاستقبال يجب ألا يقل عن 5 خانات";
+            if (handle.length < 3) {
+                alertBox.textContent = "رمز الاستقبال يجب ألا يقل عن 3 خانات";
                 alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
                 return;
             }
 
-            db.ref('handles/' + handle).once('value', snapshot => {
-                const ownerUid = snapshot.val();
-                
-                if (snapshot.exists() && (!currentUser || ownerUid !== currentUser.uid)) {
-                    alertBox.textContent = "هذا الرمز مسجل مسبقاً، اختر رمزاً آخر";
-                    alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
-                } else {
-                    alertBox.className = "hidden";
-                    
-                    if (currentUser) {
-                        commitHandleRegistration(handle);
-                    } else {
-                        pendingHandleToSave = handle;
-                        openAuthModal(
-                            `احفظ الرمز (${handle}) 🎯`, 
-                            `الرمز متاح الآن! اربطه بحسابك لحفظه وحماية نبضاتك من الضياع عند مسح المتصفح.`
-                        );
-                    }
+            alertBox.className = "hidden";
+
+            // حفظ مباشر وفوري في Firebase handles/ حتى يتعرف عليه أي شخص يرسل له
+            const ownerIdentifier = currentUser ? currentUser.uid : "active_guest";
+            
+            db.ref('handles/' + handle).set(ownerIdentifier).then(() => {
+                userHandle = handle;
+                localStorage.setItem('feely_user_handle', handle);
+
+                if (currentUser) {
+                    db.ref('users/' + currentUser.uid).set({ handle: handle, email: currentUser.email });
                 }
+
+                setHandleLockedState(userHandle);
+                listenForIncomingPulses(userHandle);
+                initPushNotifications(userHandle);
+                alert(`تم تفعيل الرمز (${handle}) بنجاح! جاهز لاستقبال النبضات الآن 💖`);
+            }).catch(err => {
+                alertBox.textContent = "خطأ في الاتصال بقاعدة البيانات: " + err.message;
+                alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
             });
-        }
-
-        function commitHandleRegistration(handle) {
-            localStorage.setItem('feely_user_handle', handle);
-            userHandle = handle;
-
-            db.ref('handles/' + handle).set(currentUser.uid);
-            db.ref('users/' + currentUser.uid).set({ handle: handle, email: currentUser.email || 'Google Account' });
-
-            setHandleLockedState(userHandle);
-            listenForIncomingPulses(userHandle);
-            initPushNotifications(userHandle);
         }
 
         function setHandleLockedState(handle) {
@@ -534,21 +509,6 @@
             btn.className = "w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 rounded-2xl text-xs transition border border-slate-200 flex items-center justify-center gap-1";
 
             if (shareBtn) shareBtn.classList.remove('hidden');
-        }
-
-        function setHandleEditableState() {
-            const input = document.getElementById('usernameInput');
-            const btn = document.getElementById('handleActionBtn');
-            const shareBtn = document.getElementById('shareLinkBtn');
-
-            input.value = '';
-            input.disabled = false;
-            
-            btn.textContent = "حفظ الرمز";
-            btn.onclick = registerHandle;
-            btn.className = "w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-2xl text-xs shadow-md transition active:scale-95";
-
-            if (shareBtn) shareBtn.classList.add('hidden');
         }
 
         function getMyShareableLink() { return window.location.origin + window.location.pathname + '?u=' + userHandle; }
@@ -591,7 +551,7 @@
             if (!targetHandle || targetHandle.length < 3) return alert('يرجى إدخال رمز مستلم صحيح');
 
             db.ref('handles/' + targetHandle).once('value', snapshot => {
-                if (!snapshot.exists()) return alert('رمز المستلم غير موجود، تأكد من صحة الرمز');
+                if (!snapshot.exists()) return alert('رمز المستلم غير موجود، تأكد أن المستلم قام بالضغط على "حفظ الرمز وتفعيله" في جهازه');
 
                 const pulseData = { 
                     target: targetHandle, 
@@ -604,7 +564,7 @@
                 db.ref('pulses/' + targetHandle).push(pulseData).then(() => {
                     sentPulses.unshift(pulseData);
                     localStorage.setItem('feely_sent_pulses', JSON.stringify(sentPulses));
-                    recordTargetStreak(targetHandle); // زيادة ستريك هذا الشخص تحديداً
+                    recordTargetStreak(targetHandle);
                     alert(`تم إرسال نبضة الحب إلى (${targetHandle}) بنجاح! 💕`);
                     document.getElementById('loveNote').value = '';
                     if (activeTab === 'sent') renderPulsesList();
@@ -622,7 +582,6 @@
                 }
                 isFirstPulseLoad = false;
                 
-                // تحديث عداد القلوب الإجمالي المستلمة
                 const countBadge = document.getElementById('totalHeartsReceivedBadge');
                 if (countBadge) countBadge.textContent = `${incomingPulses.length} ❤️`;
 
@@ -686,7 +645,7 @@
 
             if (currentData.length === 0) {
                 const emptyText = activeTab === 'incoming' 
-                    ? (userHandle ? 'لا توجد نبضات واصلة حتى الآن' : 'سجّل الدخول لمشاهدة النبضات الواردة')
+                    ? (userHandle ? 'لا توجد نبضات واصلة حتى الآن' : 'احفظ رمزك أعلاه لمشاهدة النبضات الواردة')
                     : 'لم ترسل أي نبضة بعد — ابدأ بالتعبير عن مشاعرك!';
                 list.innerHTML = `
                     <p class="text-center text-xs text-slate-400 py-6 font-medium">${emptyText}</p>
@@ -699,7 +658,6 @@
                 const isIncoming = activeTab === 'incoming';
                 const targetOrSender = isIncoming ? item.sender : item.target;
 
-                // قراءة الستريك الخاص بهذا الشخص
                 const pairData = JSON.parse(localStorage.getItem(getPairKey(targetOrSender)) || '{"streak": 0}');
                 const streakBadge = pairData.streak > 0 
                     ? `<span class="text-[10px] bg-rose-50 border border-rose-100 text-rose-500 font-black px-2 py-0.5 rounded-full">❤️ ${pairData.streak}</span>` 
