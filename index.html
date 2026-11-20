@@ -248,4 +248,729 @@
             <button onclick="closeAuthModal()" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
             
             <div class="text-center space-y-1.5">
-                <div class="w-12
+                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 text-xl flex items-center justify-center mx-auto mb-1 border border-rose-100">
+                    🛡️
+                </div>
+                <h3 class="text-sm font-bold text-slate-900">ربط الحساب (اختياري)</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    يمكنك ربط رمزك بـ Google أو بريدك لحفظه بشكل دائم واسترجاعه من أي جهاز.
+                </p>
+            </div>
+
+            <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-medium py-2.5 rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-xs active:scale-98">
+                <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                <span>متابعة بواسطة Google</span>
+            </button>
+
+            <div class="flex items-center my-2">
+                <div class="flex-grow border-t border-slate-100"></div>
+                <span class="px-3 text-[10px] text-slate-400">أو بالبريد الإلكتروني</span>
+                <div class="flex-grow border-t border-slate-100"></div>
+            </div>
+
+            <form onsubmit="handleSmartEmailAuth(event)" class="space-y-2.5">
+                <input type="email" id="authEmail" required placeholder="البريد الإلكتروني"
+                       class="minimal-input w-full px-3.5 py-2.5 text-xs outline-none text-right">
+                <input type="password" id="authPassword" required minlength="6" placeholder="كلمة المرور"
+                       class="minimal-input w-full px-3.5 py-2.5 text-xs outline-none text-right">
+                
+                <button type="submit" id="smartAuthBtn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+                    دخول / حفظ
+                </button>
+            </form>
+            <p id="authErrorMsg" class="text-[10px] text-center text-rose-500 hidden font-medium"></p>
+        </div>
+    </div>
+
+    <!-- Firebase & Interactive Effects Script -->
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyCZLJ3VX05H05lTFWt3obbqVK71_jgaffs",
+          authDomain: "feely-813ca.firebaseapp.com",
+          databaseURL: "https://feely-813ca-default-rtdb.firebaseio.com",
+          projectId: "feely-813ca",
+          storageBucket: "feely-813ca.firebasestorage.app",
+          messagingSenderId: "945704178477",
+          appId: "1:945704178477:web:7ec595932e9e56699539a4",
+          measurementId: "G-N8JF3818SX"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const auth = firebase.auth();
+        let messaging = null;
+        try { messaging = firebase.messaging(); } catch (e) {}
+
+        let currentUser = null;
+        let userHandle = localStorage.getItem('feely_user_handle') || null;
+        let activeTab = 'incoming';
+        let isSoundEnabled = localStorage.getItem('feely_sound_enabled') !== 'false';
+        
+        let incomingPulses = [];
+        let sentPulses = JSON.parse(localStorage.getItem('feely_sent_pulses') || '[]');
+        let isFirstPulseLoad = true;
+        let activeStreaksCache = {};
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userParam = urlParams.get('u');
+            if (userParam) {
+                selectContactRecipient(userParam.toUpperCase());
+            }
+
+            updateSoundUI();
+            updateOrb(75);
+            updateBellUI();
+            renderPulsesList();
+            renderRecentContactsBar();
+        });
+
+        // ================= INTERACTIVE EFFECTS (HEARTS + HEARTBEAT SOUND) =================
+        function updateSoundUI() {
+            const icon = document.getElementById('soundIcon');
+            if (icon) icon.textContent = isSoundEnabled ? '🔊' : '🔇';
+        }
+
+        function toggleSoundEffect() {
+            isSoundEnabled = !isSoundEnabled;
+            localStorage.setItem('feely_sound_enabled', isSoundEnabled);
+            updateSoundUI();
+            if (isSoundEnabled) playHeartbeatSound();
+        }
+
+        function playHeartbeatSound() {
+            if (!isSoundEnabled) return;
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioCtx();
+
+                const beat = (delay, freq, duration) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+                    osc.frequency.exponentialRampToValueAtTime(35, ctx.currentTime + delay + duration);
+
+                    gain.gain.setValueAtTime(0.001, ctx.currentTime + delay);
+                    gain.gain.exponentialRampToValueAtTime(0.32, ctx.currentTime + delay + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime + delay);
+                    osc.stop(ctx.currentTime + delay + duration + 0.02);
+                };
+
+                // نغمة دقة قلب دافئة (Lub - Dub)
+                beat(0, 125, 0.16);
+                beat(0.20, 105, 0.22);
+            } catch (e) {}
+        }
+
+        function triggerFloatingHearts(count = 16) {
+            const heartEmojis = ['❤️', '💖', '💕', '💗', '💓', '💘'];
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('span');
+                    heart.className = 'floating-heart';
+                    heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                    
+                    const leftPos = Math.random() * 90 + 5; // 5% to 95%
+                    const size = Math.random() * 18 + 18; // 18px to 36px
+                    const duration = Math.random() * 1.4 + 1.8; // 1.8s to 3.2s
+                    const rotation = (Math.random() * 50 - 25) + 'deg';
+
+                    heart.style.left = leftPos + 'vw';
+                    heart.style.fontSize = size + 'px';
+                    heart.style.setProperty('--dur', duration + 's');
+                    heart.style.setProperty('--rot', rotation);
+
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), duration * 1000 + 100);
+                }, i * 55);
+            }
+        }
+
+        // ================= ANONYMOUS & FULL AUTH LOGIC =================
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+
+                if (!user.isAnonymous) {
+                    document.getElementById('openAuthModalBtn').classList.add('hidden');
+                    document.getElementById('logoutBtn').classList.remove('hidden');
+                    closeAuthModal();
+                } else {
+                    document.getElementById('openAuthModalBtn').classList.remove('hidden');
+                    document.getElementById('logoutBtn').classList.add('hidden');
+                }
+
+                db.ref('users/' + user.uid + '/handle').once('value', snapshot => {
+                    if (snapshot.exists()) {
+                        const savedHandle = snapshot.val();
+                        userHandle = savedHandle;
+                        localStorage.setItem('feely_user_handle', userHandle);
+                        setHandleLockedState(userHandle);
+                        listenForIncomingPulses(userHandle);
+                        initPushNotifications(userHandle);
+                        renderRecentContactsBar();
+                    } else if (userHandle) {
+                        db.ref('handles/' + userHandle).once('value', hSnap => {
+                            if (hSnap.exists() && hSnap.val() === user.uid) {
+                                db.ref('users/' + user.uid + '/handle').set(userHandle);
+                                setHandleLockedState(userHandle);
+                                listenForIncomingPulses(userHandle);
+                                initPushNotifications(userHandle);
+                                renderRecentContactsBar();
+                            } else {
+                                localStorage.removeItem('feely_user_handle');
+                                userHandle = null;
+                            }
+                        });
+                    }
+                });
+            } else {
+                auth.signInAnonymously().catch(err => console.error("Anonymous auth error:", err));
+            }
+        });
+
+        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
+        function closeAuthModal() { 
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('authErrorMsg').classList.add('hidden');
+        }
+
+        function loginWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            if (currentUser && currentUser.isAnonymous) {
+                currentUser.linkWithPopup(provider)
+                    .then((result) => {
+                        if (userHandle) {
+                            db.ref('users/' + result.user.uid).update({ handle: userHandle, email: result.user.email });
+                        }
+                    })
+                    .catch(err => {
+                        if (err.code === 'auth/credential-already-in-use') {
+                            auth.signInWithCredential(err.credential).catch(e => showAuthError(e.message));
+                        } else {
+                            showAuthError(err.message);
+                        }
+                    });
+            } else {
+                auth.signInWithPopup(provider).catch(err => showAuthError(err.message));
+            }
+        }
+
+        function handleSmartEmailAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value;
+            const btn = document.getElementById('smartAuthBtn');
+            const errBox = document.getElementById('authErrorMsg');
+            
+            errBox.classList.add('hidden');
+            btn.disabled = true;
+            btn.textContent = "جاري التحقق...";
+
+            const credential = firebase.auth.EmailAuthProvider.credential(email, password);
+
+            if (currentUser && currentUser.isAnonymous) {
+                currentUser.linkWithCredential(credential)
+                    .then((result) => {
+                        if (userHandle) {
+                            db.ref('users/' + result.user.uid).update({ handle: userHandle, email: email });
+                        }
+                        btn.disabled = false;
+                        btn.textContent = "دخول / حفظ";
+                    })
+                    .catch(err => {
+                        if (err.code === 'auth/email-already-in-use' || err.code === 'auth/credential-already-in-use') {
+                            auth.signInWithEmailAndPassword(email, password)
+                                .then(() => {
+                                    btn.disabled = false;
+                                    btn.textContent = "دخول / حفظ";
+                                })
+                                .catch(signInErr => {
+                                    btn.disabled = false;
+                                    btn.textContent = "دخول / حفظ";
+                                    showAuthError(signInErr.message);
+                                });
+                        } else {
+                            btn.disabled = false;
+                            btn.textContent = "دخول / حفظ";
+                            showAuthError(err.message);
+                        }
+                    });
+            } else {
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(() => {
+                        btn.disabled = false;
+                        btn.textContent = "دخول / حفظ";
+                    })
+                    .catch(err => {
+                        btn.disabled = false;
+                        btn.textContent = "دخول / حفظ";
+                        showAuthError(err.message);
+                    });
+            }
+        }
+
+        function showAuthError(msg) {
+            const errBox = document.getElementById('authErrorMsg');
+            errBox.textContent = msg;
+            errBox.classList.remove('hidden');
+        }
+
+        function logout() { 
+            auth.signOut().then(() => {
+                localStorage.removeItem('feely_user_handle');
+                alert("تم تسجيل الخروج");
+                location.reload();
+            }); 
+        }
+
+        // ================= FIREBASE CLOUD STREAK LOGIC =================
+        function getFirebasePairKey(handle1, handle2) {
+            if (!handle1 || !handle2) return null;
+            const h1 = handle1.trim().toUpperCase();
+            const h2 = handle2.trim().toUpperCase();
+            return [h1, h2].sort().join('_');
+        }
+
+        function checkTargetStreak(target, callback) {
+            const trimmedTarget = target.trim().toUpperCase();
+            const badge = document.getElementById('targetStreakIndicator');
+            
+            if (trimmedTarget.length < 1 || !userHandle || !currentUser) {
+                badge.classList.add('hidden');
+                if (callback) callback(0);
+                return;
+            }
+
+            const pairKey = getFirebasePairKey(userHandle, trimmedTarget);
+            if (!pairKey) return;
+
+            db.ref('streaks/' + pairKey).once('value', snapshot => {
+                const data = snapshot.val() || { streak: 0, lastDate: "" };
+                const yesterday = new Date(Date.now() - 86400000).toDateString();
+                const today = new Date().toDateString();
+
+                let currentStreak = data.streak || 0;
+                if (data.lastDate && data.lastDate !== today && data.lastDate !== yesterday) {
+                    currentStreak = 0;
+                }
+
+                activeStreaksCache[trimmedTarget] = currentStreak;
+                badge.textContent = `❤️ ستريك: ${currentStreak} أيام`;
+                badge.classList.remove('hidden');
+                if (callback) callback(currentStreak);
+            });
+        }
+
+        function recordTargetStreakInCloud(senderHandle, targetHandle) {
+            const pairKey = getFirebasePairKey(senderHandle, targetHandle);
+            if (!pairKey) return;
+
+            db.ref('streaks/' + pairKey).once('value', snapshot => {
+                const data = snapshot.val() || { streak: 0, lastDate: "" };
+                const today = new Date().toDateString();
+                const yesterday = new Date(Date.now() - 86400000).toDateString();
+
+                let newStreak = data.streak || 0;
+                if (data.lastDate === yesterday) {
+                    newStreak += 1;
+                } else if (data.lastDate === today) {
+                    newStreak = newStreak === 0 ? 1 : newStreak;
+                } else {
+                    newStreak = 1;
+                }
+
+                db.ref('streaks/' + pairKey).set({
+                    streak: newStreak,
+                    lastDate: today,
+                    updatedAt: Date.now(),
+                    pair: [senderHandle, targetHandle]
+                }).then(() => {
+                    activeStreaksCache[targetHandle] = newStreak;
+                    checkTargetStreak(targetHandle);
+                    renderPulsesList();
+                    renderRecentContactsBar();
+                });
+            });
+        }
+
+        // ================= RECENT CONTACTS / QUICK SELECT =================
+        function selectContactRecipient(handle) {
+            const input = document.getElementById('targetIdInput');
+            input.value = handle.toUpperCase();
+            checkTargetStreak(handle);
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function renderRecentContactsBar() {
+            const container = document.getElementById('recentContactsSection');
+            const list = document.getElementById('recentContactsList');
+            if (!container || !list) return;
+
+            const uniqueRecipients = [...new Set(sentPulses.map(p => p.target).filter(Boolean))];
+
+            if (uniqueRecipients.length === 0) {
+                container.classList.add('hidden');
+                return;
+            }
+
+            container.classList.remove('hidden');
+            list.innerHTML = '';
+
+            uniqueRecipients.forEach(handle => {
+                const streakVal = activeStreaksCache[handle] !== undefined ? activeStreaksCache[handle] : 0;
+                
+                const chip = document.createElement('button');
+                chip.type = 'button';
+                chip.onclick = () => selectContactRecipient(handle);
+                chip.className = "flex items-center gap-2 bg-[#fbf1f2] hover:bg-[#f6e5e7] border border-rose-100/90 text-slate-800 px-3.5 py-2 rounded-2xl transition active:scale-95 shrink-0 shadow-2xs";
+                chip.innerHTML = `
+                    <span class="font-mono text-xs font-bold uppercase">${handle}</span>
+                    <span class="text-[10px] font-black text-rose-500 bg-white/90 px-2 py-0.5 rounded-full border border-rose-200/50 flex items-center gap-0.5">
+                        ❤️ ${streakVal}
+                    </span>
+                `;
+                list.appendChild(chip);
+
+                if (userHandle && activeStreaksCache[handle] === undefined) {
+                    checkTargetStreak(handle, (val) => {
+                        chip.querySelector('span:last-child').textContent = `❤️ ${val}`;
+                    });
+                }
+            });
+        }
+
+        function timeAgo(ts) {
+            const s = Math.floor((Date.now() - ts) / 1000);
+            if (s < 60) return 'الآن';
+            const m = Math.floor(s / 60);
+            if (m < 60) return `قبل ${m} د`;
+            const h = Math.floor(m / 60);
+            if (h < 24) return `قبل ${h} س`;
+            return new Date(ts).toLocaleDateString('ar-SA');
+        }
+
+        function updateOrb(val) {
+            const intensity = Number(val);
+            document.getElementById('rangeDisplay').textContent = intensity + '%';
+
+            let moodText = 'حب خفيف';
+            if (intensity > 70) moodText = 'حب كبير';
+            else if (intensity > 40) moodText = 'اهتمام وود';
+            
+            document.getElementById('moodLabel').textContent = moodText;
+            if (navigator.vibrate) navigator.vibrate(10);
+        }
+
+        // Handle Registration
+        function registerHandle() {
+            const handle = document.getElementById('usernameInput').value.trim().toUpperCase();
+            const alertBox = document.getElementById('handleStatusAlert');
+            
+            if (!currentUser) {
+                alertBox.textContent = "جاري تهيئة الاتصال الآمن، حاول بعد لحظة...";
+                alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
+                return;
+            }
+
+            const validRegex = /^[a-zA-Z0-9_]+$/;
+            if (!validRegex.test(handle)) {
+                alertBox.textContent = "يُسمح فقط بالحروف الإنجليزية، الأرقام والشرطة السفلية (_)";
+                alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
+                return;
+            }
+
+            if (handle.length < 1) {
+                alertBox.textContent = "يرجى إدخال حرف واحد على الأقل للرمز";
+                alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
+                return;
+            }
+
+            alertBox.className = "hidden";
+            
+            db.ref('handles/' + handle).set(currentUser.uid).then(() => {
+                userHandle = handle;
+                localStorage.setItem('feely_user_handle', handle);
+
+                db.ref('users/' + currentUser.uid + '/handle').set(handle);
+
+                setHandleLockedState(userHandle);
+                listenForIncomingPulses(userHandle);
+                initPushNotifications(userHandle);
+                renderRecentContactsBar();
+                triggerFloatingHearts(14);
+                playHeartbeatSound();
+                alert(`تم تفعيل الرمز (${handle}) وتأمينه بنجاح! 💖`);
+            }).catch(err => {
+                if (err.code === 'PERMISSION_DENIED') {
+                    alertBox.textContent = "هذا الرمز محجوز لشخص آخر، اختر رمزاً مختلفاً";
+                } else {
+                    alertBox.textContent = "خطأ في الاتصال: " + err.message;
+                }
+                alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
+            });
+        }
+
+        function setHandleLockedState(handle) {
+            const input = document.getElementById('usernameInput');
+            const btn = document.getElementById('handleActionBtn');
+            
+            input.value = handle;
+            input.disabled = true;
+            
+            btn.innerHTML = '<span>مشاركة رابطك الخاص</span> 📲';
+            btn.onclick = shareMyLink;
+            btn.className = "w-full bg-[#f4a2ab] hover:bg-[#f2919c] text-white font-bold py-3 rounded-2xl text-xs shadow-md transition active:scale-95 flex items-center justify-center gap-1.5";
+        }
+
+        function getMyShareableLink() { return window.location.origin + window.location.pathname + '?u=' + userHandle; }
+
+        function copyMyLink() {
+            if (!userHandle) {
+                return alert("يرجى كتابة رمز وتفعيله أولاً لنسخ رابطك!");
+            }
+            const link = getMyShareableLink();
+            navigator.clipboard.writeText(link);
+            alert("تم نسخ رابطك بنجاح! 📋\n" + link);
+        }
+
+        function shareMyLink() {
+            const link = getMyShareableLink();
+            if (navigator.share) {
+                navigator.share({ title: 'Feely - شاركني نبضات الحب 💖', text: 'أرسل لي نبضة حب عبر هذا الرابط:', url: link }).catch(() => {});
+            } else { copyMyLink(); }
+        }
+
+        function switchPulseTab(tab) {
+            activeTab = tab;
+            const incomingBtn = document.getElementById('tabIncomingBtn');
+            const sentBtn = document.getElementById('tabSentBtn');
+
+            if (tab === 'incoming') {
+                incomingBtn.className = "flex-1 py-2.5 rounded-full text-xs font-bold transition bg-white text-slate-900 shadow-xs";
+                sentBtn.className = "flex-1 py-2.5 rounded-full text-xs font-bold transition text-slate-500 hover:text-slate-800";
+            } else {
+                sentBtn.className = "flex-1 py-2.5 rounded-full text-xs font-bold transition bg-white text-slate-900 shadow-xs";
+                incomingBtn.className = "flex-1 py-2.5 rounded-full text-xs font-bold transition text-slate-500 hover:text-slate-800";
+            }
+            renderPulsesList();
+        }
+
+        function executePulseSend(targetHandle, senderName, score, note, isQuickReply = false) {
+            if (!currentUser) return alert('يرجى الانتظار لحظة لتأمين الاتصال...');
+            const cleanTarget = targetHandle.trim().toUpperCase();
+
+            if (!cleanTarget || cleanTarget.length < 1) return alert('يرجى إدخال رمز مستلم صحيح');
+
+            db.ref('handles/' + cleanTarget).once('value', snapshot => {
+                if (!snapshot.exists()) return alert('رمز المستلم غير موجود أو لم يقم بتفعيل رمزه بعد');
+
+                const pulseData = { 
+                    target: cleanTarget, 
+                    sender: senderName, 
+                    senderHandle: userHandle || senderName,
+                    score: score, 
+                    note: note, 
+                    timestamp: Date.now() 
+                };
+
+                db.ref('pulses/' + cleanTarget).push(pulseData).then(() => {
+                    sentPulses.unshift(pulseData);
+                    localStorage.setItem('feely_sent_pulses', JSON.stringify(sentPulses));
+                    
+                    if (userHandle) {
+                        recordTargetStreakInCloud(userHandle, cleanTarget);
+                    }
+
+                    // تأثيرات الإرسال التفاعلية
+                    triggerFloatingHearts(isQuickReply ? 12 : 18);
+                    playHeartbeatSound();
+                    if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
+
+                    renderRecentContactsBar();
+                    if (!isQuickReply) {
+                        document.getElementById('loveNote').value = '';
+                        alert(`تم إرسال نبضة الحب إلى (${cleanTarget}) بنجاح! 💕`);
+                    }
+                    if (activeTab === 'sent') renderPulsesList();
+                }).catch(err => alert('حدث خطأ أثناء الإرسال: ' + err.message));
+            });
+        }
+
+        function sendLovePulse(e) {
+            e.preventDefault();
+            const targetHandle = document.getElementById('targetIdInput').value.trim().toUpperCase();
+            const senderName = document.getElementById('senderNameInput').value.trim() || userHandle || 'مجهول';
+            const score = document.getElementById('loveSlider').value;
+            const note = document.getElementById('loveNote').value.trim();
+
+            executePulseSend(targetHandle, senderName, score, note, false);
+        }
+
+        // ميزة الرد السريع بنقرة واحدة
+        function quickReplyPulse(e, recipientHandle, btnElement) {
+            e.stopPropagation();
+            const cleanHandle = recipientHandle.trim().toUpperCase();
+            document.getElementById('targetIdInput').value = cleanHandle;
+            checkTargetStreak(cleanHandle);
+
+            const senderName = document.getElementById('senderNameInput').value.trim() || userHandle || 'مجهول';
+            
+            const originalText = btnElement.innerHTML;
+            btnElement.disabled = true;
+            btnElement.innerHTML = 'تم الرد 💕';
+            btnElement.classList.add('bg-rose-500', 'text-white', 'border-rose-500');
+
+            executePulseSend(cleanHandle, senderName, 100, 'رد سريع بنبضة حب ❤️', true);
+
+            setTimeout(() => {
+                btnElement.disabled = false;
+                btnElement.innerHTML = originalText;
+                btnElement.classList.remove('bg-rose-500', 'text-white', 'border-rose-500');
+            }, 2200);
+        }
+
+        function listenForIncomingPulses(handle) {
+            db.ref('pulses/' + handle).on('value', (snapshot) => {
+                incomingPulses = [];
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach(key => incomingPulses.unshift(data[key]));
+                    if (!isFirstPulseLoad && incomingPulses.length > 0) {
+                        showLocalNotification(incomingPulses[0]);
+                        triggerFloatingHearts(20);
+                        playHeartbeatSound();
+                    }
+                }
+                isFirstPulseLoad = false;
+                
+                const countBadge = document.getElementById('totalHeartsReceivedBadge');
+                if (countBadge) countBadge.textContent = `${incomingPulses.length} ❤️ وصلك`;
+
+                if (activeTab === 'incoming') renderPulsesList();
+            });
+        }
+
+        function updateBellUI() {
+            const bellBadge = document.getElementById('bellBadge');
+            if (!("Notification" in window)) return;
+            if (Notification.permission === "granted") {
+                bellBadge.classList.remove('hidden');
+            } else {
+                bellBadge.classList.add('hidden');
+            }
+        }
+
+        function toggleNotificationPermission() {
+            if (!("Notification" in window)) return alert("المتصفح لا يدعم الإشعارات");
+            if (Notification.permission === "granted") alert("الإشعارات مفعلة بالفعل 👍");
+            else {
+                Notification.requestPermission().then((permission) => {
+                    updateBellUI();
+                    if (permission === "granted" && userHandle) {
+                        initPushNotifications(userHandle);
+                        alert("تم تفعيل الإشعارات بنجاح! 🔔");
+                    }
+                });
+            }
+        }
+
+        function initPushNotifications(handle) {
+            if ("Notification" in window && messaging) {
+                Notification.requestPermission().then((permission) => {
+                    updateBellUI();
+                    if (permission === 'granted' && 'serviceWorker' in navigator) {
+                        navigator.serviceWorker.register('/firebase-messaging-sw.js').then((registration) => {
+                            return messaging.getToken({ serviceWorkerRegistration: registration, vapidKey: 'BD8T3W-78T3W-EXAMPLE-VAPID-KEY' });
+                        }).then((currentToken) => {
+                            if (currentToken) db.ref('fcmTokens/' + handle).set(currentToken);
+                        }).catch(err => console.log('ملاحظة: يتطلب HTTPS والمفتاح الصحيح.', err));
+                    }
+                });
+            }
+        }
+
+        function showLocalNotification(pulse) {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification("نبضة جديدة 💖", {
+                    body: `من: ${pulse.sender} (${pulse.score}%)` + (pulse.note ? `\n"${pulse.note}"` : ''),
+                    icon: "https://cdn-icons-png.flaticon.com/512/2589/2589175.png"
+                });
+            }
+        }
+
+        function renderPulsesList() {
+            const list = document.getElementById('pulsesList');
+            list.innerHTML = '';
+
+            const currentData = activeTab === 'incoming' ? incomingPulses : sentPulses;
+
+            if (currentData.length === 0) {
+                const emptyText = activeTab === 'incoming' 
+                    ? (userHandle ? 'لا توجد نبضات واصلة حتى الآن' : 'احفظ رمزك أعلاه لمشاهدة النبضات الواردة')
+                    : 'لم ترسل أي نبضة بعد — ابدأ بالتعبير عن مشاعرك!';
+                list.innerHTML = `
+                    <p class="text-center text-xs text-slate-400 py-6 font-medium">${emptyText}</p>
+                `;
+                return;
+            }
+
+            currentData.forEach(item => {
+                const formattedTime = timeAgo(item.timestamp);
+                const isIncoming = activeTab === 'incoming';
+                const targetOrSender = isIncoming ? (item.senderHandle || item.sender) : item.target;
+
+                const currentStreakVal = activeStreaksCache[targetOrSender] || 0;
+                const streakBadge = currentStreakVal > 0 
+                    ? `<span class="text-[10px] bg-rose-50 border border-rose-100 text-rose-500 font-black px-2 py-0.5 rounded-full">❤️ ${currentStreakVal}</span>` 
+                    : '';
+
+                const titleText = isIncoming 
+                    ? `نبضة حب من <span class="font-mono font-bold text-slate-900">${item.sender}</span>`
+                    : `نبضة حب إلى <span class="font-mono font-bold text-slate-900">${item.target}</span>`;
+
+                const quickReplyBtnHTML = isIncoming && targetOrSender !== 'مجهول'
+                    ? `<button type="button" onclick="quickReplyPulse(event, '${targetOrSender}', this)" class="mt-2 inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 bg-white hover:bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-full transition active:scale-95 shadow-2xs">
+                           <span>رد بنبضة ❤️</span>
+                       </button>`
+                    : '';
+
+                const pulseCard = document.createElement('div');
+                pulseCard.className = "flex items-start gap-3 rounded-2xl border border-rose-100 bg-[#fbf1f2]/50 p-3 hover:border-rose-300 transition text-right cursor-pointer";
+                pulseCard.onclick = () => {
+                    selectContactRecipient(targetOrSender);
+                    if (isIncoming) {
+                        triggerFloatingHearts(10);
+                        playHeartbeatSound();
+                    }
+                };
+                pulseCard.innerHTML = `
+                    <span class="grid size-9 shrink-0 place-items-center rounded-xl bg-white text-rose-500 text-base shadow-2xs">
+                        ❤️
+                    </span>
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-1.5">
+                                <span class="shrink-0 text-[10px] text-slate-400 font-medium">${formattedTime}</span>
+                                ${streakBadge}
+                            </div>
+                            <p class="truncate text-xs font-bold text-slate-800">${titleText}</p>
+                        </div>
+                        <p class="mt-0.5 truncate text-xs text-slate-500">${item.note ? `"${item.note}"` : 'بدون رسالة'}</p>
+                        ${quickReplyBtnHTML}
+                    </div>
+                    <span class="shrink-0 self-center rounded-full px-2.5 py-1 text-[11px] font-black text-white bg-[#f39fa9]">
+                        ${item.score}%
+                    </span>
+                `;
+                list.appendChild(pulseCard);
+            });
+        }
+    </script>
+</body>
+</html>
