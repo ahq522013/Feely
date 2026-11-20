@@ -68,10 +68,10 @@
             border-radius: 9999px;
         }
 
-        /* Heart Send Button Pulse Ring */
+        /* Heart Send Button & Circular Progress Ring */
         @keyframes heartHalo {
-            0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.35); }
-            70% { box-shadow: 0 0 0 16px rgba(244, 63, 94, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.28); }
+            70% { box-shadow: 0 0 0 14px rgba(244, 63, 94, 0); }
             100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
         }
         .heart-send-btn {
@@ -82,8 +82,8 @@
         }
         .heart-charging {
             animation: none !important;
-            box-shadow: 0 0 0 14px rgba(225, 29, 72, 0.18), 0 10px 25px -5px rgba(225, 29, 72, 0.35);
-            border-color: #f43f5e !important;
+            box-shadow: 0 0 0 12px rgba(225, 29, 72, 0.14), 0 12px 28px -6px rgba(225, 29, 72, 0.35);
+            transform: scale(1.04);
         }
 
         /* Floating Hearts Animation */
@@ -301,12 +301,11 @@
                 </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة (مع أيقونة المجهول على اليمين + شحن مخفف + بدون علامات مرجعية) -->
-            <section class="glass-card p-5 sm:p-6 space-y-3.5 relative">
+            <!-- بطاقة إرسال النبضة (الشحن الدائري حول زر القلب مباشرة + بدون العداد السفلي) -->
+            <section class="glass-card p-5 sm:p-6 space-y-4 relative">
                 <!-- أيقونة وضع المجهول على يمين البوكس الأساسي (مطفأة افتراضياً) -->
                 <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="إرسال كمجهول"
                         class="absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#f9eff1] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90">
-                    <!-- أيقونة قناع/مجهول حديثة -->
                     <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
                         <circle cx="12" cy="12" r="3"/>
@@ -315,8 +314,8 @@
                     <span id="anonStatusLabel" class="text-[10px] font-bold">مجهول</span>
                 </button>
 
-                <div class="text-center space-y-2 pt-2">
-                    <!-- زر القلب التفاعلي للشحن المستمر -->
+                <div class="text-center space-y-2.5 pt-2">
+                    <!-- زر القلب الدائري مع إطار الشحن الدائري حوله -->
                     <button type="button" id="mainHeartOrb"
                             onpointerdown="startHeartCharge(event)"
                             onpointerup="releaseHeartCharge(event)"
@@ -324,8 +323,28 @@
                             onpointercancel="cancelHeartCharge()"
                             oncontextmenu="return false;"
                             title="ضغطة سريعة 1% أو استمر بالضغط حتى 100%"
-                            class="heart-send-btn inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/80 border-2 border-rose-200 hover:border-rose-400 shadow-md cursor-pointer select-none transition-shadow duration-150">
-                        <svg id="dynamicHeartSvg" style="transform: scale(0.72);" class="w-12 h-12 transition-transform duration-75 drop-shadow-sm pointer-events-none" viewBox="0 0 24 24">
+                            class="heart-send-btn relative inline-flex items-center justify-center w-28 h-28 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/70 shadow-md cursor-pointer select-none transition-all duration-150">
+                        
+                        <!-- حلقة الشحن الدائرية SVG -->
+                        <svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#fb7185"/>
+                                    <stop offset="50%" stop-color="#f43f5e"/>
+                                    <stop offset="100%" stop-color="#e11d48"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- المسار الخلفي الباهت -->
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#ffe4e6" stroke-width="5.5"/>
+                            <!-- مسار التقدم الدائري (محيط الدائرة = 2 * π * 45 ≈ 282.74) -->
+                            <circle id="circularChargeRing" cx="50" cy="50" r="45" fill="none"
+                                    stroke="url(#ringGrad)" stroke-width="5.5" stroke-linecap="round"
+                                    stroke-dasharray="282.74" stroke-dashoffset="279.91"
+                                    class="transition-[stroke-dashoffset] duration-75 ease-linear"/>
+                        </svg>
+
+                        <!-- أيقونة القلب الداخلية -->
+                        <svg id="dynamicHeartSvg" style="transform: scale(0.72);" class="w-12 h-12 transition-transform duration-75 drop-shadow-sm pointer-events-none relative z-10" viewBox="0 0 24 24">
                             <defs>
                                 <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stop-color="#fb7185"/>
@@ -341,16 +360,9 @@
                         <p id="holdHintText" class="text-[10px] text-slate-400 mt-0.5">ضغطة سريعة 1% · استمر بالضغط حتى 100%</p>
                     </div>
 
-                    <!-- عرض النسبة المئوية فقط -->
+                    <!-- عرض النسبة المئوية الرقمية -->
                     <div class="inline-flex items-center justify-center bg-rose-50 px-4 py-1 rounded-full border border-rose-100">
                         <span id="rangeDisplay" class="text-xs font-black text-rose-600 tabular-nums">1%</span>
-                    </div>
-                </div>
-
-                <!-- مؤشر التقدم السلس النظيف (بدون علامات مرجعية) -->
-                <div class="bg-[#f9eff1] p-2.5 rounded-2xl border border-rose-100/80" dir="ltr">
-                    <div class="relative w-full h-2.5 bg-rose-200/60 rounded-full overflow-hidden">
-                        <div id="smoothChargeFill" style="width: 1%;" class="h-full bg-gradient-to-r from-rose-400 via-rose-500 to-pink-600 rounded-full transition-[width] duration-75 ease-linear"></div>
                     </div>
                 </div>
 
@@ -604,11 +616,14 @@
             pulseHeart: '<svg class="w-4 h-4 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'
         };
 
+        // محيط الدائرة في SVG (2 * π * 45 = 282.743)
+        const RING_CIRCUMFERENCE = 2 * Math.PI * 45;
+
         let currentLoveValue = 1;
         let chargeDelayTimer = null;
         let chargeInterval = null;
         let isChargingHeart = false;
-        let isAnonymousMode = false; // افتراضياً غير مجهول
+        let isAnonymousMode = false;
 
         let currentUser = null;
         let userHandle = localStorage.getItem('feely_user_handle') || null;
@@ -697,7 +712,7 @@
             renderRecentSearches();
         });
 
-        // ================= SMOOTH 1-TO-100 METER (SLOWER & CLEAN) =================
+        // ================= CIRCULAR RING 1-TO-100 METER =================
         function updateLoveMeterUI(val) {
             const clamped = Math.max(1, Math.min(100, Math.round(val)));
             currentLoveValue = clamped;
@@ -710,10 +725,11 @@
                 svg.style.transform = `scale(${scale.toFixed(3)})`;
             }
 
-            // تعبئة شريط التقدم المتصل بسلاسة من 1% إلى 100%
-            const fillBar = document.getElementById('smoothChargeFill');
-            if (fillBar) {
-                fillBar.style.width = clamped + '%';
+            // تحديث حلقة الشحن الدائرية حول زر القلب
+            const ring = document.getElementById('circularChargeRing');
+            if (ring) {
+                const offset = RING_CIRCUMFERENCE * (1 - clamped / 100);
+                ring.style.strokeDashoffset = offset.toFixed(2);
             }
         }
 
@@ -727,12 +743,10 @@
             if (orb) orb.classList.add('heart-charging');
             if (hint) hint.textContent = 'جاري الشحن... ارفع إصبعك للإرسال';
 
-            // يثبت على 1% عند اللمس
             let val = 1;
             updateLoveMeterUI(val);
             if (navigator.vibrate) navigator.vibrate(12);
 
-            // مهلة 320ms لسهولة اختيار 1% بضغطة سريعة دون قفز، ثم تصاعد مخفف (42ms لكل 1%)
             chargeDelayTimer = setTimeout(() => {
                 if (!isChargingHeart) return;
                 chargeInterval = setInterval(() => {
@@ -1257,7 +1271,7 @@
             });
         }
 
-        // ================= STORIES-STYLE RECENT CONTACTS BAR (بدون فتح الملف عند النقر) =================
+        // ================= STORIES-STYLE RECENT CONTACTS BAR =================
         function selectContactRecipient(handle) {
             const clean = handle.toUpperCase();
             const input = document.getElementById('targetIdInput');
