@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#fdf8f8">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Feely — نبضات الحب</title>
+    <title>Feely</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -164,26 +164,24 @@
 </head>
 <body class="text-slate-800 min-h-[100dvh] flex flex-col justify-between antialiased selection:bg-rose-100 selection:text-rose-700">
 
-    <!-- حاوية الإشعارات الموحدة في منتصف الشاشة تماماً على الجوال والكمبيوتر -->
+    <!-- حاوية الإشعارات الموحدة في منتصف الشاشة -->
     <div id="toastContainer" style="top: calc(1rem + var(--safe-top));" class="fixed inset-x-0 mx-auto z-50 pointer-events-none px-4 flex flex-col items-center justify-center w-full max-w-sm"></div>
 
-    <!-- Header العلوي الموحد -->
+    <!-- Header العلوي الموحد بأيقونات مختصرة -->
     <header class="w-full max-w-md mx-auto px-3.5 sm:px-5 pt-4 sm:pt-6 flex justify-between items-center gap-1.5">
         <div id="authStatusContainer" class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
-            <!-- زر حفظ الحساب / خروج -->
+            <!-- أيقونة حفظ الحساب / خروج -->
             <button id="openAuthModalBtn" onclick="openAuthModal()" title="حفظ الحساب"
-                    class="flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-slate-700 bg-white/95 hover:bg-white border border-rose-100 px-2.5 sm:px-3 py-2 rounded-full transition shadow-2xs active:scale-95">
-                <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 hover:bg-white text-slate-700 border border-rose-100 transition shadow-2xs active:scale-95">
+                <svg class="w-4 h-4 text-rose-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
                 </svg>
-                <span class="hidden xs:inline sm:inline">حفظ الحساب</span>
             </button>
             <button id="logoutBtn" onclick="logout()" title="خروج"
-                    class="hidden flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-2.5 sm:px-3 py-2 rounded-full transition active:scale-95">
-                <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    class="hidden grid size-8 sm:size-9 place-items-center rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 transition active:scale-95">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
                 </svg>
-                <span class="hidden xs:inline sm:inline">خروج</span>
             </button>
 
             <!-- زر النبض (الرئيسية) -->
@@ -195,7 +193,7 @@
             </button>
 
             <!-- زر عدسة البحث -->
-            <button type="button" id="navSearchBtn" onclick="switchMainView('search')" title="بحث عن صديق"
+            <button type="button" id="navSearchBtn" onclick="switchMainView('search')" title="بحث"
                     class="grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 text-slate-600 hover:text-rose-500 border border-rose-100 shadow-2xs transition-all active:scale-90">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -203,7 +201,7 @@
             </button>
 
             <!-- زر البروفايل الشخصي -->
-            <button type="button" id="navProfileBtn" onclick="switchMainView('profile')" title="ملفي الشخصي"
+            <button type="button" id="navProfileBtn" onclick="switchMainView('profile')" title="ملفي"
                     class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 text-slate-600 hover:text-rose-500 border border-rose-100 shadow-2xs transition-all active:scale-90">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
@@ -212,7 +210,7 @@
             </button>
 
             <!-- أيقونة الإشعارات -->
-            <button id="notificationBellBtn" onclick="handleBellClick()" title="إشعارات النبضات" 
+            <button id="notificationBellBtn" onclick="handleBellClick()" title="الإشعارات" 
                     class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 text-slate-600 hover:text-rose-500 transition border border-rose-100 shadow-2xs active:scale-90">
                 <svg id="bellSvgIcon" class="w-4 h-4 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
@@ -224,7 +222,7 @@
             </button>
 
             <!-- زر نغمة النبض -->
-            <button id="soundToggleBtn" onclick="toggleSoundEffect()" title="نغمة النبض" 
+            <button id="soundToggleBtn" onclick="toggleSoundEffect()" title="الصوت" 
                     class="grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 text-slate-600 hover:text-rose-500 transition border border-rose-100 shadow-2xs active:scale-90">
                 <span id="soundIcon" class="flex items-center justify-center"></span>
             </button>
@@ -232,10 +230,7 @@
 
         <!-- الشعار -->
         <div onclick="switchMainView('home')" class="flex items-center gap-2 cursor-pointer select-none group shrink-0">
-            <div class="text-left">
-                <h1 class="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-none">Feely</h1>
-                <span class="text-[8px] sm:text-[9px] font-bold text-rose-400 tracking-wider">PULSE</span>
-            </div>
+            <h1 class="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-none">Feely</h1>
             <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-2xl bg-gradient-to-tr from-rose-600 via-rose-500 to-pink-400 flex items-center justify-center text-white shadow-md shadow-rose-200 group-active:scale-95 transition">
                 <svg class="w-4 h-4 sm:w-5 sm:h-5 fill-white" viewBox="0 0 24 24">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
@@ -250,15 +245,14 @@
         <!-- ==================== VIEW 1: HOME ==================== -->
         <div id="viewHome" class="space-y-3.5">
 
-            <!-- بطاقة الهوية المصغرة في الأعلى -->
+            <!-- بطاقة الهوية المصغرة في الأعلى (قلب + عدد القلوب فقط بدون كلمة وصلك) -->
             <div onclick="switchMainView('profile')" class="glass-card px-4 py-3 flex items-center justify-between cursor-pointer hover:border-rose-300 transition active:scale-[0.99]">
-                <span class="inline-flex items-center gap-1.5 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1 rounded-full" id="miniHeartsBadge">
-                    <span>0</span>
+                <span class="inline-flex items-center gap-1.5 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1 rounded-full tabular-nums" id="miniHeartsBadge">
                     <svg class="w-3.5 h-3.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                    <span>وصلك</span>
+                    <span>0</span>
                 </span>
                 <div class="flex items-center gap-2 min-w-0">
-                    <span id="miniHandleDisplay" class="unified-field-text uppercase truncate">فعّل رمزك الآن</span>
+                    <span id="miniHandleDisplay" class="unified-field-text uppercase truncate">فعّل رمزك</span>
                     <div class="size-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
@@ -271,9 +265,9 @@
             <section id="recentContactsSection" class="glass-card p-4 space-y-3">
                 <div class="flex items-center justify-between px-1">
                     <div class="flex items-center gap-1.5">
-                        <span id="targetStreakIndicator" class="hidden inline-flex items-center gap-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200/70 px-2 py-0.5 rounded-full">
+                        <span id="targetStreakIndicator" class="hidden inline-flex items-center gap-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200/70 px-2 py-0.5 rounded-full tabular-nums">
                             <svg class="w-2.5 h-2.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                            <span>ستريك: 0</span>
+                            <span>0</span>
                         </span>
                     </div>
                     <h3 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
@@ -285,9 +279,9 @@
                 <!-- دوائر الأصدقاء -->
                 <div id="recentContactsList" class="hidden flex gap-3 overflow-x-auto pb-1 pt-1.5 px-1 hide-scrollbar"></div>
 
-                <!-- بوكس إضافة رمز المستلم (بنفس الخط والحجم واللون الموحد) -->
+                <!-- بوكس إضافة رمز المستلم -->
                 <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
-                    <button type="button" onclick="confirmAddRecipient()" title="إضافة المستلم"
+                    <button type="button" onclick="confirmAddRecipient()" title="إضافة"
                             class="size-7 rounded-xl bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-200/80 flex items-center justify-center shrink-0 transition-all active:scale-90">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -301,33 +295,29 @@
                 </div>
             </section>
 
-            <!-- بطاقة صفحة الصديق (تظهر فقط عند فتح رابط خارجي مباشر ?u=...) -->
+            <!-- بطاقة صفحة الصديق (عند فتح رابط مباشر ?u=...) -->
             <section id="friendProfileCard" class="hidden glass-card p-4 sm:p-5 relative overflow-hidden space-y-3 border-2 border-rose-300 bg-gradient-to-b from-[#fff2f4] to-white">
                 <div class="flex items-center justify-between">
-                    <button type="button" onclick="closeFriendProfile()" class="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 hover:text-slate-800 bg-white px-2.5 py-1 rounded-full border border-slate-200/80 transition active:scale-95">
-                        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <button type="button" onclick="closeFriendProfile()" class="grid size-7 place-items-center text-slate-500 hover:text-slate-800 bg-white rounded-full border border-slate-200/80 transition active:scale-95">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                         </svg>
-                        <span>إغلاق</span>
                     </button>
-                    <span class="text-xs font-black text-rose-600 inline-flex items-center gap-1.5">
-                        <span>ملف الصديق</span>
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                        </svg>
+                    <span id="friendProfileStreakText" class="inline-flex items-center gap-1 text-xs font-black text-rose-600 tabular-nums">
+                        <svg class="w-3.5 h-3.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        <span>0</span>
                     </span>
                 </div>
 
                 <div class="flex items-center justify-between gap-2 bg-white rounded-2xl px-3.5 py-3 border border-rose-100 shadow-2xs">
-                    <span class="inline-flex items-center gap-1.5 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-full shrink-0" id="friendHeartsReceivedBadge">
-                        <span>0</span>
+                    <span class="inline-flex items-center gap-1.5 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-full shrink-0 tabular-nums" id="friendHeartsReceivedBadge">
                         <svg class="w-3.5 h-3.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                        <span>وصله</span>
+                        <span>0</span>
                     </span>
 
                     <div class="flex items-center gap-2 min-w-0">
                         <span id="friendProfileHandle" class="font-mono text-xl font-black tracking-[0.22em] text-slate-900 uppercase truncate">---</span>
-                        <button type="button" onclick="copyFriendLink()" title="نسخ رابط صفحة الصديق"
+                        <button type="button" onclick="copyFriendLink()" title="نسخ"
                                 class="p-1.5 text-slate-500 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition active:scale-90 shrink-0">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -335,21 +325,13 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="flex items-center justify-between text-[11px] px-1">
-                    <span id="friendProfileStreakText" class="inline-flex items-center gap-1 font-bold text-rose-600">
-                        <svg class="w-3.5 h-3.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                        <span>ستريك مشترك: 0 أيام</span>
-                    </span>
-                    <span class="text-slate-400">اضغط مطولاً على القلب أدناه للإرسال</span>
-                </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة -->
+            <!-- بطاقة إرسال النبضة (مضغوطة بأقل قدر ممكن من الكتابة) -->
             <section class="glass-card p-5 sm:p-6 space-y-4 relative">
                 <!-- أيقونة وضع المجهول -->
-                <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="إرسال كمجهول"
-                        class="absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#f9eff1] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90">
+                <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="مجهول"
+                        class="absolute top-4 right-4 z-10 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[#f9eff1] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90">
                     <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
                         <circle cx="12" cy="12" r="3"/>
@@ -366,7 +348,6 @@
                             onpointerleave="cancelHeartCharge()"
                             onpointercancel="cancelHeartCharge()"
                             oncontextmenu="return false;"
-                            title="ضغطة سريعة 1% أو استمر بالضغط حتى 100%"
                             class="heart-send-btn relative inline-flex items-center justify-center w-28 h-28 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/70 shadow-md cursor-pointer select-none transition-all duration-150">
                         
                         <svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 100 100">
@@ -394,20 +375,16 @@
                         </svg>
                     </button>
 
+                    <!-- النسبة المئوية فقط -->
                     <div>
-                        <h2 class="text-lg font-black text-slate-900">أرسل نبضة حب</h2>
-                        <p id="holdHintText" class="text-[10px] text-slate-400 mt-0.5">ضغطة سريعة 1% · استمر بالضغط حتى 100%</p>
-                    </div>
-
-                    <div class="inline-flex items-center justify-center bg-rose-50 px-4 py-1 rounded-full border border-rose-100">
-                        <span id="rangeDisplay" class="text-xs font-black text-rose-600 tabular-nums">1%</span>
+                        <span id="rangeDisplay" class="inline-flex items-center justify-center bg-rose-50 px-4 py-1 rounded-full border border-rose-100 text-xs font-black text-rose-600 tabular-nums">1%</span>
                     </div>
                 </div>
 
-                <!-- بوكس إضافة رسالة (موحد تماماً في الخط والحجم واللون مع بوكس المستلم وملف التعريف) -->
+                <!-- بوكس إضافة رسالة -->
                 <div class="relative">
                     <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
-                        <button type="button" id="emojiPickerToggleBtn" onclick="toggleEmojiPicker()" title="إضافة إيموجي"
+                        <button type="button" id="emojiPickerToggleBtn" onclick="toggleEmojiPicker()"
                                 class="size-7 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 border border-rose-200/70 flex items-center justify-center shrink-0 transition-all active:scale-90">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
@@ -438,21 +415,13 @@
 
             <!-- صندوق النبضات -->
             <section id="pulsesFeedSection" class="glass-card p-4 sm:p-5 space-y-3.5">
-                <div class="flex items-center justify-between px-1">
-                    <span id="pulsesSectionCounter" class="text-[11px] font-bold text-slate-400">0 نبضة</span>
-                    <h3 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-                        <span>سجل النبضات</span>
-                        <span class="inline-block size-1.5 rounded-full bg-rose-500"></span>
-                    </h3>
-                </div>
-
                 <div class="bg-[#f9eff1] p-1 rounded-2xl flex gap-1 border border-rose-100/80">
                     <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-white text-slate-900 shadow-2xs inline-flex items-center justify-center gap-1.5">
                         <svg class="w-3.5 h-3.5 text-rose-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
                         </svg>
                         <span>الواردة</span>
-                        <span id="incomingTabCountBadge" class="text-[10px] bg-rose-50 text-rose-600 border border-rose-100 px-1.5 py-0.2 rounded-full font-black">0</span>
+                        <span id="incomingTabCountBadge" class="text-[10px] bg-rose-50 text-rose-600 border border-rose-100 px-1.5 py-0.2 rounded-full font-black tabular-nums">0</span>
                     </button>
                     <button id="tabSentBtn" onclick="switchPulseTab('sent')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition text-slate-500 hover:text-slate-800 inline-flex items-center justify-center gap-1.5">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
@@ -464,7 +433,7 @@
 
                 <div id="pulsesList" class="space-y-2.5 max-h-80 overflow-y-auto px-0.5 py-0.5">
                     <div class="rounded-2xl border border-dashed border-rose-200/80 bg-[#fcf7f8] py-7 px-4 text-center">
-                        <p id="authNotice" class="text-xs text-slate-400 font-medium">احفظ رمزك في صفحة البروفايل لمشاهدة النبضات الواردة</p>
+                        <p id="authNotice" class="text-xs text-slate-400 font-medium">لا توجد نبضات</p>
                     </div>
                 </div>
             </section>
@@ -473,65 +442,52 @@
         <!-- ==================== VIEW 2: SEARCH ==================== -->
         <div id="viewSearch" class="hidden space-y-4">
             <section class="glass-card p-5 sm:p-6 space-y-4">
-                <div class="text-center space-y-1">
-                    <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mx-auto border border-rose-100">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                        </svg>
-                    </div>
-                    <h2 class="text-lg font-black text-slate-900">اكتشف ملف صديق</h2>
-                    <p class="text-xs text-slate-400">ابحث برمز أي مستخدم لعرض ملفه وعدد القلوب التي وصلته</p>
-                </div>
-
                 <form onsubmit="executeFriendSearch(event)" class="space-y-2.5">
-                    <input type="text" id="searchFriendInput" required placeholder="اكتب الرمز... (مثلاً A أو LOVE)" autocapitalize="characters" autocomplete="off"
-                           oninput="handleLiveSearchInput(this.value)"
-                           class="soft-input w-full px-4 py-3.5 text-center font-mono text-lg font-black tracking-[0.25em] text-slate-900 outline-none uppercase">
-                    <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-2xl text-xs shadow-md transition active:scale-[0.98] inline-flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                        </svg>
-                        <span>بحث عن الملف</span>
-                    </button>
+                    <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
+                        <button type="submit" class="size-7 rounded-xl bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-200/80 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                        </button>
+                        <input type="text" id="searchFriendInput" required placeholder="ابحث برمز الصديق" autocapitalize="characters" autocomplete="off"
+                               oninput="handleLiveSearchInput(this.value)"
+                               class="w-full bg-transparent text-center unified-field-text tracking-wider outline-none uppercase">
+                        <span class="size-7 shrink-0"></span>
+                    </div>
                 </form>
 
                 <!-- آخر عمليات البحث -->
                 <div id="recentSearchesSection" class="hidden space-y-1.5 pt-1">
                     <div class="flex items-center justify-between">
                         <button type="button" onclick="clearRecentSearches()" class="text-[10px] text-slate-400 hover:text-rose-500">مسح</button>
-                        <span class="text-[11px] font-bold text-slate-400">عمليات بحث سابقة</span>
+                        <span class="text-[10px] font-bold text-slate-400">السابقة</span>
                     </div>
                     <div id="recentSearchesList" class="flex flex-wrap gap-1.5"></div>
                 </div>
 
-                <!-- نتيجة البحث -->
+                <!-- نتيجة البحث (قلب + العدد فقط بدون نص) -->
                 <div id="searchResultBox" class="hidden pt-2 border-t border-rose-100 space-y-3">
                     <div class="bg-gradient-to-b from-[#fff2f4] to-white rounded-3xl p-5 border border-rose-200/80 text-center space-y-3 shadow-xs">
                         <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-rose-500 to-pink-400 text-white font-mono text-xl font-black flex items-center justify-center mx-auto shadow-md shadow-rose-200" id="searchResultAvatar">
                             ?
                         </div>
-                        <div>
-                            <span class="inline-block text-[10px] font-bold text-rose-500 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-100 mb-1">
-                                ملف نشط
-                            </span>
-                            <div id="searchResultHandle" class="font-mono text-2xl font-black tracking-[0.25em] text-slate-900 uppercase break-all">---</div>
-                        </div>
+                        <div id="searchResultHandle" class="font-mono text-2xl font-black tracking-[0.25em] text-slate-900 uppercase break-all">---</div>
                         
                         <div class="flex flex-wrap items-center justify-center gap-2">
-                            <span id="searchResultHearts" class="inline-flex items-center gap-1.5 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 px-3.5 py-1.5 rounded-full">
-                                0 ❤️ وصله
+                            <span id="searchResultHearts" class="inline-flex items-center gap-1.5 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 px-3.5 py-1.5 rounded-full tabular-nums">
+                                0
                             </span>
-                            <span id="searchResultStreak" class="inline-flex items-center gap-1 text-xs font-bold text-slate-600 bg-slate-50 border border-slate-200/70 px-3 py-1.5 rounded-full">
-                                ستريك: 0
+                            <span id="searchResultStreak" class="inline-flex items-center gap-1 text-xs font-bold text-slate-600 bg-slate-50 border border-slate-200/70 px-3 py-1.5 rounded-full tabular-nums">
+                                0
                             </span>
                         </div>
 
                         <div class="pt-2 flex gap-2">
                             <button type="button" id="searchSendPulseBtn" class="flex-1 bg-gradient-to-l from-rose-600 to-pink-500 text-white font-bold py-3 rounded-2xl text-xs shadow-md shadow-rose-500/20 transition active:scale-95 inline-flex items-center justify-center gap-1.5">
                                 <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                                <span>أرسل له نبضة</span>
+                                <span>إرسال</span>
                             </button>
-                            <button type="button" id="searchCopyLinkBtn" title="نسخ رابط ملفه" class="p-3 bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-500 rounded-2xl border border-rose-100 transition active:scale-95 shrink-0">
+                            <button type="button" id="searchCopyLinkBtn" class="p-3 bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-500 rounded-2xl border border-rose-100 transition active:scale-95 shrink-0">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                                 </svg>
@@ -547,19 +503,7 @@
         <!-- ==================== VIEW 3: PROFILE ==================== -->
         <div id="viewProfile" class="hidden space-y-4">
             <section class="glass-card p-5 sm:p-6 relative overflow-hidden space-y-4 border-2 border-rose-100">
-                <div class="flex items-center justify-between gap-2">
-                    <span class="text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1 rounded-full">
-                        معاينة ملفك العام للآخرين
-                    </span>
-                    <span class="text-xs font-black text-slate-800 inline-flex items-center gap-1 shrink-0">
-                        <span>هويتك في Feely</span>
-                        <svg class="w-4 h-4 text-rose-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                        </svg>
-                    </span>
-                </div>
-
-                <!-- بطاقة الهوية الاجتماعية (موحدة الخط والحجم واللون لليوزر الجديد) -->
+                <!-- بطاقة الهوية الاجتماعية (قلب + عدد القلوب فقط بدون كلمة وصلك) -->
                 <div class="bg-gradient-to-b from-[#fff1f3] via-white to-[#fff8f9] rounded-3xl p-5 border border-rose-200/70 shadow-xs text-center space-y-3.5">
                     <div class="story-ring w-18 h-18 inline-block mx-auto shadow-md shadow-rose-200">
                         <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center text-rose-500">
@@ -569,27 +513,23 @@
                         </div>
                     </div>
 
-                    <div>
-                        <p class="text-[11px] font-bold text-slate-400">رمزك الخاص (حرف واحد أو أكثر)</p>
-                        <div class="mt-1.5 white-compact-box flex items-center justify-center gap-1.5 px-2 py-1.5 shadow-2xs">
-                            <button type="button" id="copyBtn" onclick="copyMyLink()" title="نسخ الرابط"
-                                    class="size-7 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 border border-rose-200/70 flex items-center justify-center shrink-0 transition-all active:scale-90">
-                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                            <input type="text" id="usernameInput" autocapitalize="characters" autocomplete="off"
-                                   class="w-full bg-transparent text-center unified-field-text tracking-wider outline-none uppercase"
-                                   placeholder="اكتب رمزك الخاص">
-                            <span class="size-7 shrink-0"></span>
-                        </div>
+                    <div class="white-compact-box flex items-center justify-center gap-1.5 px-2 py-1.5 shadow-2xs">
+                        <button type="button" id="copyBtn" onclick="copyMyLink()"
+                                class="size-7 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 border border-rose-200/70 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <input type="text" id="usernameInput" autocapitalize="characters" autocomplete="off"
+                               class="w-full bg-transparent text-center unified-field-text tracking-wider outline-none uppercase"
+                               placeholder="اكتب رمزك الخاص">
+                        <span class="size-7 shrink-0"></span>
                     </div>
 
                     <div class="flex items-center justify-center pt-1">
-                        <span class="inline-flex items-center gap-1.5 text-sm font-black text-rose-600 bg-rose-50 border border-rose-100 px-4 py-1.5 rounded-full" id="totalHeartsReceivedBadge">
-                            <span>0</span>
+                        <span class="inline-flex items-center gap-1.5 text-sm font-black text-rose-600 bg-rose-50 border border-rose-100 px-4 py-1.5 rounded-full tabular-nums" id="totalHeartsReceivedBadge">
                             <svg class="w-4 h-4 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                            <span>وصلك</span>
+                            <span>0</span>
                         </span>
                     </div>
                 </div>
@@ -600,7 +540,7 @@
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M20 6 9 17l-5-5"/>
                         </svg>
-                        <span>حفظ الرمز وتفعيله فوراً</span>
+                        <span>حفظ وتفعيل</span>
                     </button>
                 </div>
                 <p id="handleStatusAlert" class="text-[11px] text-center hidden font-semibold text-rose-600"></p>
@@ -608,11 +548,6 @@
         </div>
 
     </main>
-
-    <!-- Footer -->
-    <footer class="mt-2 text-center text-[11px] text-slate-400 py-3">
-        صُمم بحب · Feely © 2026
-    </footer>
 
     <!-- Auth Modal -->
     <div id="authModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
@@ -623,28 +558,19 @@
                 </svg>
             </button>
             
-            <div class="text-center space-y-1.5">
-                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mx-auto mb-1 border border-rose-100">
-                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="text-center space-y-1">
+                <div class="w-11 h-11 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mx-auto mb-1 border border-rose-100">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
                     </svg>
                 </div>
-                <h3 class="text-sm font-black text-slate-900">توثيق وحفظ الحساب</h3>
-                <p class="text-xs text-slate-500 leading-relaxed">
-                    اربط رمزك بحساب Google أو بريدك الإلكتروني حتى لا يضيع أبداً وتتمكن من فتحه من أي جهاز.
-                </p>
+                <h3 class="text-sm font-black text-slate-900">حفظ الحساب</h3>
             </div>
 
             <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold py-3 rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-2xs active:scale-98">
                 <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-                <span>متابعة بواسطة Google</span>
+                <span>Google</span>
             </button>
-
-            <div class="flex items-center my-1">
-                <div class="flex-grow border-t border-slate-100"></div>
-                <span class="px-3 text-[10px] text-slate-400">أو بالبريد الإلكتروني</span>
-                <div class="flex-grow border-t border-slate-100"></div>
-            </div>
 
             <form onsubmit="handleSmartEmailAuth(event)" class="space-y-2.5">
                 <input type="email" id="authEmail" required placeholder="البريد الإلكتروني"
@@ -653,7 +579,7 @@
                        class="soft-input w-full px-3.5 py-2.5 outline-none text-right">
                 
                 <button type="submit" id="smartAuthBtn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-xs transition shadow-md">
-                    دخول / حفظ
+                    دخول
                 </button>
             </form>
             <p id="authErrorMsg" class="text-[10px] text-center text-rose-500 hidden font-medium"></p>
@@ -681,6 +607,7 @@
 
         const ICONS = {
             heartFill: '<svg class="w-3.5 h-3.5 fill-rose-500 inline-block" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+            heartMed: '<svg class="w-4 h-4 fill-rose-500 inline-block" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
             heartSmall: '<svg class="w-2.5 h-2.5 fill-rose-500 inline-block" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
             soundOn: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>',
             soundOff: '<svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>',
@@ -715,6 +642,21 @@
         let recentSearches = JSON.parse(localStorage.getItem('feely_recent_searches') || '[]');
         let isFirstPulseLoad = true;
         let activeStreaksCache = {};
+
+        // ================= FORMAT EXACT DATE & TIME (HOUR:MINUTE · DD/MM/YYYY) =================
+        function formatExactDateTime(ts) {
+            if (!ts) return '';
+            const d = new Date(ts);
+            const timeStr = d.toLocaleTimeString('ar-SA', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+            return `${day}/${month}/${year} · ${timeStr}`;
+        }
 
         // ================= NOTIFICATION BELL (UNREAD INDICATOR) =================
         function updateBellBadgeState() {
@@ -751,9 +693,8 @@
                 if (feedSection) {
                     feedSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-                showToast('تم عرض أحدث النبضات الواردة');
             } else {
-                showToast('لا توجد إشعارات جديدة حالياً');
+                showToast('لا توجد إشعارات جديدة');
             }
         }
 
@@ -763,12 +704,12 @@
             const code = input.value.trim().toUpperCase();
             if (!code) {
                 input.focus();
-                return showToast('اكتب رمز المستلم أولاً', 'error');
+                return showToast('أضف رمز المستلم', 'error');
             }
 
             db.ref('handles/' + code).once('value', snapshot => {
                 if (!snapshot.exists()) {
-                    return showToast(`الرمز (${code}) غير مسجل أو غير مفعل`, 'error');
+                    return showToast(`(${code}) غير موجود`, 'error');
                 }
 
                 if (hiddenFriends.includes(code)) {
@@ -783,7 +724,7 @@
                 renderRecentContactsBar();
                 checkTargetStreak(code);
                 if (navigator.vibrate) navigator.vibrate(15);
-                showToast(`تمت إضافة (${code}) إلى أصدقاء النبض`);
+                showToast(`تمت إضافة (${code})`);
             });
         }
 
@@ -807,7 +748,6 @@
 
             renderRecentContactsBar();
             if (navigator.vibrate) navigator.vibrate(12);
-            showToast(`تم حذف (${clean}) من أصدقاء النبض`);
         }
 
         // ================= EMOJI PICKER LOGIC =================
@@ -830,18 +770,14 @@
             isAnonymousMode = !isAnonymousMode;
             const btn = document.getElementById('anonymousToggleBtn');
             const slash = document.getElementById('anonSlashLine');
-            const label = document.getElementById('anonStatusLabel');
 
             if (isAnonymousMode) {
-                btn.className = "absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-slate-900 text-white border border-slate-800 shadow-xs transition-all active:scale-90";
+                btn.className = "absolute top-4 right-4 z-10 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-slate-900 text-white border border-slate-800 shadow-xs transition-all active:scale-90";
                 slash.classList.remove('hidden');
-                label.textContent = "مجهول: مفعّل";
-                showToast("وضع المجهول مفعّل — ستصل النبضة بدون اسمك");
+                showToast("وضع المجهول");
             } else {
-                btn.className = "absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#f9eff1] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90";
+                btn.className = "absolute top-4 right-4 z-10 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[#f9eff1] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90";
                 slash.classList.add('hidden');
-                label.textContent = "مجهول";
-                showToast("تم إيقاف وضع المجهول — سيظهر رمزك للمستلم");
             }
             if (navigator.vibrate) navigator.vibrate(12);
         }
@@ -875,7 +811,7 @@
                 toast.style.transform = 'translateY(-14px) scale(0.96)';
                 toast.style.transition = 'all 0.25s ease';
                 setTimeout(() => toast.remove(), 260);
-            }, 3200);
+            }, 3000);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -922,9 +858,7 @@
 
             isChargingHeart = true;
             const orb = document.getElementById('mainHeartOrb');
-            const hint = document.getElementById('holdHintText');
             if (orb) orb.classList.add('heart-charging');
-            if (hint) hint.textContent = 'جاري الشحن... ارفع إصبعك للإرسال';
 
             let val = 1;
             updateLoveMeterUI(val);
@@ -962,9 +896,7 @@
             isChargingHeart = false;
 
             const orb = document.getElementById('mainHeartOrb');
-            const hint = document.getElementById('holdHintText');
             if (orb) orb.classList.remove('heart-charging');
-            if (hint) hint.textContent = 'ضغطة سريعة 1% · استمر بالضغط حتى 100%';
 
             const selectedScore = currentLoveValue;
             sendLovePulseWithScore(selectedScore);
@@ -983,9 +915,7 @@
             isChargingHeart = false;
 
             const orb = document.getElementById('mainHeartOrb');
-            const hint = document.getElementById('holdHintText');
             if (orb) orb.classList.remove('heart-charging');
-            if (hint) hint.textContent = 'ضغطة سريعة 1% · استمر بالضغط حتى 100%';
             updateLoveMeterUI(1);
         }
 
@@ -1053,7 +983,7 @@
             db.ref('handles/' + rawCode).once('value', snapshot => {
                 if (!snapshot.exists()) {
                     resultBox.classList.add('hidden');
-                    errBox.textContent = `لا يوجد حساب نشط بالرمز (${rawCode})`;
+                    errBox.textContent = `(${rawCode}) غير موجود`;
                     errBox.classList.remove('hidden');
                     return;
                 }
@@ -1070,11 +1000,11 @@
 
                 db.ref('stats/' + rawCode + '/receivedCount').once('value', countSnap => {
                     const count = countSnap.val() || 0;
-                    document.getElementById('searchResultHearts').innerHTML = `<span>${count}</span> ${ICONS.heartFill} <span>وصله</span>`;
+                    document.getElementById('searchResultHearts').innerHTML = `${ICONS.heartFill} <span>${count}</span>`;
                 });
 
                 checkTargetStreak(rawCode, (streakVal) => {
-                    document.getElementById('searchResultStreak').innerHTML = `${ICONS.heartSmall} <span>ستريك: ${streakVal}</span>`;
+                    document.getElementById('searchResultStreak').innerHTML = `${ICONS.heartSmall} <span>${streakVal}</span>`;
                 });
 
                 document.getElementById('searchSendPulseBtn').onclick = () => {
@@ -1085,7 +1015,7 @@
                 document.getElementById('searchCopyLinkBtn').onclick = () => {
                     const link = window.location.origin + window.location.pathname + '?u=' + rawCode;
                     navigator.clipboard.writeText(link);
-                    showToast(`تم نسخ رابط ملف (${rawCode})`);
+                    showToast(`تم النسخ (${rawCode})`);
                 };
             });
         }
@@ -1128,7 +1058,7 @@
 
             db.ref('handles/' + cleanHandle).once('value', snapshot => {
                 if (!snapshot.exists()) {
-                    return showToast(`الرمز (${cleanHandle}) غير مسجل حالياً`, 'error');
+                    return showToast(`(${cleanHandle}) غير موجود`, 'error');
                 }
 
                 if (friendStatsListenerRef) {
@@ -1145,11 +1075,11 @@
                 friendStatsListenerRef = db.ref('stats/' + cleanHandle + '/receivedCount');
                 friendStatsListenerRef.on('value', countSnap => {
                     const totalHearts = countSnap.val() || 0;
-                    document.getElementById('friendHeartsReceivedBadge').innerHTML = `<span>${totalHearts}</span> ${ICONS.heartFill} <span>وصله</span>`;
+                    document.getElementById('friendHeartsReceivedBadge').innerHTML = `${ICONS.heartFill} <span>${totalHearts}</span>`;
                 });
 
                 checkTargetStreak(cleanHandle, (streakVal) => {
-                    document.getElementById('friendProfileStreakText').innerHTML = `${ICONS.heartFill} <span>ستريك مشترك: ${streakVal} أيام</span>`;
+                    document.getElementById('friendProfileStreakText').innerHTML = `${ICONS.heartFill} <span>${streakVal}</span>`;
                 });
 
                 switchMainView('home');
@@ -1169,7 +1099,7 @@
             if (!activeFriendHandle) return;
             const link = window.location.origin + window.location.pathname + '?u=' + activeFriendHandle;
             navigator.clipboard.writeText(link);
-            showToast(`تم نسخ رابط صفحة (${activeFriendHandle})`);
+            showToast(`تم النسخ (${activeFriendHandle})`);
         }
 
         function onTargetInputChange(val) {
@@ -1189,9 +1119,6 @@
             updateSoundUI();
             if (isSoundEnabled) {
                 playHeartbeatSound();
-                showToast('تم تفعيل نغمة النبض');
-            } else {
-                showToast('تم كتم الصوت');
             }
         }
 
@@ -1305,7 +1232,7 @@
                         if (userHandle) {
                             db.ref('users/' + result.user.uid).update({ handle: userHandle, email: result.user.email });
                         }
-                        showToast('تم ربط حسابك بـ Google بنجاح');
+                        showToast('تم ربط الحساب');
                     })
                     .catch(err => {
                         if (err.code === 'auth/credential-already-in-use') {
@@ -1328,7 +1255,7 @@
             
             errBox.classList.add('hidden');
             btn.disabled = true;
-            btn.textContent = "جاري التحقق...";
+            btn.textContent = "...";
 
             const credential = firebase.auth.EmailAuthProvider.credential(email, password);
 
@@ -1339,24 +1266,24 @@
                             db.ref('users/' + result.user.uid).update({ handle: userHandle, email: email });
                         }
                         btn.disabled = false;
-                        btn.textContent = "دخول / حفظ";
-                        showToast('تم حفظ حسابك وتوثيقه بنجاح');
+                        btn.textContent = "دخول";
+                        showToast('تم حفظ الحساب');
                     })
                     .catch(err => {
                         if (err.code === 'auth/email-already-in-use' || err.code === 'auth/credential-already-in-use') {
                             auth.signInWithEmailAndPassword(email, password)
                                 .then(() => {
                                     btn.disabled = false;
-                                    btn.textContent = "دخول / حفظ";
+                                    btn.textContent = "دخول";
                                 })
                                 .catch(signInErr => {
                                     btn.disabled = false;
-                                    btn.textContent = "دخول / حفظ";
+                                    btn.textContent = "دخول";
                                     showAuthError(signInErr.message);
                                 });
                         } else {
                             btn.disabled = false;
-                            btn.textContent = "دخول / حفظ";
+                            btn.textContent = "دخول";
                             showAuthError(err.message);
                         }
                     });
@@ -1364,11 +1291,11 @@
                 auth.signInWithEmailAndPassword(email, password)
                     .then(() => {
                         btn.disabled = false;
-                        btn.textContent = "دخول / حفظ";
+                        btn.textContent = "دخول";
                     })
                     .catch(err => {
                         btn.disabled = false;
-                        btn.textContent = "دخول / حفظ";
+                        btn.textContent = "دخول";
                         showAuthError(err.message);
                     });
             }
@@ -1419,7 +1346,7 @@
                 }
 
                 activeStreaksCache[trimmedTarget] = currentStreak;
-                badge.innerHTML = `${ICONS.heartSmall} <span>ستريك: ${currentStreak}</span>`;
+                badge.innerHTML = `${ICONS.heartSmall} <span>${currentStreak}</span>`;
                 badge.classList.remove('hidden');
                 if (callback) callback(currentStreak);
             });
@@ -1452,7 +1379,7 @@
                     activeStreaksCache[targetHandle] = newStreak;
                     checkTargetStreak(targetHandle);
                     if (activeFriendHandle === targetHandle) {
-                        document.getElementById('friendProfileStreakText').innerHTML = `${ICONS.heartFill} <span>ستريك مشترك: ${newStreak} أيام</span>`;
+                        document.getElementById('friendProfileStreakText').innerHTML = `${ICONS.heartFill} <span>${newStreak}</span>`;
                     }
                     renderPulsesList();
                     renderRecentContactsBar();
@@ -1493,7 +1420,7 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = "relative flex flex-col items-center gap-1 shrink-0 group";
                 wrapper.innerHTML = `
-                    <button type="button" onclick="removeFriendFromBar(event, '${handle}')" title="حذف الصديق"
+                    <button type="button" onclick="removeFriendFromBar(event, '${handle}')"
                             class="absolute -top-1 -left-1 z-10 size-4 rounded-full bg-slate-200 hover:bg-rose-500 text-slate-600 hover:text-white border border-white shadow-2xs flex items-center justify-center transition-colors active:scale-90">
                         <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -1507,7 +1434,7 @@
                                     ${initial}
                                 </div>
                             </div>
-                            <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white border border-rose-200 text-rose-600 text-[9px] font-black px-1.5 py-0.2 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap">
+                            <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white border border-rose-200 text-rose-600 text-[9px] font-black px-1.5 py-0.2 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap tabular-nums">
                                 ${ICONS.heartSmall} <span>${streakVal}</span>
                             </span>
                         </div>
@@ -1525,36 +1452,26 @@
             });
         }
 
-        function timeAgo(ts) {
-            const s = Math.floor((Date.now() - ts) / 1000);
-            if (s < 60) return 'الآن';
-            const m = Math.floor(s / 60);
-            if (m < 60) return `قبل ${m} د`;
-            const h = Math.floor(m / 60);
-            if (h < 24) return `قبل ${h} س`;
-            return new Date(ts).toLocaleDateString('ar-SA');
-        }
-
         // Handle Registration
         function registerHandle() {
             const handle = document.getElementById('usernameInput').value.trim().toUpperCase();
             const alertBox = document.getElementById('handleStatusAlert');
             
             if (!currentUser) {
-                alertBox.textContent = "جاري تهيئة الاتصال الآمن، حاول بعد لحظة...";
+                alertBox.textContent = "جاري الاتصال...";
                 alertBox.classList.remove('hidden');
                 return;
             }
 
             const validRegex = /^[a-zA-Z0-9_]+$/;
             if (!validRegex.test(handle)) {
-                alertBox.textContent = "يُسمح فقط بالحروف الإنجليزية، الأرقام والشرطة السفلية (_)";
+                alertBox.textContent = "حروف إنجليزية وأرقام فقط";
                 alertBox.classList.remove('hidden');
                 return;
             }
 
             if (handle.length < 1) {
-                alertBox.textContent = "يرجى إدخال حرف واحد على الأقل للرمز";
+                alertBox.textContent = "أدخل رمزاً";
                 alertBox.classList.remove('hidden');
                 return;
             }
@@ -1574,12 +1491,12 @@
                 renderRecentContactsBar();
                 triggerFloatingHearts(14);
                 playHeartbeatSound();
-                showToast(`تم تفعيل رمزك (${handle}) وتأمينه بنجاح!`);
+                showToast(`تم تفعيل (${handle})`);
             }).catch(err => {
                 if (err.code === 'PERMISSION_DENIED') {
-                    alertBox.textContent = "هذا الرمز محجوز لشخص آخر، اختر رمزاً مختلفاً";
+                    alertBox.textContent = "الرمز محجوز";
                 } else {
-                    alertBox.textContent = "خطأ في الاتصال: " + err.message;
+                    alertBox.textContent = err.message;
                 }
                 alertBox.classList.remove('hidden');
             });
@@ -1596,7 +1513,7 @@
             if (miniDisplay) miniDisplay.textContent = handle;
             if (alertDot) alertDot.classList.add('hidden');
             
-            btn.innerHTML = `${ICONS.share} <span>مشاركة رابط ملفك الشخصي</span>`;
+            btn.innerHTML = `${ICONS.share} <span>مشاركة الرابط</span>`;
             btn.onclick = shareMyLink;
             btn.className = "w-full bg-gradient-to-l from-rose-600 to-pink-500 hover:brightness-105 text-white font-bold py-3.5 rounded-2xl text-xs shadow-lg shadow-rose-500/20 transition active:scale-[0.98] inline-flex items-center justify-center gap-1.5";
         }
@@ -1605,17 +1522,17 @@
 
         function copyMyLink() {
             if (!userHandle) {
-                return showToast("فعّل رمزك أولاً لنسخ الرابط", 'error');
+                return showToast("فعّل رمزك أولاً", 'error');
             }
             const link = getMyShareableLink();
             navigator.clipboard.writeText(link);
-            showToast("تم نسخ رابط ملفك الشخصي!");
+            showToast("تم النسخ");
         }
 
         function shareMyLink() {
             const link = getMyShareableLink();
             if (navigator.share) {
-                navigator.share({ title: 'Feely — أرسل لي نبضة حب', text: 'أرسل لي نبضة حب عبر هذا الرابط:', url: link }).catch(() => {});
+                navigator.share({ title: 'Feely', url: link }).catch(() => {});
             } else { copyMyLink(); }
         }
 
@@ -1647,13 +1564,13 @@
 
         function executePulseSend(targetHandle, score, note) {
             if (isSendingPulse) return;
-            if (!currentUser) return showToast('جاري تأمين الاتصال، حاول بعد لحظة', 'error');
+            if (!currentUser) return showToast('جاري الاتصال...', 'error');
             const cleanTarget = targetHandle.trim().toUpperCase();
 
             if (!cleanTarget || cleanTarget.length < 1) {
                 const targetInput = document.getElementById('targetIdInput');
                 if (targetInput) targetInput.focus();
-                return showToast('أضف رمز المستلم في البوكس أعلاه أولاً', 'error');
+                return showToast('أضف رمز المستلم', 'error');
             }
 
             const senderIdentity = getEffectiveSenderIdentity();
@@ -1662,7 +1579,7 @@
             db.ref('handles/' + cleanTarget).once('value', snapshot => {
                 if (!snapshot.exists()) {
                     isSendingPulse = false;
-                    return showToast(`الرمز (${cleanTarget}) غير موجود أو لم يُفعّل بعد`, 'error');
+                    return showToast(`(${cleanTarget}) غير موجود`, 'error');
                 }
 
                 const pulseData = { 
@@ -1699,12 +1616,11 @@
                     document.getElementById('loveNote').value = '';
                     const popover = document.getElementById('emojiPickerPopover');
                     if (popover) popover.classList.add('hidden');
-                    const anonSuffix = isAnonymousMode ? ' (كمجهول)' : '';
-                    showToast(`تم إرسال نبضة (${score}%) إلى (${cleanTarget})${anonSuffix}!`);
+                    showToast(`تم الإرسال (${score}%)`);
                     if (activeTab === 'sent') renderPulsesList();
                 }).catch(err => {
                     isSendingPulse = false;
-                    showToast('حدث خطأ: ' + err.message, 'error');
+                    showToast(err.message, 'error');
                 });
             });
         }
@@ -1731,7 +1647,7 @@
                         showLocalNotification(incomingPulses[0]);
                         triggerFloatingHearts(20);
                         playHeartbeatSound();
-                        showToast(`وصلتك نبضة حب جديدة (${incomingPulses[0].score}%) من ${incomingPulses[0].sender}!`);
+                        showToast(`نبضة جديدة (${incomingPulses[0].score}%) من ${incomingPulses[0].sender}`);
                     }
                 }
                 isFirstPulseLoad = false;
@@ -1741,8 +1657,9 @@
                 const miniBadge = document.getElementById('miniHeartsBadge');
                 const tabBadge = document.getElementById('incomingTabCountBadge');
 
-                if (countBadge) countBadge.innerHTML = `<span>${totalCount}</span> ${ICONS.heartFill} <span>وصلك</span>`;
-                if (miniBadge) miniBadge.innerHTML = `<span>${totalCount}</span> ${ICONS.heartFill} <span>وصلك</span>`;
+                // أيقونة قلب وبجانبها العدد فقط بدون كلمة وصلك
+                if (countBadge) countBadge.innerHTML = `${ICONS.heartMed} <span>${totalCount}</span>`;
+                if (miniBadge) miniBadge.innerHTML = `${ICONS.heartFill} <span>${totalCount}</span>`;
                 if (tabBadge) tabBadge.textContent = totalCount;
 
                 db.ref('stats/' + handle + '/receivedCount').set(totalCount);
@@ -1763,45 +1680,38 @@
 
         function showLocalNotification(pulse) {
             if ("Notification" in window && Notification.permission === "granted") {
-                new Notification("نبضة جديدة", {
-                    body: `من: ${pulse.sender} (${pulse.score}%)` + (pulse.note ? `\n"${pulse.note}"` : ''),
+                new Notification("Feely", {
+                    body: `${pulse.sender} (${pulse.score}%)` + (pulse.note ? ` · ${pulse.note}` : ''),
                     icon: "https://cdn-icons-png.flaticon.com/512/2589/2589175.png"
                 });
             }
         }
 
-        // ================= CONSISTENT & CLEAN PULSES LIST =================
+        // ================= CONSISTENT PULSES LIST WITH EXACT DATE & TIME =================
         function renderPulsesList() {
             const list = document.getElementById('pulsesList');
-            const counterEl = document.getElementById('pulsesSectionCounter');
             list.innerHTML = '';
 
             const currentData = activeTab === 'incoming' ? incomingPulses : sentPulses;
-            if (counterEl) {
-                counterEl.textContent = `${currentData.length} نبضة`;
-            }
 
             if (currentData.length === 0) {
-                const emptyText = activeTab === 'incoming' 
-                    ? (userHandle ? 'لا توجد نبضات واردة حتى الآن' : 'احفظ رمزك في صفحة البروفايل لمشاهدة النبضات الواردة')
-                    : 'لم ترسل أي نبضة بعد — ابدأ بالتعبير عن مشاعرك!';
                 list.innerHTML = `
                     <div class="rounded-2xl border border-dashed border-rose-200/80 bg-[#fcf7f8] py-7 px-4 text-center">
-                        <p class="text-xs text-slate-400 font-medium">${emptyText}</p>
+                        <p class="text-xs text-slate-400 font-medium">لا توجد نبضات</p>
                     </div>
                 `;
                 return;
             }
 
             currentData.forEach(item => {
-                const formattedTime = timeAgo(item.timestamp);
+                const exactDateTime = formatExactDateTime(item.timestamp);
                 const isIncoming = activeTab === 'incoming';
                 const targetOrSender = isIncoming ? (item.senderHandle || item.sender) : item.target;
                 const isAnonSender = targetOrSender === 'مجهول';
 
                 const currentStreakVal = activeStreaksCache[targetOrSender] || 0;
                 const streakBadge = currentStreakVal > 0 && !isAnonSender
-                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] bg-rose-50 border border-rose-100 text-rose-600 font-black px-2 py-0.5 rounded-full">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
+                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] bg-rose-50 border border-rose-100 text-rose-600 font-black px-2 py-0.5 rounded-full tabular-nums">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
                     : '';
 
                 const directionLabel = isIncoming ? 'من' : 'إلى';
@@ -1848,7 +1758,7 @@
                                     <span class="font-mono text-xs font-black text-slate-900 uppercase truncate">${isIncoming ? item.sender : item.target}</span>
                                     <span class="text-[10px] font-bold text-slate-400">${directionLabel}</span>
                                 </div>
-                                <p class="text-[10px] text-slate-400 font-medium mt-0.5">${formattedTime}</p>
+                                <p class="text-[9px] text-slate-400 font-medium mt-0.5 tabular-nums tracking-tight">${exactDateTime}</p>
                             </div>
                             ${avatarHTML}
                         </div>
