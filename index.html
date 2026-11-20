@@ -81,6 +81,21 @@
             border-radius: 9999px;
         }
 
+        /* Pulse Item Card (Consistent White + Rose Border Aesthetic) */
+        .pulse-item-card {
+            background: #ffffff;
+            border: 1.5px solid #ffe4e6;
+            border-radius: 20px;
+            box-shadow: 0 4px 14px -6px rgba(225, 29, 72, 0.07);
+            transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .pulse-item-card:hover {
+            border-color: #fda4af;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px -8px rgba(225, 29, 72, 0.14);
+        }
+
         /* Heart Send Button & Circular Progress Ring */
         @keyframes heartHalo {
             0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.28); }
@@ -260,10 +275,10 @@
                     </h3>
                 </div>
 
-                <!-- دوائر الأصدقاء (مع زر × في أعلى يسار كل دائرة) -->
+                <!-- دوائر الأصدقاء -->
                 <div id="recentContactsList" class="hidden flex gap-3 overflow-x-auto pb-1 pt-1.5 px-1 hide-scrollbar"></div>
 
-                <!-- بوكس إضافة رمز المستلم المصغّر بخلفية بيضاء وإطار مناسب وزر + -->
+                <!-- بوكس إضافة رمز المستلم -->
                 <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
                     <button type="button" onclick="confirmAddRecipient()" title="إضافة المستلم"
                             class="size-7 rounded-xl bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-200/80 flex items-center justify-center shrink-0 transition-all active:scale-90">
@@ -325,7 +340,7 @@
 
             <!-- بطاقة إرسال النبضة -->
             <section class="glass-card p-5 sm:p-6 space-y-4 relative">
-                <!-- أيقونة وضع المجهول على يمين البوكس الأساسي (مطفأة افتراضياً) -->
+                <!-- أيقونة وضع المجهول -->
                 <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="إرسال كمجهول"
                         class="absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#f9eff1] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90">
                     <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
@@ -347,7 +362,6 @@
                             title="ضغطة سريعة 1% أو استمر بالضغط حتى 100%"
                             class="heart-send-btn relative inline-flex items-center justify-center w-28 h-28 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/70 shadow-md cursor-pointer select-none transition-all duration-150">
                         
-                        <!-- حلقة الشحن الدائرية SVG -->
                         <svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 100 100">
                             <defs>
                                 <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -362,7 +376,6 @@
                                     stroke-dasharray="282.74" stroke-dashoffset="279.91"/>
                         </svg>
 
-                        <!-- أيقونة القلب الداخلية -->
                         <svg id="dynamicHeartSvg" style="transform: scale(0.72);" class="w-12 h-12 transition-transform duration-75 drop-shadow-sm pointer-events-none relative z-10" viewBox="0 0 24 24">
                             <defs>
                                 <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -379,16 +392,14 @@
                         <p id="holdHintText" class="text-[10px] text-slate-400 mt-0.5">ضغطة سريعة 1% · استمر بالضغط حتى 100%</p>
                     </div>
 
-                    <!-- عرض النسبة المئوية الرقمية -->
                     <div class="inline-flex items-center justify-center bg-rose-50 px-4 py-1 rounded-full border border-rose-100">
                         <span id="rangeDisplay" class="text-xs font-black text-rose-600 tabular-nums">1%</span>
                     </div>
                 </div>
 
-                <!-- بوكس إضافة رسالة (بدون كلمة اختياري) مع لوحة إيموجيات حديثة ومتنوعة في الزاوية اليمنى -->
+                <!-- بوكس إضافة رسالة مع لوحة إيموجيات حديثة -->
                 <div class="relative">
                     <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
-                        <!-- زر الإيموجيات في الزاوية اليمنى -->
                         <button type="button" id="emojiPickerToggleBtn" onclick="toggleEmojiPicker()" title="إضافة إيموجي"
                                 class="size-7 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 border border-rose-200/70 flex items-center justify-center shrink-0 transition-all active:scale-90">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
@@ -400,7 +411,6 @@
                                class="w-full bg-transparent text-right text-xs font-medium text-slate-800 placeholder:text-slate-400 outline-none pr-1">
                     </div>
 
-                    <!-- لوحة الإيموجيات الحديثة والمتنوعة -->
                     <div id="emojiPickerPopover" class="hidden mt-1.5 p-2 rounded-2xl bg-white border border-rose-200 shadow-lg grid grid-cols-6 gap-1 text-center">
                         <button type="button" onclick="insertEmojiToNote('🫶🏻')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫶🏻</button>
                         <button type="button" onclick="insertEmojiToNote('🥹')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🥹</button>
@@ -418,15 +428,23 @@
                 </div>
             </section>
 
-            <!-- صندوق النبضات (Feed / Inbox) -->
+            <!-- صندوق النبضات المحدّث بتصميم متسق مع بقية البطاقات وبدون زر "رد بنبضة" -->
             <section class="glass-card p-4 sm:p-5 space-y-3.5">
-                <div class="bg-[#f9eff1] p-1 rounded-2xl flex gap-1">
+                <div class="flex items-center justify-between px-1">
+                    <span id="pulsesSectionCounter" class="text-[11px] font-bold text-slate-400">0 نبضة</span>
+                    <h3 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+                        <span>سجل النبضات</span>
+                        <span class="inline-block size-1.5 rounded-full bg-rose-500"></span>
+                    </h3>
+                </div>
+
+                <div class="bg-[#f9eff1] p-1 rounded-2xl flex gap-1 border border-rose-100/80">
                     <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-white text-slate-900 shadow-2xs inline-flex items-center justify-center gap-1.5">
                         <svg class="w-3.5 h-3.5 text-rose-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
                         </svg>
                         <span>الواردة</span>
-                        <span id="incomingTabCountBadge" class="text-[10px] bg-rose-100 text-rose-600 px-1.5 py-0.2 rounded-full font-black">0</span>
+                        <span id="incomingTabCountBadge" class="text-[10px] bg-rose-50 text-rose-600 border border-rose-100 px-1.5 py-0.2 rounded-full font-black">0</span>
                     </button>
                     <button id="tabSentBtn" onclick="switchPulseTab('sent')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition text-slate-500 hover:text-slate-800 inline-flex items-center justify-center gap-1.5">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
@@ -436,8 +454,10 @@
                     </button>
                 </div>
 
-                <div id="pulsesList" class="space-y-2.5 max-h-80 overflow-y-auto pr-0.5">
-                    <p id="authNotice" class="text-center text-xs text-slate-400 py-6 font-medium">احفظ رمزك في صفحة البروفايل لمشاهدة النبضات الواردة</p>
+                <div id="pulsesList" class="space-y-2.5 max-h-80 overflow-y-auto px-0.5 py-0.5">
+                    <div class="rounded-2xl border border-dashed border-rose-200/80 bg-[#fcf7f8] py-7 px-4 text-center">
+                        <p id="authNotice" class="text-xs text-slate-400 font-medium">احفظ رمزك في صفحة البروفايل لمشاهدة النبضات الواردة</p>
+                    </div>
                 </div>
             </section>
         </div>
@@ -656,9 +676,8 @@
             soundOn: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>',
             soundOff: '<svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>',
             share: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
-            reply: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>',
             check: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
-            pulseHeart: '<svg class="w-4 h-4 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'
+            anonMask: '<svg class="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/><line x1="3" y1="3" x2="21" y2="21"/></svg>'
         };
 
         const RING_CIRCUMFERENCE = 2 * Math.PI * 45;
@@ -701,7 +720,6 @@
                     return showToast(`الرمز (${code}) غير مسجل أو غير مفعل`, 'error');
                 }
 
-                // إزالته من قائمة المخفيين إذا كان محذوفاً سابقاً
                 if (hiddenFriends.includes(code)) {
                     hiddenFriends = hiddenFriends.filter(f => f !== code);
                     localStorage.setItem('feely_hidden_friends', JSON.stringify(hiddenFriends));
@@ -1390,7 +1408,7 @@
             });
         }
 
-        // ================= STORIES-STYLE RECENT CONTACTS BAR (WITH DELETE × BUTTON) =================
+        // ================= STORIES-STYLE RECENT CONTACTS BAR =================
         function selectContactRecipient(handle) {
             const clean = handle.toUpperCase();
             const input = document.getElementById('targetIdInput');
@@ -1423,7 +1441,6 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = "relative flex flex-col items-center gap-1 shrink-0 group";
                 wrapper.innerHTML = `
-                    <!-- دائرة رصاصي بداخلها علامة × في أعلى يسار الدائرة لحذف الصديق -->
                     <button type="button" onclick="removeFriendFromBar(event, '${handle}')" title="حذف الصديق"
                             class="absolute -top-1 -left-1 z-10 size-4 rounded-full bg-slate-200 hover:bg-rose-500 text-slate-600 hover:text-white border border-white shadow-2xs flex items-center justify-center transition-colors active:scale-90">
                         <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -1572,7 +1589,7 @@
             return { name: userHandle, handle: userHandle };
         }
 
-        function executePulseSend(targetHandle, score, note, isQuickReply = false) {
+        function executePulseSend(targetHandle, score, note) {
             if (isSendingPulse) return;
             if (!currentUser) return showToast('جاري تأمين الاتصال، حاول بعد لحظة', 'error');
             const cleanTarget = targetHandle.trim().toUpperCase();
@@ -1605,7 +1622,6 @@
                     isSendingPulse = false;
                     db.ref('stats/' + cleanTarget + '/receivedCount').transaction(curr => (curr || 0) + 1);
 
-                    // إعادة إظهار المستلم في الشريط عند الإرسال إليه مجدداً
                     if (hiddenFriends.includes(cleanTarget)) {
                         hiddenFriends = hiddenFriends.filter(f => f !== cleanTarget);
                         localStorage.setItem('feely_hidden_friends', JSON.stringify(hiddenFriends));
@@ -1618,21 +1634,17 @@
                         recordTargetStreakInCloud(userHandle, cleanTarget);
                     }
 
-                    const heartsCount = isQuickReply ? 12 : Math.max(5, Math.round(Number(score) / 5));
+                    const heartsCount = Math.max(5, Math.round(Number(score) / 5));
                     triggerFloatingHearts(heartsCount);
                     playHeartbeatSound();
                     if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
 
                     renderRecentContactsBar();
-                    if (!isQuickReply) {
-                        document.getElementById('loveNote').value = '';
-                        const popover = document.getElementById('emojiPickerPopover');
-                        if (popover) popover.classList.add('hidden');
-                        const anonSuffix = isAnonymousMode ? ' (كمجهول)' : '';
-                        showToast(`تم إرسال نبضة (${score}%) إلى (${cleanTarget})${anonSuffix}!`);
-                    } else {
-                        showToast(`تم إرسال رد سريع إلى (${cleanTarget})`);
-                    }
+                    document.getElementById('loveNote').value = '';
+                    const popover = document.getElementById('emojiPickerPopover');
+                    if (popover) popover.classList.add('hidden');
+                    const anonSuffix = isAnonymousMode ? ' (كمجهول)' : '';
+                    showToast(`تم إرسال نبضة (${score}%) إلى (${cleanTarget})${anonSuffix}!`);
                     if (activeTab === 'sent') renderPulsesList();
                 }).catch(err => {
                     isSendingPulse = false;
@@ -1645,27 +1657,7 @@
             const targetHandle = document.getElementById('targetIdInput').value.trim().toUpperCase();
             const note = document.getElementById('loveNote').value.trim();
 
-            executePulseSend(targetHandle, score, note, false);
-        }
-
-        function quickReplyPulse(e, recipientHandle, btnElement) {
-            e.stopPropagation();
-            const cleanHandle = recipientHandle.trim().toUpperCase();
-            document.getElementById('targetIdInput').value = cleanHandle;
-            checkTargetStreak(cleanHandle);
-            
-            const originalHTML = btnElement.innerHTML;
-            btnElement.disabled = true;
-            btnElement.innerHTML = `${ICONS.check} <span>تم الرد</span>`;
-            btnElement.classList.add('bg-rose-500', 'text-white', 'border-rose-500');
-
-            executePulseSend(cleanHandle, 100, 'رد سريع بنبضة حب', true);
-
-            setTimeout(() => {
-                btnElement.disabled = false;
-                btnElement.innerHTML = originalHTML;
-                btnElement.classList.remove('bg-rose-500', 'text-white', 'border-rose-500');
-            }, 2200);
+            executePulseSend(targetHandle, score, note);
         }
 
         function listenForIncomingPulses(handle) {
@@ -1746,18 +1738,23 @@
             }
         }
 
+        // ================= CONSISTENT & CLEAN PULSES LIST (WITHOUT "رد بنبضة") =================
         function renderPulsesList() {
             const list = document.getElementById('pulsesList');
+            const counterEl = document.getElementById('pulsesSectionCounter');
             list.innerHTML = '';
 
             const currentData = activeTab === 'incoming' ? incomingPulses : sentPulses;
+            if (counterEl) {
+                counterEl.textContent = `${currentData.length} نبضة`;
+            }
 
             if (currentData.length === 0) {
                 const emptyText = activeTab === 'incoming' 
-                    ? (userHandle ? 'لا توجد نبضات واصلة حتى الآن' : 'احفظ رمزك في صفحة البروفايل لمشاهدة النبضات الواردة')
+                    ? (userHandle ? 'لا توجد نبضات واردة حتى الآن' : 'احفظ رمزك في صفحة البروفايل لمشاهدة النبضات الواردة')
                     : 'لم ترسل أي نبضة بعد — ابدأ بالتعبير عن مشاعرك!';
                 list.innerHTML = `
-                    <div class="text-center py-8 space-y-1.5">
+                    <div class="rounded-2xl border border-dashed border-rose-200/80 bg-[#fcf7f8] py-7 px-4 text-center">
                         <p class="text-xs text-slate-400 font-medium">${emptyText}</p>
                     </div>
                 `;
@@ -1768,27 +1765,32 @@
                 const formattedTime = timeAgo(item.timestamp);
                 const isIncoming = activeTab === 'incoming';
                 const targetOrSender = isIncoming ? (item.senderHandle || item.sender) : item.target;
+                const isAnonSender = targetOrSender === 'مجهول';
 
                 const currentStreakVal = activeStreaksCache[targetOrSender] || 0;
-                const streakBadge = currentStreakVal > 0 && targetOrSender !== 'مجهول'
+                const streakBadge = currentStreakVal > 0 && !isAnonSender
                     ? `<span class="inline-flex items-center gap-0.5 text-[10px] bg-rose-50 border border-rose-100 text-rose-600 font-black px-2 py-0.5 rounded-full">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
                     : '';
 
-                const titleText = isIncoming 
-                    ? `من <span class="font-mono font-black text-slate-900">${item.sender}</span>`
-                    : `إلى <span class="font-mono font-black text-slate-900">${item.target}</span>`;
+                const directionLabel = isIncoming ? 'من' : 'إلى';
+                const avatarHTML = isAnonSender
+                    ? `<div class="size-10 rounded-full bg-slate-100 border border-slate-200/80 flex items-center justify-center shrink-0">${ICONS.anonMask}</div>`
+                    : `<div class="story-ring shrink-0">
+                           <div class="size-9 rounded-full bg-white flex items-center justify-center font-mono text-xs font-black text-slate-900">
+                               ${targetOrSender.charAt(0)}
+                           </div>
+                       </div>`;
 
-                const quickReplyBtnHTML = isIncoming && targetOrSender !== 'مجهول'
-                    ? `<button type="button" onclick="quickReplyPulse(event, '${targetOrSender}', this)" class="mt-2 inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 bg-white hover:bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-full transition active:scale-95 shadow-2xs">
-                           ${ICONS.reply}
-                           <span>رد بنبضة</span>
-                       </button>`
+                const noteBlockHTML = item.note
+                    ? `<div class="mt-2 rounded-xl bg-[#f9eff1]/85 border border-rose-100/80 px-3 py-2 text-xs text-slate-700 leading-relaxed break-words">
+                           ${item.note}
+                       </div>`
                     : '';
 
                 const pulseCard = document.createElement('div');
-                pulseCard.className = "flex items-start gap-3 rounded-2xl border border-rose-100/90 bg-[#fcf5f6] p-3.5 hover:border-rose-300 transition text-right cursor-pointer active:scale-[0.99]";
+                pulseCard.className = "pulse-item-card p-3.5 text-right cursor-pointer active:scale-[0.99]";
                 pulseCard.onclick = () => {
-                    if (targetOrSender !== 'مجهول') {
+                    if (!isAnonSender) {
                         selectContactRecipient(targetOrSender);
                     }
                     if (isIncoming) {
@@ -1797,23 +1799,27 @@
                     }
                 };
                 pulseCard.innerHTML = `
-                    <span class="grid size-9 shrink-0 place-items-center rounded-2xl bg-white text-rose-500 shadow-2xs border border-rose-100">
-                        ${ICONS.pulseHeart}
-                    </span>
-                    <div class="min-w-0 flex-1">
-                        <div class="flex items-center justify-between gap-1.5">
-                            <div class="flex items-center gap-1.5 shrink-0">
-                                <span class="text-[10px] text-slate-400 font-medium">${formattedTime}</span>
-                                ${streakBadge}
+                    <div class="flex items-center justify-between gap-2.5">
+                        <!-- شارة النسبة المئوية المتسقة مع التصميم -->
+                        <span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-black text-rose-600 bg-rose-50 border border-rose-100 shrink-0 tabular-nums">
+                            ${ICONS.heartSmall}
+                            <span>${item.score}%</span>
+                        </span>
+
+                        <!-- معلومات المرسل/المستلم والأفاتار -->
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <div class="min-w-0 text-right">
+                                <div class="flex items-center justify-end gap-1.5">
+                                    ${streakBadge}
+                                    <span class="font-mono text-xs font-black text-slate-900 uppercase truncate">${isIncoming ? item.sender : item.target}</span>
+                                    <span class="text-[10px] font-bold text-slate-400">${directionLabel}</span>
+                                </div>
+                                <p class="text-[10px] text-slate-400 font-medium mt-0.5">${formattedTime}</p>
                             </div>
-                            <p class="truncate text-xs font-bold text-slate-700">${titleText}</p>
+                            ${avatarHTML}
                         </div>
-                        <p class="mt-1 break-words text-xs text-slate-600 leading-relaxed">${item.note ? `"${item.note}"` : '<span class="text-slate-400">نبضة صامتة</span>'}</p>
-                        ${quickReplyBtnHTML}
                     </div>
-                    <span class="shrink-0 self-center rounded-full px-2.5 py-1 text-[11px] font-black text-rose-600 bg-white border border-rose-100 shadow-2xs">
-                        ${item.score}%
-                    </span>
+                    ${noteBlockHTML}
                 `;
                 list.appendChild(pulseCard);
             });
