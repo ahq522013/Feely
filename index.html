@@ -1656,12 +1656,6 @@
                 return showToast('أضف رمز المستلم في البوكس أعلاه أولاً', 'error');
             }
 
-            // قاعدة الحماية الخاصة باليوزر A: لا يقبل أقل من 100%
-            if (cleanTarget === 'A' && Number(score) < 100) {
-                if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
-                return showToast('نعتذر! لا يمكن إعطاء بابا نبضة حب أقل من 100%', 'error');
-            }
-
             const senderIdentity = getEffectiveSenderIdentity();
 
             isSendingPulse = true;
