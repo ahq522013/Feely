@@ -260,8 +260,8 @@
                     </h3>
                 </div>
 
-                <!-- دوائر الأصدقاء -->
-                <div id="recentContactsList" class="hidden flex gap-3 overflow-x-auto pb-1 pt-0.5 px-1 hide-scrollbar"></div>
+                <!-- دوائر الأصدقاء (مع زر × في أعلى يسار كل دائرة) -->
+                <div id="recentContactsList" class="hidden flex gap-3 overflow-x-auto pb-1 pt-1.5 px-1 hide-scrollbar"></div>
 
                 <!-- بوكس إضافة رمز المستلم المصغّر بخلفية بيضاء وإطار مناسب وزر + -->
                 <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
@@ -323,7 +323,7 @@
                 </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة (شحن متسارع + بوكس رسالة أبيض مدمج مع إيموجيات في الزاوية اليمنى) -->
+            <!-- بطاقة إرسال النبضة -->
             <section class="glass-card p-5 sm:p-6 space-y-4 relative">
                 <!-- أيقونة وضع المجهول على يمين البوكس الأساسي (مطفأة افتراضياً) -->
                 <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="إرسال كمجهول"
@@ -385,7 +385,7 @@
                     </div>
                 </div>
 
-                <!-- بوكس إضافة رسالة مشابه لبوكس المستلم (أبيض بإطار مناسب) مع زر إيموجي في الزاوية اليمنى -->
+                <!-- بوكس إضافة رسالة (بدون كلمة اختياري) مع لوحة إيموجيات حديثة ومتنوعة في الزاوية اليمنى -->
                 <div class="relative">
                     <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
                         <!-- زر الإيموجيات في الزاوية اليمنى -->
@@ -396,20 +396,24 @@
                             </svg>
                         </button>
 
-                        <input type="text" id="loveNote" maxlength="100" placeholder="أضف رسالة قصيرة (اختياري)..."
+                        <input type="text" id="loveNote" maxlength="100" placeholder="أضف رسالة قصيرة"
                                class="w-full bg-transparent text-right text-xs font-medium text-slate-800 placeholder:text-slate-400 outline-none pr-1">
                     </div>
 
-                    <!-- لوحة الإيموجيات المنبثقة عند الضغط على أيقونة الزاوية اليمنى -->
-                    <div id="emojiPickerPopover" class="hidden mt-1.5 p-2 rounded-2xl bg-white border border-rose-200 shadow-lg flex items-center justify-between gap-1 overflow-x-auto hide-scrollbar">
-                        <button type="button" onclick="insertEmojiToNote('❤️')" class="text-base hover:scale-125 active:scale-95 transition p-1">❤️</button>
-                        <button type="button" onclick="insertEmojiToNote('💖')" class="text-base hover:scale-125 active:scale-95 transition p-1">💖</button>
-                        <button type="button" onclick="insertEmojiToNote('🥰')" class="text-base hover:scale-125 active:scale-95 transition p-1">🥰</button>
-                        <button type="button" onclick="insertEmojiToNote('😘')" class="text-base hover:scale-125 active:scale-95 transition p-1">😘</button>
-                        <button type="button" onclick="insertEmojiToNote('🌹')" class="text-base hover:scale-125 active:scale-95 transition p-1">🌹</button>
-                        <button type="button" onclick="insertEmojiToNote('✨')" class="text-base hover:scale-125 active:scale-95 transition p-1">✨</button>
-                        <button type="button" onclick="insertEmojiToNote('🤍')" class="text-base hover:scale-125 active:scale-95 transition p-1">🤍</button>
-                        <button type="button" onclick="insertEmojiToNote('🫂')" class="text-base hover:scale-125 active:scale-95 transition p-1">🫂</button>
+                    <!-- لوحة الإيموجيات الحديثة والمتنوعة -->
+                    <div id="emojiPickerPopover" class="hidden mt-1.5 p-2 rounded-2xl bg-white border border-rose-200 shadow-lg grid grid-cols-6 gap-1 text-center">
+                        <button type="button" onclick="insertEmojiToNote('🫶🏻')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫶🏻</button>
+                        <button type="button" onclick="insertEmojiToNote('🥹')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🥹</button>
+                        <button type="button" onclick="insertEmojiToNote('🫂')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫂</button>
+                        <button type="button" onclick="insertEmojiToNote('💓')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">💓</button>
+                        <button type="button" onclick="insertEmojiToNote('🫠')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫠</button>
+                        <button type="button" onclick="insertEmojiToNote('💌')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">💌</button>
+                        <button type="button" onclick="insertEmojiToNote('🌷')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🌷</button>
+                        <button type="button" onclick="insertEmojiToNote('🦋')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🦋</button>
+                        <button type="button" onclick="insertEmojiToNote('✨')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">✨</button>
+                        <button type="button" onclick="insertEmojiToNote('🔥')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🔥</button>
+                        <button type="button" onclick="insertEmojiToNote('🤍')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🤍</button>
+                        <button type="button" onclick="insertEmojiToNote('💫')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">💫</button>
                     </div>
                 </div>
             </section>
@@ -678,11 +682,12 @@
         let incomingPulses = [];
         let sentPulses = JSON.parse(localStorage.getItem('feely_sent_pulses') || '[]');
         let pinnedFriends = JSON.parse(localStorage.getItem('feely_pinned_friends') || '[]');
+        let hiddenFriends = JSON.parse(localStorage.getItem('feely_hidden_friends') || '[]');
         let recentSearches = JSON.parse(localStorage.getItem('feely_recent_searches') || '[]');
         let isFirstPulseLoad = true;
         let activeStreaksCache = {};
 
-        // ================= ADD RECIPIENT (+) BUTTON LOGIC =================
+        // ================= ADD / REMOVE RECIPIENT LOGIC =================
         function confirmAddRecipient() {
             const input = document.getElementById('targetIdInput');
             const code = input.value.trim().toUpperCase();
@@ -696,6 +701,12 @@
                     return showToast(`الرمز (${code}) غير مسجل أو غير مفعل`, 'error');
                 }
 
+                // إزالته من قائمة المخفيين إذا كان محذوفاً سابقاً
+                if (hiddenFriends.includes(code)) {
+                    hiddenFriends = hiddenFriends.filter(f => f !== code);
+                    localStorage.setItem('feely_hidden_friends', JSON.stringify(hiddenFriends));
+                }
+
                 if (!pinnedFriends.includes(code)) {
                     pinnedFriends.unshift(code);
                     localStorage.setItem('feely_pinned_friends', JSON.stringify(pinnedFriends));
@@ -705,6 +716,29 @@
                 if (navigator.vibrate) navigator.vibrate(15);
                 showToast(`تمت إضافة (${code}) إلى أصدقاء النبض`);
             });
+        }
+
+        function removeFriendFromBar(e, handle) {
+            e.stopPropagation();
+            const clean = handle.trim().toUpperCase();
+
+            pinnedFriends = pinnedFriends.filter(f => f !== clean);
+            localStorage.setItem('feely_pinned_friends', JSON.stringify(pinnedFriends));
+
+            if (!hiddenFriends.includes(clean)) {
+                hiddenFriends.push(clean);
+                localStorage.setItem('feely_hidden_friends', JSON.stringify(hiddenFriends));
+            }
+
+            const targetInput = document.getElementById('targetIdInput');
+            if (targetInput && targetInput.value.trim().toUpperCase() === clean) {
+                targetInput.value = '';
+                onTargetInputChange('');
+            }
+
+            renderRecentContactsBar();
+            if (navigator.vibrate) navigator.vibrate(12);
+            showToast(`تم حذف (${clean}) من أصدقاء النبض`);
         }
 
         // ================= EMOJI PICKER LOGIC =================
@@ -826,7 +860,6 @@
             updateLoveMeterUI(val);
             if (navigator.vibrate) navigator.vibrate(12);
 
-            // مهلة 320ms للضغطة السريعة (1%)، ثم يتسارع العداد تدريجياً من 40ms إلى 8ms
             chargeDelayTimer = setTimeout(() => {
                 if (!isChargingHeart) return;
 
@@ -839,7 +872,6 @@
                         navigator.vibrate(val === 100 ? [30, 40, 30] : 15);
                     }
 
-                    // تسارع ديناميكي: يبدأ ببطء (40ms) ويتسارع بقوة كلما اقترب من 100% (حتى 8ms)
                     const progress = val / 100;
                     const nextDelay = Math.max(8, Math.round(40 * Math.pow(1 - progress, 1.45)));
                     chargeStepTimer = setTimeout(tick, nextDelay);
@@ -1358,7 +1390,7 @@
             });
         }
 
-        // ================= STORIES-STYLE RECENT CONTACTS BAR =================
+        // ================= STORIES-STYLE RECENT CONTACTS BAR (WITH DELETE × BUTTON) =================
         function selectContactRecipient(handle) {
             const clean = handle.toUpperCase();
             const input = document.getElementById('targetIdInput');
@@ -1372,7 +1404,9 @@
             if (!list) return;
 
             const sentTargets = sentPulses.map(p => p.target).filter(Boolean);
-            const uniqueRecipients = [...new Set([...pinnedFriends, ...sentTargets])];
+            const uniqueRecipients = [...new Set([...pinnedFriends, ...sentTargets])].filter(
+                h => !hiddenFriends.includes(h.toUpperCase())
+            );
 
             if (uniqueRecipients.length === 0) {
                 list.classList.add('hidden');
@@ -1386,28 +1420,36 @@
                 const streakVal = activeStreaksCache[handle] !== undefined ? activeStreaksCache[handle] : 0;
                 const initial = handle.charAt(0);
                 
-                const storyItem = document.createElement('button');
-                storyItem.type = 'button';
-                storyItem.onclick = () => selectContactRecipient(handle);
-                storyItem.className = "flex flex-col items-center gap-1 shrink-0 group transition active:scale-90";
-                storyItem.innerHTML = `
-                    <div class="relative">
-                        <div class="story-ring">
-                            <div class="size-12 rounded-full bg-white flex items-center justify-center font-mono text-base font-black text-slate-900 group-hover:bg-rose-50 transition">
-                                ${initial}
+                const wrapper = document.createElement('div');
+                wrapper.className = "relative flex flex-col items-center gap-1 shrink-0 group";
+                wrapper.innerHTML = `
+                    <!-- دائرة رصاصي بداخلها علامة × في أعلى يسار الدائرة لحذف الصديق -->
+                    <button type="button" onclick="removeFriendFromBar(event, '${handle}')" title="حذف الصديق"
+                            class="absolute -top-1 -left-1 z-10 size-4 rounded-full bg-slate-200 hover:bg-rose-500 text-slate-600 hover:text-white border border-white shadow-2xs flex items-center justify-center transition-colors active:scale-90">
+                        <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+
+                    <button type="button" onclick="selectContactRecipient('${handle}')" class="flex flex-col items-center gap-1 transition active:scale-90">
+                        <div class="relative">
+                            <div class="story-ring">
+                                <div class="size-12 rounded-full bg-white flex items-center justify-center font-mono text-base font-black text-slate-900 group-hover:bg-rose-50 transition">
+                                    ${initial}
+                                </div>
                             </div>
+                            <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white border border-rose-200 text-rose-600 text-[9px] font-black px-1.5 py-0.2 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap">
+                                ${ICONS.heartSmall} <span>${streakVal}</span>
+                            </span>
                         </div>
-                        <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white border border-rose-200 text-rose-600 text-[9px] font-black px-1.5 py-0.2 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap">
-                            ${ICONS.heartSmall} <span>${streakVal}</span>
-                        </span>
-                    </div>
-                    <span class="font-mono text-[10px] font-bold text-slate-700 uppercase max-w-[56px] truncate mt-0.5">${handle}</span>
+                        <span class="font-mono text-[10px] font-bold text-slate-700 uppercase max-w-[56px] truncate mt-0.5">${handle}</span>
+                    </button>
                 `;
-                list.appendChild(storyItem);
+                list.appendChild(wrapper);
 
                 if (userHandle && activeStreaksCache[handle] === undefined) {
                     checkTargetStreak(handle, (val) => {
-                        const pillSpan = storyItem.querySelector('.streak-pill span');
+                        const pillSpan = wrapper.querySelector('.streak-pill span');
                         if (pillSpan) pillSpan.textContent = val;
                     });
                 }
@@ -1562,6 +1604,12 @@
                 db.ref('pulses/' + cleanTarget).push(pulseData).then(() => {
                     isSendingPulse = false;
                     db.ref('stats/' + cleanTarget + '/receivedCount').transaction(curr => (curr || 0) + 1);
+
+                    // إعادة إظهار المستلم في الشريط عند الإرسال إليه مجدداً
+                    if (hiddenFriends.includes(cleanTarget)) {
+                        hiddenFriends = hiddenFriends.filter(f => f !== cleanTarget);
+                        localStorage.setItem('feely_hidden_friends', JSON.stringify(hiddenFriends));
+                    }
 
                     sentPulses.unshift(pulseData);
                     localStorage.setItem('feely_sent_pulses', JSON.stringify(sentPulses));
