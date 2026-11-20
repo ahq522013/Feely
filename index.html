@@ -92,7 +92,7 @@
     <!-- Main Workspace -->
     <main class="w-full max-w-md mx-auto px-4 py-6 space-y-4 flex-grow">
 
-        <!-- Receive Code Card (مع أيقونة نسخ واحدة مدمجة) -->
+        <!-- Receive Code Card -->
         <section class="minimal-card p-6 relative overflow-hidden space-y-3">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-black text-rose-500 bg-rose-50 border border-rose-100 px-3 py-1 rounded-full shadow-2xs" id="totalHeartsReceivedBadge">
@@ -101,7 +101,6 @@
                 <p class="text-xs font-bold text-slate-400">رمزك الخاص</p>
             </div>
 
-            <!-- الحاوية الموحدة للرمز مع أيقونة النسخ المباشرة -->
             <div class="flex items-center justify-between gap-2 bg-[#fbf1f2] rounded-2xl px-4 py-2 border border-rose-100/60">
                 <button type="button" id="copyBtn" onclick="copyMyLink()" title="نسخ الرابط"
                         class="p-2 text-slate-600 hover:text-rose-500 hover:bg-white rounded-xl transition active:scale-90 shadow-2xs">
@@ -117,7 +116,6 @@
                 </div>
             </div>
 
-            <!-- زر الإجراء السفلي -->
             <div class="pt-1">
                 <button id="handleActionBtn" onclick="registerHandle()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-2xl text-xs shadow-md transition active:scale-95">
                     حفظ الرمز وتفعيله فوراً
@@ -135,9 +133,7 @@
                     <span>✨</span>
                 </h3>
             </div>
-            <div id="recentContactsList" class="flex gap-2 overflow-x-auto pb-1 pt-1 hide-scrollbar">
-                <!-- Chips rendered dynamically -->
-            </div>
+            <div id="recentContactsList" class="flex gap-2 overflow-x-auto pb-1 pt-1 hide-scrollbar"></div>
         </section>
 
         <!-- Send Pulse Card -->
@@ -216,7 +212,7 @@
         صُمم بحب · Feely App © 2026
     </footer>
 
-    <!-- Auth Modal (اختياري) -->
+    <!-- Auth Modal (اختياري لترقية الحساب وحفظه بين الأجهزة) -->
     <div id="authModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 border border-rose-100 shadow-2xl relative text-right">
             <button onclick="closeAuthModal()" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
@@ -227,7 +223,7 @@
                 </div>
                 <h3 class="text-sm font-bold text-slate-900">ربط الحساب (اختياري)</h3>
                 <p class="text-xs text-slate-500 leading-relaxed">
-                    يمكنك ربط رمزك بـ Google أو بريدك لحفظه بشكل دائم واسترجاعه في أي وقت.
+                    يمكنك ربط رمزك بـ Google أو بريدك لحفظه بشكل دائم واسترجاعه من أي جهاز.
                 </p>
             </div>
 
@@ -291,16 +287,159 @@
                 selectContactRecipient(userParam.toUpperCase());
             }
 
-            if (userHandle) {
-                setHandleLockedState(userHandle);
-                listenForIncomingPulses(userHandle);
-            }
-
             updateOrb(75);
             updateBellUI();
             renderPulsesList();
             renderRecentContactsBar();
         });
+
+        // ================= ANONYMOUS & FULL AUTH LOGIC =================
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+
+                // إذا كان الحساب مربوطاً ببريد أو Google (ليس مجهولاً)
+                if (!user.isAnonymous) {
+                    document.getElementById('openAuthModalBtn').classList.add('hidden');
+                    document.getElementById('logoutBtn').classList.remove('hidden');
+                    closeAuthModal();
+                } else {
+                    document.getElementById('openAuthModalBtn').classList.remove('hidden');
+                    document.getElementById('logoutBtn').classList.add('hidden');
+                }
+
+                // التحقق من الرمز المحفوظ في السحابة لهذا الـ uid
+                db.ref('users/' + user.uid + '/handle').once('value', snapshot => {
+                    if (snapshot.exists()) {
+                        const savedHandle = snapshot.val();
+                        userHandle = savedHandle;
+                        localStorage.setItem('feely_user_handle', userHandle);
+                        setHandleLockedState(userHandle);
+                        listenForIncomingPulses(userHandle);
+                        initPushNotifications(userHandle);
+                        renderRecentContactsBar();
+                    } else if (userHandle) {
+                        // التحقق من ملكية الرمز المحلي مع الـ uid الحالي
+                        db.ref('handles/' + userHandle).once('value', hSnap => {
+                            if (hSnap.exists() && hSnap.val() === user.uid) {
+                                db.ref('users/' + user.uid + '/handle').set(userHandle);
+                                setHandleLockedState(userHandle);
+                                listenForIncomingPulses(userHandle);
+                                initPushNotifications(userHandle);
+                                renderRecentContactsBar();
+                            } else {
+                                // الرمز المحلي لم يعد صالحاً أو محجوز لغيره
+                                localStorage.removeItem('feely_user_handle');
+                                userHandle = null;
+                            }
+                        });
+                    }
+                });
+            } else {
+                // إنشاء هوية مجهولة صامتة في الخلفية فوراً للزائر
+                auth.signInAnonymously().catch(err => {
+                    console.error("Anonymous auth error:", err);
+                });
+            }
+        });
+
+        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
+        function closeAuthModal() { 
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('authErrorMsg').classList.add('hidden');
+        }
+
+        function loginWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            // محاولة ربط الحساب المجهول الحالي بـ Google للحفاظ على نفس uid والرمز
+            if (currentUser && currentUser.isAnonymous) {
+                currentUser.linkWithPopup(provider)
+                    .then((result) => {
+                        if (userHandle) {
+                            db.ref('users/' + result.user.uid).update({ handle: userHandle, email: result.user.email });
+                        }
+                    })
+                    .catch(err => {
+                        // إذا كان حساب Google مستخدماً مسبقاً، سجل الدخول به مباشرة
+                        if (err.code === 'auth/credential-already-in-use') {
+                            auth.signInWithCredential(err.credential).catch(e => showAuthError(e.message));
+                        } else {
+                            showAuthError(err.message);
+                        }
+                    });
+            } else {
+                auth.signInWithPopup(provider).catch(err => showAuthError(err.message));
+            }
+        }
+
+        function handleSmartEmailAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value;
+            const btn = document.getElementById('smartAuthBtn');
+            const errBox = document.getElementById('authErrorMsg');
+            
+            errBox.classList.add('hidden');
+            btn.disabled = true;
+            btn.textContent = "جاري التحقق...";
+
+            const credential = firebase.auth.EmailAuthProvider.credential(email, password);
+
+            // ترقية الحساب المجهول الحالي بربطه بالبريد الإلكتروني للحفاظ على الرمز
+            if (currentUser && currentUser.isAnonymous) {
+                currentUser.linkWithCredential(credential)
+                    .then((result) => {
+                        if (userHandle) {
+                            db.ref('users/' + result.user.uid).update({ handle: userHandle, email: email });
+                        }
+                        btn.disabled = false;
+                        btn.textContent = "دخول / حفظ";
+                    })
+                    .catch(err => {
+                        if (err.code === 'auth/email-already-in-use' || err.code === 'auth/credential-already-in-use') {
+                            auth.signInWithEmailAndPassword(email, password)
+                                .then(() => {
+                                    btn.disabled = false;
+                                    btn.textContent = "دخول / حفظ";
+                                })
+                                .catch(signInErr => {
+                                    btn.disabled = false;
+                                    btn.textContent = "دخول / حفظ";
+                                    showAuthError(signInErr.message);
+                                });
+                        } else {
+                            btn.disabled = false;
+                            btn.textContent = "دخول / حفظ";
+                            showAuthError(err.message);
+                        }
+                    });
+            } else {
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(() => {
+                        btn.disabled = false;
+                        btn.textContent = "دخول / حفظ";
+                    })
+                    .catch(err => {
+                        btn.disabled = false;
+                        btn.textContent = "دخول / حفظ";
+                        showAuthError(err.message);
+                    });
+            }
+        }
+
+        function showAuthError(msg) {
+            const errBox = document.getElementById('authErrorMsg');
+            errBox.textContent = msg;
+            errBox.classList.remove('hidden');
+        }
+
+        function logout() { 
+            auth.signOut().then(() => {
+                localStorage.removeItem('feely_user_handle');
+                alert("تم تسجيل الخروج");
+                location.reload();
+            }); 
+        }
 
         // ================= FIREBASE CLOUD STREAK LOGIC =================
         function getFirebasePairKey(handle1, handle2) {
@@ -314,7 +453,7 @@
             const trimmedTarget = target.trim().toUpperCase();
             const badge = document.getElementById('targetStreakIndicator');
             
-            if (trimmedTarget.length < 3 || !userHandle) {
+            if (trimmedTarget.length < 1 || !userHandle || !currentUser) {
                 badge.classList.add('hidden');
                 if (callback) callback(0);
                 return;
@@ -417,7 +556,6 @@
                 }
             });
         }
-        // ==================================================================
 
         function timeAgo(ts) {
             const s = Math.floor((Date.now() - ts) / 1000);
@@ -441,99 +579,17 @@
             if (navigator.vibrate) navigator.vibrate(10);
         }
 
-        // Auth Logic
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('openAuthModalBtn').classList.add('hidden');
-                document.getElementById('logoutBtn').classList.remove('hidden');
-                closeAuthModal();
-
-                db.ref('users/' + user.uid + '/handle').once('value', snapshot => {
-                    if (snapshot.exists()) {
-                        const savedHandle = snapshot.val();
-                        userHandle = savedHandle;
-                        localStorage.setItem('feely_user_handle', userHandle);
-                        setHandleLockedState(userHandle);
-                        listenForIncomingPulses(userHandle);
-                        initPushNotifications(userHandle);
-                        renderRecentContactsBar();
-                    } else if (userHandle) {
-                        db.ref('users/' + user.uid + '/handle').set(userHandle);
-                    }
-                });
-            } else {
-                currentUser = null;
-                document.getElementById('openAuthModalBtn').classList.remove('hidden');
-                document.getElementById('logoutBtn').classList.add('hidden');
-            }
-        });
-
-        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
-        function closeAuthModal() { 
-            document.getElementById('authModal').classList.add('hidden');
-            document.getElementById('authErrorMsg').classList.add('hidden');
-        }
-
-        function loginWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(err => showAuthError(err.message));
-        }
-
-        function handleSmartEmailAuth(e) {
-            e.preventDefault();
-            const email = document.getElementById('authEmail').value.trim();
-            const password = document.getElementById('authPassword').value;
-            const btn = document.getElementById('smartAuthBtn');
-            const errBox = document.getElementById('authErrorMsg');
-            
-            errBox.classList.add('hidden');
-            btn.disabled = true;
-            btn.textContent = "جاري التحقق...";
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    btn.disabled = false;
-                    btn.textContent = "دخول / حفظ";
-                })
-                .catch(err => {
-                    if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
-                        auth.createUserWithEmailAndPassword(email, password)
-                            .then(() => {
-                                btn.disabled = false;
-                                btn.textContent = "دخول / حفظ";
-                            })
-                            .catch(signUpErr => {
-                                btn.disabled = false;
-                                btn.textContent = "دخول / حفظ";
-                                showAuthError(signUpErr.message);
-                            });
-                    } else {
-                        btn.disabled = false;
-                        btn.textContent = "دخول / حفظ";
-                        showAuthError(err.message);
-                    }
-                });
-        }
-
-        function showAuthError(msg) {
-            const errBox = document.getElementById('authErrorMsg');
-            errBox.textContent = msg;
-            errBox.classList.remove('hidden');
-        }
-
-        function logout() { 
-            auth.signOut().then(() => {
-                alert("تم تسجيل الخروج");
-                location.reload();
-            }); 
-        }
-
-        // Handle Registration
+        // Handle Registration (مربوط بـ uid السري تلقائياً)
         function registerHandle() {
             const handle = document.getElementById('usernameInput').value.trim().toUpperCase();
             const alertBox = document.getElementById('handleStatusAlert');
             
+            if (!currentUser) {
+                alertBox.textContent = "جاري تهيئة الاتصال الآمن، حاول بعد لحظة...";
+                alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
+                return;
+            }
+
             const validRegex = /^[a-zA-Z0-9_]+$/;
             if (!validRegex.test(handle)) {
                 alertBox.textContent = "يُسمح فقط بالحروف الإنجليزية، الأرقام والشرطة السفلية (_)";
@@ -541,30 +597,31 @@
                 return;
             }
 
-            if (handle.length < 3) {
-                alertBox.textContent = "رمز الاستقبال يجب ألا يقل عن 3 خانات";
+            if (handle.length < 1) {
+                alertBox.textContent = "يرجى إدخال حرف واحد على الأقل للرمز";
                 alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
                 return;
             }
 
             alertBox.className = "hidden";
-            const ownerIdentifier = currentUser ? currentUser.uid : "active_guest";
             
-            db.ref('handles/' + handle).set(ownerIdentifier).then(() => {
+            db.ref('handles/' + handle).set(currentUser.uid).then(() => {
                 userHandle = handle;
                 localStorage.setItem('feely_user_handle', handle);
 
-                if (currentUser) {
-                    db.ref('users/' + currentUser.uid).set({ handle: handle, email: currentUser.email });
-                }
+                db.ref('users/' + currentUser.uid + '/handle').set(handle);
 
                 setHandleLockedState(userHandle);
                 listenForIncomingPulses(userHandle);
                 initPushNotifications(userHandle);
                 renderRecentContactsBar();
-                alert(`تم تفعيل الرمز (${handle}) بنجاح! جاهز لاستقبال النبضات الآن 💖`);
+                alert(`تم تفعيل الرمز (${handle}) وتأمينه بنجاح! 💖`);
             }).catch(err => {
-                alertBox.textContent = "خطأ في الاتصال بقاعدة البيانات: " + err.message;
+                if (err.code === 'PERMISSION_DENIED') {
+                    alertBox.textContent = "هذا الرمز محجوز لشخص آخر، اختر رمزاً مختلفاً";
+                } else {
+                    alertBox.textContent = "خطأ في الاتصال: " + err.message;
+                }
                 alertBox.className = "text-[10px] text-center font-medium text-rose-500 block";
             });
         }
@@ -616,12 +673,14 @@
 
         function sendLovePulse(e) {
             e.preventDefault();
+            if (!currentUser) return alert('يرجى الانتظار لحظة لتأمين الاتصال...');
+
             const targetHandle = document.getElementById('targetIdInput').value.trim().toUpperCase();
             const senderName = document.getElementById('senderNameInput').value.trim() || userHandle || 'مجهول';
             const score = document.getElementById('loveSlider').value;
             const note = document.getElementById('loveNote').value.trim();
 
-            if (!targetHandle || targetHandle.length < 3) return alert('يرجى إدخال رمز مستلم صحيح');
+            if (!targetHandle || targetHandle.length < 1) return alert('يرجى إدخال رمز مستلم صحيح');
 
             db.ref('handles/' + targetHandle).once('value', snapshot => {
                 if (!snapshot.exists()) return alert('رمز المستلم غير موجود، تأكد أن المستلم قام بالضغط على "حفظ الرمز وتفعيله" في جهازه');
