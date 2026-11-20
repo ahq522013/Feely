@@ -55,7 +55,7 @@
             box-shadow: 0 0 0 4px rgba(251, 113, 133, 0.14);
         }
 
-        /* Compact White Box Inputs */
+        /* Compact White Box Inputs (Unified Style) */
         .white-compact-box {
             background: #ffffff;
             border: 1.5px solid #fecdd3;
@@ -66,6 +66,21 @@
         .white-compact-box:focus-within {
             border-color: #fb7185;
             box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.14);
+        }
+
+        /* Unified Field Text & Placeholder Typography */
+        .unified-field-text {
+            font-family: 'Readex Pro', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+        }
+        .unified-field-text::placeholder {
+            font-family: 'Readex Pro', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: normal;
+            color: #94a3b8;
         }
 
         /* Story Avatar Ring */
@@ -124,13 +139,13 @@
             user-select: none;
         }
 
-        /* Toast Notification */
-        @keyframes toastSlideIn {
-            0% { transform: translate(-50%, -120%); opacity: 0; }
-            100% { transform: translate(-50%, 0); opacity: 1; }
+        /* Unified Centered Toast Notification */
+        @keyframes toastCenterDrop {
+            0% { transform: translateY(-24px) scale(0.95); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
         }
         .toast-enter {
-            animation: toastSlideIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation: toastCenterDrop 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
         .hide-scrollbar::-webkit-scrollbar { display: none; }
@@ -149,10 +164,10 @@
 </head>
 <body class="text-slate-800 min-h-[100dvh] flex flex-col justify-between antialiased selection:bg-rose-100 selection:text-rose-700">
 
-    <!-- إشعار Toast عائم حديث -->
-    <div id="toastContainer" style="top: calc(0.9rem + var(--safe-top));" class="fixed left-1/2 -translate-x-1/2 z-50 pointer-events-none w-[92%] max-w-sm"></div>
+    <!-- حاوية الإشعارات الموحدة في منتصف الشاشة تماماً على الجوال والكمبيوتر -->
+    <div id="toastContainer" style="top: calc(1rem + var(--safe-top));" class="fixed inset-x-0 mx-auto z-50 pointer-events-none px-4 flex flex-col items-center justify-center w-full max-w-sm"></div>
 
-    <!-- Header العلوي الموحد (يضم أزرار التنقل + الإشعارات + الصوت + حفظ الحساب + الشعار) -->
+    <!-- Header العلوي الموحد -->
     <header class="w-full max-w-md mx-auto px-3.5 sm:px-5 pt-4 sm:pt-6 flex justify-between items-center gap-1.5">
         <div id="authStatusContainer" class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
             <!-- زر حفظ الحساب / خروج -->
@@ -196,7 +211,7 @@
                 <span id="profileAlertDot" class="hidden absolute right-1.5 top-1.5 size-2 rounded-full bg-rose-500 ring-2 ring-white"></span>
             </button>
 
-            <!-- أيقونة الإشعارات (تُظهر وجود إشعارات جديدة من عدمها) -->
+            <!-- أيقونة الإشعارات -->
             <button id="notificationBellBtn" onclick="handleBellClick()" title="إشعارات النبضات" 
                     class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 text-slate-600 hover:text-rose-500 transition border border-rose-100 shadow-2xs active:scale-90">
                 <svg id="bellSvgIcon" class="w-4 h-4 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
@@ -243,7 +258,7 @@
                     <span>وصلك</span>
                 </span>
                 <div class="flex items-center gap-2 min-w-0">
-                    <span id="miniHandleDisplay" class="font-mono text-xs sm:text-sm font-black tracking-widest text-slate-900 uppercase truncate">فعّل رمزك الآن</span>
+                    <span id="miniHandleDisplay" class="unified-field-text uppercase truncate">فعّل رمزك الآن</span>
                     <div class="size-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
@@ -270,7 +285,7 @@
                 <!-- دوائر الأصدقاء -->
                 <div id="recentContactsList" class="hidden flex gap-3 overflow-x-auto pb-1 pt-1.5 px-1 hide-scrollbar"></div>
 
-                <!-- بوكس إضافة رمز المستلم -->
+                <!-- بوكس إضافة رمز المستلم (بنفس الخط والحجم واللون الموحد) -->
                 <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
                     <button type="button" onclick="confirmAddRecipient()" title="إضافة المستلم"
                             class="size-7 rounded-xl bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-200/80 flex items-center justify-center shrink-0 transition-all active:scale-90">
@@ -281,7 +296,7 @@
                     <input type="text" id="targetIdInput" placeholder="أضف رمز المستلم" autocapitalize="characters" autocomplete="off"
                            oninput="onTargetInputChange(this.value)"
                            onkeydown="if(event.key==='Enter'){event.preventDefault(); confirmAddRecipient();}"
-                           class="w-full bg-transparent text-center font-mono text-xs font-bold tracking-[0.15em] text-slate-800 placeholder:font-sans placeholder:text-xs placeholder:font-medium placeholder:tracking-normal placeholder:text-slate-400 outline-none uppercase">
+                           class="w-full bg-transparent text-center unified-field-text tracking-wider outline-none uppercase">
                     <span class="size-7 shrink-0"></span>
                 </div>
             </section>
@@ -389,7 +404,7 @@
                     </div>
                 </div>
 
-                <!-- بوكس إضافة رسالة مع لوحة إيموجيات حديثة -->
+                <!-- بوكس إضافة رسالة (موحد تماماً في الخط والحجم واللون مع بوكس المستلم وملف التعريف) -->
                 <div class="relative">
                     <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
                         <button type="button" id="emojiPickerToggleBtn" onclick="toggleEmojiPicker()" title="إضافة إيموجي"
@@ -400,7 +415,8 @@
                         </button>
 
                         <input type="text" id="loveNote" maxlength="100" placeholder="أضف رسالة قصيرة"
-                               class="w-full bg-transparent text-right text-xs font-medium text-slate-800 placeholder:text-slate-400 outline-none pr-1">
+                               class="w-full bg-transparent text-center unified-field-text outline-none">
+                        <span class="size-7 shrink-0"></span>
                     </div>
 
                     <div id="emojiPickerPopover" class="hidden mt-1.5 p-2 rounded-2xl bg-white border border-rose-200 shadow-lg grid grid-cols-6 gap-1 text-center">
@@ -543,7 +559,7 @@
                     </span>
                 </div>
 
-                <!-- بطاقة الهوية الاجتماعية -->
+                <!-- بطاقة الهوية الاجتماعية (موحدة الخط والحجم واللون لليوزر الجديد) -->
                 <div class="bg-gradient-to-b from-[#fff1f3] via-white to-[#fff8f9] rounded-3xl p-5 border border-rose-200/70 shadow-xs text-center space-y-3.5">
                     <div class="story-ring w-18 h-18 inline-block mx-auto shadow-md shadow-rose-200">
                         <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center text-rose-500">
@@ -555,16 +571,17 @@
 
                     <div>
                         <p class="text-[11px] font-bold text-slate-400">رمزك الخاص (حرف واحد أو أكثر)</p>
-                        <div class="mt-1.5 flex items-center justify-center gap-2 bg-white rounded-2xl px-3.5 py-2.5 border border-rose-200/70 shadow-2xs">
+                        <div class="mt-1.5 white-compact-box flex items-center justify-center gap-1.5 px-2 py-1.5 shadow-2xs">
                             <button type="button" id="copyBtn" onclick="copyMyLink()" title="نسخ الرابط"
-                                    class="p-2 text-slate-500 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition active:scale-90 shrink-0">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    class="size-7 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 border border-rose-200/70 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                                 </svg>
                             </button>
                             <input type="text" id="usernameInput" autocapitalize="characters" autocomplete="off"
-                                   class="bg-transparent text-center font-mono text-xl sm:text-2xl font-black tracking-[0.25em] text-slate-900 outline-none w-full uppercase"
-                                   placeholder="FEELYOU">
+                                   class="w-full bg-transparent text-center unified-field-text tracking-wider outline-none uppercase"
+                                   placeholder="اكتب رمزك الخاص">
+                            <span class="size-7 shrink-0"></span>
                         </div>
                     </div>
 
@@ -717,7 +734,6 @@
         }
 
         function handleBellClick() {
-            // طلب إذن الإشعارات في الخلفية إذا لم يكن ممنوحاً بعد
             if ("Notification" in window && Notification.permission === "default") {
                 Notification.requestPermission().then(permission => {
                     if (permission === "granted" && userHandle) {
@@ -830,24 +846,25 @@
             if (navigator.vibrate) navigator.vibrate(12);
         }
 
-        // ================= MODERN TOAST NOTIFICATION =================
+        // ================= UNIFIED CENTERED TOAST NOTIFICATION =================
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             if (!container) return;
 
             const isError = type === 'error';
             const toast = document.createElement('div');
-            toast.className = `toast-enter flex items-center justify-between gap-2.5 px-4 py-3 rounded-2xl shadow-xl border text-xs font-bold mb-2 ${
-                isError 
-                ? 'bg-slate-900 text-white border-rose-500/40' 
-                : 'bg-slate-900/95 text-white border-white/10'
-            }`;
+            toast.className = `toast-enter w-full flex items-center justify-between gap-2.5 px-4 py-3 rounded-2xl bg-white/95 backdrop-blur-md shadow-xl shadow-rose-200/50 border ${
+                isError ? 'border-rose-300' : 'border-rose-100'
+            } text-xs font-bold text-slate-800 mb-2`;
+
+            const badgeHTML = isError
+                ? `<span class="size-6 rounded-full bg-rose-500 text-white font-black flex items-center justify-center shrink-0 shadow-2xs">!</span>`
+                : `<span class="size-6 rounded-full bg-gradient-to-tr from-rose-500 to-pink-400 text-white flex items-center justify-center shrink-0 shadow-2xs">${ICONS.check}</span>`;
 
             toast.innerHTML = `
-                <span class="size-6 rounded-full ${isError ? 'bg-rose-500/20 text-rose-400' : 'bg-rose-500 text-white'} flex items-center justify-center shrink-0">
-                    ${isError ? '!' : ICONS.check}
-                </span>
-                <span class="flex-1 text-right leading-snug">${message}</span>
+                ${badgeHTML}
+                <span class="flex-1 text-center leading-snug text-slate-800">${message}</span>
+                <span class="size-6 shrink-0"></span>
             `;
 
             container.innerHTML = '';
@@ -855,10 +872,10 @@
 
             setTimeout(() => {
                 toast.style.opacity = '0';
-                toast.style.transform = 'translate(-50%, -20px)';
+                toast.style.transform = 'translateY(-14px) scale(0.96)';
                 toast.style.transition = 'all 0.25s ease';
                 setTimeout(() => toast.remove(), 260);
-            }, 3000);
+            }, 3200);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -1637,6 +1654,12 @@
                 const targetInput = document.getElementById('targetIdInput');
                 if (targetInput) targetInput.focus();
                 return showToast('أضف رمز المستلم في البوكس أعلاه أولاً', 'error');
+            }
+
+            // قاعدة الحماية الخاصة باليوزر A: لا يقبل أقل من 100%
+            if (cleanTarget === 'A' && Number(score) < 100) {
+                if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
+                return showToast('نعتذر! لا يمكن إعطاء بابا نبضة حب أقل من 100%', 'error');
             }
 
             const senderIdentity = getEffectiveSenderIdentity();
