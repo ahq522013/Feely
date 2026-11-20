@@ -76,25 +76,14 @@
         }
         .heart-send-btn {
             animation: heartHalo 2.2s infinite;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
         }
-
-        /* Custom Tactile Slider */
-        input[type=range] { -webkit-appearance: none; background: transparent; height: 34px; }
-        input[type=range]:focus { outline: none; }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 10px; cursor: pointer;
-            border-radius: 999px;
-            background: linear-gradient(to left, #ffe4e6, #fecdd3);
-        }
-        input[type=range]::-webkit-slider-thumb {
-            height: 28px; width: 28px; border-radius: 50%;
-            background: #ffffff; border: 5px solid #e11d48; cursor: pointer;
-            -webkit-appearance: none; margin-top: -9px;
-            box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
-            transition: transform 0.12s ease;
-        }
-        input[type=range]:active::-webkit-slider-thumb {
-            transform: scale(1.15);
+        .heart-charging {
+            animation: none !important;
+            box-shadow: 0 0 0 14px rgba(225, 29, 72, 0.18), 0 10px 25px -5px rgba(225, 29, 72, 0.35);
+            border-color: #f43f5e !important;
         }
 
         /* Floating Hearts Animation */
@@ -243,7 +232,7 @@
                 </div>
             </div>
 
-            <!-- بوكس أصدقاء النبض المدمج (الدوائر في الأعلى + مربع أضف رمز المستلم تحتها مباشرة بدون عنوان) -->
+            <!-- بوكس أصدقاء النبض المدمج -->
             <section id="recentContactsSection" class="glass-card p-4 space-y-3">
                 <div class="flex items-center justify-between px-1">
                     <div class="flex items-center gap-1.5">
@@ -267,14 +256,14 @@
                 <!-- دوائر الأصدقاء -->
                 <div id="recentContactsList" class="hidden flex gap-3 overflow-x-auto pb-1 pt-0.5 px-1 hide-scrollbar"></div>
 
-                <!-- بوكس إضافة رمز المستلم بدون أي عنوان خارجي -->
+                <!-- بوكس إضافة رمز المستلم بدون عنوان -->
                 <div>
                     <input type="text" id="targetIdInput" placeholder="أضف رمز المستلم" autocapitalize="characters" autocomplete="off" oninput="onTargetInputChange(this.value)"
                            class="soft-input w-full px-4 py-3 text-center font-mono font-black tracking-[0.2em] text-slate-900 placeholder:font-sans placeholder:font-semibold placeholder:tracking-normal placeholder:text-slate-400 outline-none uppercase">
                 </div>
             </section>
 
-            <!-- بطاقة صفحة الصديق (تظهر عند اختيار صديق أو فتح رابطه) -->
+            <!-- بطاقة صفحة الصديق -->
             <section id="friendProfileCard" class="hidden glass-card p-4 sm:p-5 relative overflow-hidden space-y-3 border-2 border-rose-300 bg-gradient-to-b from-[#fff2f4] to-white">
                 <div class="flex items-center justify-between">
                     <button type="button" onclick="closeFriendProfile()" class="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 hover:text-slate-800 bg-white px-2.5 py-1 rounded-full border border-slate-200/80 transition active:scale-95">
@@ -314,17 +303,23 @@
                         <svg class="w-3.5 h-3.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                         <span>ستريك مشترك: 0 أيام</span>
                     </span>
-                    <span class="text-slate-400">اضغط على القلب أدناه للإرسال</span>
+                    <span class="text-slate-400">اضغط مطولاً على القلب أدناه للإرسال</span>
                 </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة (القلب نفسه هو زر الإرسال) -->
+            <!-- بطاقة إرسال النبضة (نظام الشحن بالضغط المستمر + عداد المستويات الخمسة) -->
             <section class="glass-card p-5 sm:p-6 space-y-4">
                 <div class="text-center space-y-2 pt-1">
-                    <!-- زر القلب التفاعلي للإرسال -->
-                    <button type="button" id="mainHeartOrb" onclick="sendLovePulse(event)" title="اضغط لإرسال نبضة حب"
-                            class="heart-send-btn inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/80 border-2 border-rose-200 hover:border-rose-400 shadow-md cursor-pointer select-none transition-transform duration-150 active:scale-90">
-                        <svg id="dynamicHeartSvg" style="transform: scale(1.05);" class="w-12 h-12 transition-transform duration-150 drop-shadow-sm" viewBox="0 0 24 24">
+                    <!-- زر القلب التفاعلي للشحن والإرسال عند الإفلات -->
+                    <button type="button" id="mainHeartOrb"
+                            onpointerdown="startHeartCharge(event)"
+                            onpointerup="releaseHeartCharge(event)"
+                            onpointerleave="cancelHeartCharge()"
+                            onpointercancel="cancelHeartCharge()"
+                            oncontextmenu="return false;"
+                            title="اضغط ضغطة سريعة لـ 5% أو استمر بالضغط للوصول إلى 100%"
+                            class="heart-send-btn inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/80 border-2 border-rose-200 hover:border-rose-400 shadow-md cursor-pointer select-none transition-all duration-150">
+                        <svg id="dynamicHeartSvg" style="transform: scale(0.75);" class="w-12 h-12 transition-transform duration-150 drop-shadow-sm pointer-events-none" viewBox="0 0 24 24">
                             <defs>
                                 <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stop-color="#fb7185"/>
@@ -336,21 +331,37 @@
                     </button>
 
                     <div>
-                        <h2 onclick="sendLovePulse(event)" class="text-lg font-black text-slate-900 cursor-pointer hover:text-rose-600 transition">أرسل نبضة حب</h2>
-                        <p class="text-[10px] text-slate-400 mt-0.5">اضغط على القلب لإرسال النبضة</p>
+                        <h2 class="text-lg font-black text-slate-900">أرسل نبضة حب</h2>
+                        <p id="holdHintText" class="text-[10px] text-slate-400 mt-0.5">ضغطة سريعة 5% · استمر بالضغط حتى 100%</p>
                     </div>
 
-                    <div class="inline-flex items-center gap-1.5 bg-rose-50 px-3 py-0.5 rounded-full border border-rose-100">
-                        <span id="moodLabel" class="text-[11px] font-bold text-rose-600">حب كبير</span>
+                    <div class="inline-flex items-center gap-1.5 bg-rose-50 px-3.5 py-1 rounded-full border border-rose-100">
+                        <span id="moodLabel" class="text-[11px] font-bold text-rose-600">لمسة لطيفة</span>
                         <span class="text-rose-300">•</span>
-                        <span id="rangeDisplay" class="text-[11px] font-black text-rose-600">75%</span>
+                        <span id="rangeDisplay" class="text-xs font-black text-rose-600">5%</span>
                     </div>
                 </div>
 
-                <div class="space-y-3.5">
-                    <!-- Slider -->
-                    <div class="px-1">
-                        <input type="range" id="loveSlider" min="1" max="100" value="75" oninput="updateOrb(this.value)" class="w-full">
+                <div class="space-y-4">
+                    <!-- عداد المستويات الخمسة المرئي (5% - 25% - 50% - 75% - 100%) -->
+                    <div class="bg-[#f9eff1] p-2 rounded-2xl border border-rose-100/80 space-y-2">
+                        <!-- شريط التقدم المقطّع لـ 5 مستويات -->
+                        <div class="grid grid-cols-5 gap-1.5 px-0.5" dir="ltr">
+                            <div id="seg-5" class="h-2 rounded-full bg-rose-500 transition-all duration-150"></div>
+                            <div id="seg-25" class="h-2 rounded-full bg-rose-200/70 transition-all duration-150"></div>
+                            <div id="seg-50" class="h-2 rounded-full bg-rose-200/70 transition-all duration-150"></div>
+                            <div id="seg-75" class="h-2 rounded-full bg-rose-200/70 transition-all duration-150"></div>
+                            <div id="seg-100" class="h-2 rounded-full bg-rose-200/70 transition-all duration-150"></div>
+                        </div>
+
+                        <!-- أزرار/مؤشرات النسب الخمس -->
+                        <div class="grid grid-cols-5 gap-1 text-center" dir="ltr">
+                            <button type="button" id="lvlBtn-5" onclick="previewLoveLevel(5)" class="py-1 rounded-xl text-[11px] font-black bg-white text-rose-600 shadow-2xs border border-rose-200 transition-all">5%</button>
+                            <button type="button" id="lvlBtn-25" onclick="previewLoveLevel(25)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">25%</button>
+                            <button type="button" id="lvlBtn-50" onclick="previewLoveLevel(50)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">50%</button>
+                            <button type="button" id="lvlBtn-75" onclick="previewLoveLevel(75)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">75%</button>
+                            <button type="button" id="lvlBtn-100" onclick="previewLoveLevel(100)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">100%</button>
+                        </div>
                     </div>
 
                     <!-- شرائح رسائل سريعة بلمسة واحدة -->
@@ -400,7 +411,7 @@
             </section>
         </div>
 
-        <!-- ==================== VIEW 2: SEARCH (البحث الفوري) ==================== -->
+        <!-- ==================== VIEW 2: SEARCH ==================== -->
         <div id="viewSearch" class="hidden space-y-4">
             <section class="glass-card p-5 sm:p-6 space-y-4">
                 <div class="text-center space-y-1">
@@ -474,7 +485,7 @@
             </section>
         </div>
 
-        <!-- ==================== VIEW 3: PROFILE (بطاقة الهوية الرقمية) ==================== -->
+        <!-- ==================== VIEW 3: PROFILE ==================== -->
         <div id="viewProfile" class="hidden space-y-4">
             <section class="glass-card p-5 sm:p-6 relative overflow-hidden space-y-4 border-2 border-rose-100">
                 <div class="flex items-center justify-between gap-2">
@@ -589,7 +600,7 @@
         </div>
     </div>
 
-    <!-- Firebase & UX Interactions Script -->
+    <!-- Firebase & Hold-to-Charge Logic Script -->
     <script>
         const firebaseConfig = {
           apiKey: "AIzaSyCZLJ3VX05H05lTFWt3obbqVK71_jgaffs",
@@ -618,6 +629,12 @@
             check: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
             pulseHeart: '<svg class="w-4 h-4 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'
         };
+
+        // المستويات الخمسة المطلوبة
+        const LOVE_LEVELS = [5, 25, 50, 75, 100];
+        let currentLoveLevel = 5;
+        let chargeInterval = null;
+        let isChargingHeart = false;
 
         let currentUser = null;
         let userHandle = localStorage.getItem('feely_user_handle') || null;
@@ -678,12 +695,130 @@
             }
 
             updateSoundUI();
-            updateOrb(75);
+            updateLoveLevelUI(5);
             updateBellUI();
             renderPulsesList();
             renderRecentContactsBar();
             renderRecentSearches();
         });
+
+        // ================= 5-LEVEL HOLD-TO-CHARGE HEART LOGIC =================
+        function updateLoveLevelUI(level) {
+            currentLoveLevel = level;
+            document.getElementById('rangeDisplay').textContent = level + '%';
+
+            const moodMap = {
+                5: 'لمسة لطيفة',
+                25: 'اهتمام وود',
+                50: 'نبضة دافئة',
+                75: 'حب كبير',
+                100: 'حب لا يوصف'
+            };
+            document.getElementById('moodLabel').textContent = moodMap[level] || 'نبضة حب';
+
+            // تكبير القلب حسب المستوى الحالي
+            const scaleMap = {
+                5: 0.72,
+                25: 0.85,
+                50: 0.98,
+                75: 1.12,
+                100: 1.28
+            };
+            const svg = document.getElementById('dynamicHeartSvg');
+            if (svg) {
+                svg.style.transform = `scale(${scaleMap[level] || 1})`;
+            }
+
+            // تحديث شريط المستويات الخمسة والأزرار السفلية
+            const activeIndex = LOVE_LEVELS.indexOf(level);
+            LOVE_LEVELS.forEach((lvl, idx) => {
+                const seg = document.getElementById('seg-' + lvl);
+                const btn = document.getElementById('lvlBtn-' + lvl);
+
+                if (seg) {
+                    seg.className = idx <= activeIndex
+                        ? 'h-2 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 transition-all duration-150 shadow-2xs'
+                        : 'h-2 rounded-full bg-rose-200/60 transition-all duration-150';
+                }
+
+                if (btn) {
+                    if (lvl === level) {
+                        btn.className = 'py-1 rounded-xl text-[11px] font-black bg-white text-rose-600 shadow-2xs border border-rose-200 scale-105 transition-all';
+                    } else if (idx < activeIndex) {
+                        btn.className = 'py-1 rounded-xl text-[11px] font-bold text-rose-500 transition-all';
+                    } else {
+                        btn.className = 'py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all';
+                    }
+                }
+            });
+        }
+
+        function previewLoveLevel(level) {
+            updateLoveLevelUI(level);
+            if (navigator.vibrate) navigator.vibrate(10);
+        }
+
+        function startHeartCharge(e) {
+            if (e) e.preventDefault();
+            if (isSendingPulse || isChargingHeart) return;
+
+            isChargingHeart = true;
+            const orb = document.getElementById('mainHeartOrb');
+            const hint = document.getElementById('holdHintText');
+            if (orb) orb.classList.add('heart-charging');
+            if (hint) hint.textContent = 'استمر بالضغط لزيادة النسبة... ارفع إصبعك للإرسال';
+
+            // يبدأ فوراً من المستوى الأول 5% (للضغطة السريعة)
+            let stepIndex = 0;
+            updateLoveLevelUI(LOVE_LEVELS[stepIndex]);
+            if (navigator.vibrate) navigator.vibrate(15);
+
+            // ينتقل للمستوى التالي كل 380 مللي ثانية أثناء استمرار الضغط
+            chargeInterval = setInterval(() => {
+                if (stepIndex < LOVE_LEVELS.length - 1) {
+                    stepIndex++;
+                    updateLoveLevelUI(LOVE_LEVELS[stepIndex]);
+                    if (navigator.vibrate) {
+                        navigator.vibrate(stepIndex === LOVE_LEVELS.length - 1 ? [30, 40, 30] : 18);
+                    }
+                }
+            }, 380);
+        }
+
+        function releaseHeartCharge(e) {
+            if (e) e.preventDefault();
+            if (!isChargingHeart) return;
+
+            clearInterval(chargeInterval);
+            chargeInterval = null;
+            isChargingHeart = false;
+
+            const orb = document.getElementById('mainHeartOrb');
+            const hint = document.getElementById('holdHintText');
+            if (orb) orb.classList.remove('heart-charging');
+            if (hint) hint.textContent = 'ضغطة سريعة 5% · استمر بالضغط حتى 100%';
+
+            const selectedScore = currentLoveLevel;
+            sendLovePulseWithScore(selectedScore);
+
+            // إعادة المؤشر إلى 5% بعد لحظة قصيرة ليكون جاهزاً للنبضة القادمة
+            setTimeout(() => {
+                if (!isChargingHeart) updateLoveLevelUI(5);
+            }, 650);
+        }
+
+        function cancelHeartCharge() {
+            if (!isChargingHeart) return;
+            clearInterval(chargeInterval);
+            chargeInterval = null;
+            isChargingHeart = false;
+
+            const orb = document.getElementById('mainHeartOrb');
+            const hint = document.getElementById('holdHintText');
+            if (orb) orb.classList.remove('heart-charging');
+            if (hint) hint.textContent = 'ضغطة سريعة 5% · استمر بالضغط حتى 100%';
+            updateLoveLevelUI(5);
+        }
 
         // ================= QUICK NOTE CHIPS =================
         function applyQuickNote(text) {
@@ -1235,26 +1370,6 @@
             return new Date(ts).toLocaleDateString('ar-SA');
         }
 
-        function updateOrb(val) {
-            const intensity = Number(val);
-            document.getElementById('rangeDisplay').textContent = intensity + '%';
-
-            let moodText = 'حب لطيف';
-            if (intensity > 80) moodText = 'حب لا يوصف';
-            else if (intensity > 60) moodText = 'حب كبير';
-            else if (intensity > 35) moodText = 'اهتمام وود';
-            
-            document.getElementById('moodLabel').textContent = moodText;
-
-            const svg = document.getElementById('dynamicHeartSvg');
-            if (svg) {
-                const scale = 0.78 + (intensity / 100) * 0.42;
-                svg.style.transform = `scale(${scale.toFixed(2)})`;
-            }
-
-            if (navigator.vibrate) navigator.vibrate(8);
-        }
-
         // Handle Registration
         function registerHandle() {
             const handle = document.getElementById('usernameInput').value.trim().toUpperCase();
@@ -1392,14 +1507,16 @@
                         recordTargetStreakInCloud(userHandle, cleanTarget);
                     }
 
-                    triggerFloatingHearts(isQuickReply ? 12 : 18);
+                    // عدد القلوب المتطايرة يتناسب مع نسبة الحب المرسلة
+                    const heartsCount = isQuickReply ? 12 : Math.max(6, Math.round(Number(score) / 5));
+                    triggerFloatingHearts(heartsCount);
                     playHeartbeatSound();
                     if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
 
                     renderRecentContactsBar();
                     if (!isQuickReply) {
                         document.getElementById('loveNote').value = '';
-                        showToast(`تم إرسال نبضة الحب إلى (${cleanTarget})!`);
+                        showToast(`تم إرسال نبضة (${score}%) إلى (${cleanTarget})!`);
                     } else {
                         showToast(`تم إرسال رد سريع إلى (${cleanTarget})`);
                     }
@@ -1411,11 +1528,9 @@
             });
         }
 
-        function sendLovePulse(e) {
-            if (e) e.preventDefault();
+        function sendLovePulseWithScore(score) {
             const targetHandle = document.getElementById('targetIdInput').value.trim().toUpperCase();
             const senderName = document.getElementById('senderNameInput').value.trim() || userHandle || 'مجهول';
-            const score = document.getElementById('loveSlider').value;
             const note = document.getElementById('loveNote').value.trim();
 
             executePulseSend(targetHandle, senderName, score, note, false);
@@ -1453,7 +1568,7 @@
                         showLocalNotification(incomingPulses[0]);
                         triggerFloatingHearts(20);
                         playHeartbeatSound();
-                        showToast(`وصلتك نبضة حب جديدة من ${incomingPulses[0].sender}!`);
+                        showToast(`وصلتك نبضة حب جديدة (${incomingPulses[0].score}%) من ${incomingPulses[0].sender}!`);
                     }
                 }
                 isFirstPulseLoad = false;
