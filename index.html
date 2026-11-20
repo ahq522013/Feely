@@ -61,6 +61,19 @@
             box-shadow: 0 0 0 4px rgba(251, 113, 133, 0.14);
         }
 
+        /* Compact White Box Inputs */
+        .white-compact-box {
+            background: #ffffff;
+            border: 1.5px solid #fecdd3;
+            border-radius: 16px;
+            transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .white-compact-box:focus-within {
+            border-color: #fb7185;
+            box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.14);
+        }
+
         /* Story Avatar Ring */
         .story-ring {
             background: linear-gradient(135deg, #fb7185 0%, #e11d48 50%, #f472b6 100%);
@@ -250,10 +263,19 @@
                 <!-- دوائر الأصدقاء -->
                 <div id="recentContactsList" class="hidden flex gap-3 overflow-x-auto pb-1 pt-0.5 px-1 hide-scrollbar"></div>
 
-                <!-- بوكس إضافة رمز المستلم بدون عنوان -->
-                <div>
-                    <input type="text" id="targetIdInput" placeholder="أضف رمز المستلم" autocapitalize="characters" autocomplete="off" oninput="onTargetInputChange(this.value)"
-                           class="soft-input w-full px-4 py-3 text-center font-mono font-black tracking-[0.2em] text-slate-900 placeholder:font-sans placeholder:font-semibold placeholder:tracking-normal placeholder:text-slate-400 outline-none uppercase">
+                <!-- بوكس إضافة رمز المستلم المصغّر بخلفية بيضاء وإطار مناسب وزر + -->
+                <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
+                    <button type="button" onclick="confirmAddRecipient()" title="إضافة المستلم"
+                            class="size-7 rounded-xl bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-200/80 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                    </button>
+                    <input type="text" id="targetIdInput" placeholder="أضف رمز المستلم" autocapitalize="characters" autocomplete="off"
+                           oninput="onTargetInputChange(this.value)"
+                           onkeydown="if(event.key==='Enter'){event.preventDefault(); confirmAddRecipient();}"
+                           class="w-full bg-transparent text-center font-mono text-xs font-bold tracking-[0.15em] text-slate-800 placeholder:font-sans placeholder:text-xs placeholder:font-medium placeholder:tracking-normal placeholder:text-slate-400 outline-none uppercase">
+                    <span class="size-7 shrink-0"></span>
                 </div>
             </section>
 
@@ -301,7 +323,7 @@
                 </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة (الشحن الدائري حول زر القلب مباشرة + بدون العداد السفلي) -->
+            <!-- بطاقة إرسال النبضة (شحن متسارع + بوكس رسالة أبيض مدمج مع إيموجيات في الزاوية اليمنى) -->
             <section class="glass-card p-5 sm:p-6 space-y-4 relative">
                 <!-- أيقونة وضع المجهول على يمين البوكس الأساسي (مطفأة افتراضياً) -->
                 <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="إرسال كمجهول"
@@ -334,13 +356,10 @@
                                     <stop offset="100%" stop-color="#e11d48"/>
                                 </linearGradient>
                             </defs>
-                            <!-- المسار الخلفي الباهت -->
                             <circle cx="50" cy="50" r="45" fill="none" stroke="#ffe4e6" stroke-width="5.5"/>
-                            <!-- مسار التقدم الدائري (محيط الدائرة = 2 * π * 45 ≈ 282.74) -->
                             <circle id="circularChargeRing" cx="50" cy="50" r="45" fill="none"
                                     stroke="url(#ringGrad)" stroke-width="5.5" stroke-linecap="round"
-                                    stroke-dasharray="282.74" stroke-dashoffset="279.91"
-                                    class="transition-[stroke-dashoffset] duration-75 ease-linear"/>
+                                    stroke-dasharray="282.74" stroke-dashoffset="279.91"/>
                         </svg>
 
                         <!-- أيقونة القلب الداخلية -->
@@ -366,10 +385,32 @@
                     </div>
                 </div>
 
-                <!-- صندوق الرسالة الصغير فقط -->
-                <div>
-                    <input type="text" id="loveNote" maxlength="100" placeholder="رسالة قصيرة (اختياري)..."
-                           class="soft-input w-full px-4 py-2.5 text-right text-sm text-slate-800 outline-none">
+                <!-- بوكس إضافة رسالة مشابه لبوكس المستلم (أبيض بإطار مناسب) مع زر إيموجي في الزاوية اليمنى -->
+                <div class="relative">
+                    <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
+                        <!-- زر الإيموجيات في الزاوية اليمنى -->
+                        <button type="button" id="emojiPickerToggleBtn" onclick="toggleEmojiPicker()" title="إضافة إيموجي"
+                                class="size-7 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 border border-rose-200/70 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+                            </svg>
+                        </button>
+
+                        <input type="text" id="loveNote" maxlength="100" placeholder="أضف رسالة قصيرة (اختياري)..."
+                               class="w-full bg-transparent text-right text-xs font-medium text-slate-800 placeholder:text-slate-400 outline-none pr-1">
+                    </div>
+
+                    <!-- لوحة الإيموجيات المنبثقة عند الضغط على أيقونة الزاوية اليمنى -->
+                    <div id="emojiPickerPopover" class="hidden mt-1.5 p-2 rounded-2xl bg-white border border-rose-200 shadow-lg flex items-center justify-between gap-1 overflow-x-auto hide-scrollbar">
+                        <button type="button" onclick="insertEmojiToNote('❤️')" class="text-base hover:scale-125 active:scale-95 transition p-1">❤️</button>
+                        <button type="button" onclick="insertEmojiToNote('💖')" class="text-base hover:scale-125 active:scale-95 transition p-1">💖</button>
+                        <button type="button" onclick="insertEmojiToNote('🥰')" class="text-base hover:scale-125 active:scale-95 transition p-1">🥰</button>
+                        <button type="button" onclick="insertEmojiToNote('😘')" class="text-base hover:scale-125 active:scale-95 transition p-1">😘</button>
+                        <button type="button" onclick="insertEmojiToNote('🌹')" class="text-base hover:scale-125 active:scale-95 transition p-1">🌹</button>
+                        <button type="button" onclick="insertEmojiToNote('✨')" class="text-base hover:scale-125 active:scale-95 transition p-1">✨</button>
+                        <button type="button" onclick="insertEmojiToNote('🤍')" class="text-base hover:scale-125 active:scale-95 transition p-1">🤍</button>
+                        <button type="button" onclick="insertEmojiToNote('🫂')" class="text-base hover:scale-125 active:scale-95 transition p-1">🫂</button>
+                    </div>
                 </div>
             </section>
 
@@ -616,12 +657,11 @@
             pulseHeart: '<svg class="w-4 h-4 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'
         };
 
-        // محيط الدائرة في SVG (2 * π * 45 = 282.743)
         const RING_CIRCUMFERENCE = 2 * Math.PI * 45;
 
         let currentLoveValue = 1;
         let chargeDelayTimer = null;
-        let chargeInterval = null;
+        let chargeStepTimer = null;
         let isChargingHeart = false;
         let isAnonymousMode = false;
 
@@ -637,9 +677,50 @@
         
         let incomingPulses = [];
         let sentPulses = JSON.parse(localStorage.getItem('feely_sent_pulses') || '[]');
+        let pinnedFriends = JSON.parse(localStorage.getItem('feely_pinned_friends') || '[]');
         let recentSearches = JSON.parse(localStorage.getItem('feely_recent_searches') || '[]');
         let isFirstPulseLoad = true;
         let activeStreaksCache = {};
+
+        // ================= ADD RECIPIENT (+) BUTTON LOGIC =================
+        function confirmAddRecipient() {
+            const input = document.getElementById('targetIdInput');
+            const code = input.value.trim().toUpperCase();
+            if (!code) {
+                input.focus();
+                return showToast('اكتب رمز المستلم أولاً', 'error');
+            }
+
+            db.ref('handles/' + code).once('value', snapshot => {
+                if (!snapshot.exists()) {
+                    return showToast(`الرمز (${code}) غير مسجل أو غير مفعل`, 'error');
+                }
+
+                if (!pinnedFriends.includes(code)) {
+                    pinnedFriends.unshift(code);
+                    localStorage.setItem('feely_pinned_friends', JSON.stringify(pinnedFriends));
+                }
+                renderRecentContactsBar();
+                checkTargetStreak(code);
+                if (navigator.vibrate) navigator.vibrate(15);
+                showToast(`تمت إضافة (${code}) إلى أصدقاء النبض`);
+            });
+        }
+
+        // ================= EMOJI PICKER LOGIC =================
+        function toggleEmojiPicker() {
+            const popover = document.getElementById('emojiPickerPopover');
+            if (!popover) return;
+            popover.classList.toggle('hidden');
+        }
+
+        function insertEmojiToNote(emoji) {
+            const noteInput = document.getElementById('loveNote');
+            if (!noteInput) return;
+            noteInput.value = (noteInput.value + emoji).slice(0, 100);
+            noteInput.focus();
+            if (navigator.vibrate) navigator.vibrate(10);
+        }
 
         // ================= ANONYMOUS TOGGLE LOGIC =================
         function toggleAnonymousMode() {
@@ -712,20 +793,18 @@
             renderRecentSearches();
         });
 
-        // ================= CIRCULAR RING 1-TO-100 METER =================
+        // ================= ACCELERATING CIRCULAR RING 1-TO-100 METER =================
         function updateLoveMeterUI(val) {
             const clamped = Math.max(1, Math.min(100, Math.round(val)));
             currentLoveValue = clamped;
             document.getElementById('rangeDisplay').textContent = clamped + '%';
 
-            // تكبير القلب بسلاسة متناسبة من 1% إلى 100%
             const svg = document.getElementById('dynamicHeartSvg');
             if (svg) {
                 const scale = 0.72 + ((clamped - 1) / 99) * 0.56;
                 svg.style.transform = `scale(${scale.toFixed(3)})`;
             }
 
-            // تحديث حلقة الشحن الدائرية حول زر القلب
             const ring = document.getElementById('circularChargeRing');
             if (ring) {
                 const offset = RING_CIRCUMFERENCE * (1 - clamped / 100);
@@ -747,18 +826,26 @@
             updateLoveMeterUI(val);
             if (navigator.vibrate) navigator.vibrate(12);
 
+            // مهلة 320ms للضغطة السريعة (1%)، ثم يتسارع العداد تدريجياً من 40ms إلى 8ms
             chargeDelayTimer = setTimeout(() => {
                 if (!isChargingHeart) return;
-                chargeInterval = setInterval(() => {
-                    if (val < 100) {
-                        val += 1;
-                        updateLoveMeterUI(val);
 
-                        if ([25, 50, 75, 100].includes(val) && navigator.vibrate) {
-                            navigator.vibrate(val === 100 ? [30, 40, 30] : 16);
-                        }
+                const tick = () => {
+                    if (!isChargingHeart || val >= 100) return;
+                    val += 1;
+                    updateLoveMeterUI(val);
+
+                    if ([25, 50, 75, 100].includes(val) && navigator.vibrate) {
+                        navigator.vibrate(val === 100 ? [30, 40, 30] : 15);
                     }
-                }, 42);
+
+                    // تسارع ديناميكي: يبدأ ببطء (40ms) ويتسارع بقوة كلما اقترب من 100% (حتى 8ms)
+                    const progress = val / 100;
+                    const nextDelay = Math.max(8, Math.round(40 * Math.pow(1 - progress, 1.45)));
+                    chargeStepTimer = setTimeout(tick, nextDelay);
+                };
+
+                tick();
             }, 320);
         }
 
@@ -767,9 +854,9 @@
             if (!isChargingHeart) return;
 
             clearTimeout(chargeDelayTimer);
-            clearInterval(chargeInterval);
+            clearTimeout(chargeStepTimer);
             chargeDelayTimer = null;
-            chargeInterval = null;
+            chargeStepTimer = null;
             isChargingHeart = false;
 
             const orb = document.getElementById('mainHeartOrb');
@@ -788,9 +875,9 @@
         function cancelHeartCharge() {
             if (!isChargingHeart) return;
             clearTimeout(chargeDelayTimer);
-            clearInterval(chargeInterval);
+            clearTimeout(chargeStepTimer);
             chargeDelayTimer = null;
-            chargeInterval = null;
+            chargeStepTimer = null;
             isChargingHeart = false;
 
             const orb = document.getElementById('mainHeartOrb');
@@ -1284,7 +1371,8 @@
             const list = document.getElementById('recentContactsList');
             if (!list) return;
 
-            const uniqueRecipients = [...new Set(sentPulses.map(p => p.target).filter(Boolean))];
+            const sentTargets = sentPulses.map(p => p.target).filter(Boolean);
+            const uniqueRecipients = [...new Set([...pinnedFriends, ...sentTargets])];
 
             if (uniqueRecipients.length === 0) {
                 list.classList.add('hidden');
@@ -1490,6 +1578,8 @@
                     renderRecentContactsBar();
                     if (!isQuickReply) {
                         document.getElementById('loveNote').value = '';
+                        const popover = document.getElementById('emojiPickerPopover');
+                        if (popover) popover.classList.add('hidden');
                         const anonSuffix = isAnonymousMode ? ' (كمجهول)' : '';
                         showToast(`تم إرسال نبضة (${score}%) إلى (${cleanTarget})${anonSuffix}!`);
                     } else {
