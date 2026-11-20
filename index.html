@@ -240,12 +240,6 @@
                             <svg class="w-2.5 h-2.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                             <span>ستريك: 0</span>
                         </span>
-                        <button type="button" id="viewTargetProfileBtn" onclick="openFriendProfile(document.getElementById('targetIdInput').value)" class="hidden inline-flex items-center gap-1 text-[10px] font-bold text-slate-600 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 px-2 py-0.5 rounded-full transition">
-                            <span>ملفه</span>
-                            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                            </svg>
-                        </button>
                     </div>
                     <h3 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
                         <span>أصدقاء النبض</span>
@@ -263,7 +257,7 @@
                 </div>
             </section>
 
-            <!-- بطاقة صفحة الصديق -->
+            <!-- بطاقة صفحة الصديق (تظهر فقط عند فتح رابط خارجي مباشر ?u=...) -->
             <section id="friendProfileCard" class="hidden glass-card p-4 sm:p-5 relative overflow-hidden space-y-3 border-2 border-rose-300 bg-gradient-to-b from-[#fff2f4] to-white">
                 <div class="flex items-center justify-between">
                     <button type="button" onclick="closeFriendProfile()" class="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 hover:text-slate-800 bg-white px-2.5 py-1 rounded-full border border-slate-200/80 transition active:scale-95">
@@ -307,9 +301,21 @@
                 </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة (بدون وصف الشعور + 1% دقيق للضغطة السريعة) -->
-            <section class="glass-card p-5 sm:p-6 space-y-3.5">
-                <div class="text-center space-y-2 pt-0.5">
+            <!-- بطاقة إرسال النبضة (مع أيقونة المجهول على اليمين + شحن مخفف + بدون علامات مرجعية) -->
+            <section class="glass-card p-5 sm:p-6 space-y-3.5 relative">
+                <!-- أيقونة وضع المجهول على يمين البوكس الأساسي (مطفأة افتراضياً) -->
+                <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="إرسال كمجهول"
+                        class="absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#f9eff1] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90">
+                    <!-- أيقونة قناع/مجهول حديثة -->
+                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                        <line id="anonSlashLine" x1="3" y1="3" x2="21" y2="21" class="hidden"/>
+                    </svg>
+                    <span id="anonStatusLabel" class="text-[10px] font-bold">مجهول</span>
+                </button>
+
+                <div class="text-center space-y-2 pt-2">
                     <!-- زر القلب التفاعلي للشحن المستمر -->
                     <button type="button" id="mainHeartOrb"
                             onpointerdown="startHeartCharge(event)"
@@ -335,36 +341,23 @@
                         <p id="holdHintText" class="text-[10px] text-slate-400 mt-0.5">ضغطة سريعة 1% · استمر بالضغط حتى 100%</p>
                     </div>
 
-                    <!-- عرض النسبة المئوية فقط بدون وصف الشعور -->
+                    <!-- عرض النسبة المئوية فقط -->
                     <div class="inline-flex items-center justify-center bg-rose-50 px-4 py-1 rounded-full border border-rose-100">
                         <span id="rangeDisplay" class="text-xs font-black text-rose-600 tabular-nums">1%</span>
                     </div>
                 </div>
 
-                <!-- مؤشر التقدم السلس (1 إلى 100) مع علامات المستويات الخمسة -->
-                <div class="bg-[#f9eff1] p-2.5 rounded-2xl border border-rose-100/80 space-y-2" dir="ltr">
-                    <!-- شريط تعبئة متصل من 1% إلى 100% -->
+                <!-- مؤشر التقدم السلس النظيف (بدون علامات مرجعية) -->
+                <div class="bg-[#f9eff1] p-2.5 rounded-2xl border border-rose-100/80" dir="ltr">
                     <div class="relative w-full h-2.5 bg-rose-200/60 rounded-full overflow-hidden">
                         <div id="smoothChargeFill" style="width: 1%;" class="h-full bg-gradient-to-r from-rose-400 via-rose-500 to-pink-600 rounded-full transition-[width] duration-75 ease-linear"></div>
                     </div>
-
-                    <!-- علامات المستويات الخمسة المرجعية (1, 25, 50, 75, 100) -->
-                    <div class="grid grid-cols-5 gap-1 text-center">
-                        <button type="button" id="lvlBtn-1" onclick="previewLoveValue(1)" class="py-1 rounded-xl text-[11px] font-black bg-white text-rose-600 shadow-2xs border border-rose-200 scale-105 transition-all">1%</button>
-                        <button type="button" id="lvlBtn-25" onclick="previewLoveValue(25)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">25%</button>
-                        <button type="button" id="lvlBtn-50" onclick="previewLoveValue(50)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">50%</button>
-                        <button type="button" id="lvlBtn-75" onclick="previewLoveValue(75)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">75%</button>
-                        <button type="button" id="lvlBtn-100" onclick="previewLoveValue(100)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">100%</button>
-                    </div>
                 </div>
 
-                <!-- صندوق الرسالة الصغير واسم المرسل -->
-                <div class="space-y-2.5">
+                <!-- صندوق الرسالة الصغير فقط -->
+                <div>
                     <input type="text" id="loveNote" maxlength="100" placeholder="رسالة قصيرة (اختياري)..."
                            class="soft-input w-full px-4 py-2.5 text-right text-sm text-slate-800 outline-none">
-
-                    <input type="text" id="senderNameInput" placeholder="اسمك الظاهر للمستلم (اختياري - افتراضياً مجهول)"
-                           class="soft-input w-full px-4 py-2.5 text-right text-sm text-slate-700 outline-none">
                 </div>
             </section>
 
@@ -581,7 +574,7 @@
         </div>
     </div>
 
-    <!-- Firebase & Smooth 1-to-100 Hold-to-Charge Logic Script -->
+    <!-- Firebase & Logic Script -->
     <script>
         const firebaseConfig = {
           apiKey: "AIzaSyCZLJ3VX05H05lTFWt3obbqVK71_jgaffs",
@@ -611,12 +604,11 @@
             pulseHeart: '<svg class="w-4 h-4 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'
         };
 
-        // علامات المستويات الخمسة المرجعية (1 - 25 - 50 - 75 - 100)
-        const MILESTONE_LEVELS = [1, 25, 50, 75, 100];
         let currentLoveValue = 1;
         let chargeDelayTimer = null;
         let chargeInterval = null;
         let isChargingHeart = false;
+        let isAnonymousMode = false; // افتراضياً غير مجهول
 
         let currentUser = null;
         let userHandle = localStorage.getItem('feely_user_handle') || null;
@@ -633,6 +625,27 @@
         let recentSearches = JSON.parse(localStorage.getItem('feely_recent_searches') || '[]');
         let isFirstPulseLoad = true;
         let activeStreaksCache = {};
+
+        // ================= ANONYMOUS TOGGLE LOGIC =================
+        function toggleAnonymousMode() {
+            isAnonymousMode = !isAnonymousMode;
+            const btn = document.getElementById('anonymousToggleBtn');
+            const slash = document.getElementById('anonSlashLine');
+            const label = document.getElementById('anonStatusLabel');
+
+            if (isAnonymousMode) {
+                btn.className = "absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-slate-900 text-white border border-slate-800 shadow-xs transition-all active:scale-90";
+                slash.classList.remove('hidden');
+                label.textContent = "مجهول: مفعّل";
+                showToast("وضع المجهول مفعّل — ستصل النبضة بدون اسمك");
+            } else {
+                btn.className = "absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#f9eff1] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90";
+                slash.classList.add('hidden');
+                label.textContent = "مجهول";
+                showToast("تم إيقاف وضع المجهول — سيظهر رمزك للمستلم");
+            }
+            if (navigator.vibrate) navigator.vibrate(12);
+        }
 
         // ================= MODERN TOAST NOTIFICATION =================
         function showToast(message, type = 'success') {
@@ -684,7 +697,7 @@
             renderRecentSearches();
         });
 
-        // ================= SMOOTH 1-TO-100 METER + 5 MILESTONES =================
+        // ================= SMOOTH 1-TO-100 METER (SLOWER & CLEAN) =================
         function updateLoveMeterUI(val) {
             const clamped = Math.max(1, Math.min(100, Math.round(val)));
             currentLoveValue = clamped;
@@ -702,33 +715,6 @@
             if (fillBar) {
                 fillBar.style.width = clamped + '%';
             }
-
-            // إضاءة علامات المستويات الخمسة المرجعية (1, 25, 50, 75, 100)
-            let activeMilestone = 1;
-            for (let i = MILESTONE_LEVELS.length - 1; i >= 0; i--) {
-                if (clamped >= MILESTONE_LEVELS[i]) {
-                    activeMilestone = MILESTONE_LEVELS[i];
-                    break;
-                }
-            }
-
-            MILESTONE_LEVELS.forEach(lvl => {
-                const btn = document.getElementById('lvlBtn-' + lvl);
-                if (!btn) return;
-
-                if (lvl === activeMilestone) {
-                    btn.className = 'py-1 rounded-xl text-[11px] font-black bg-white text-rose-600 shadow-2xs border border-rose-200 scale-105 transition-all';
-                } else if (clamped > lvl) {
-                    btn.className = 'py-1 rounded-xl text-[11px] font-bold text-rose-500 transition-all';
-                } else {
-                    btn.className = 'py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all';
-                }
-            });
-        }
-
-        function previewLoveValue(val) {
-            updateLoveMeterUI(val);
-            if (navigator.vibrate) navigator.vibrate(10);
         }
 
         function startHeartCharge(e) {
@@ -746,7 +732,7 @@
             updateLoveMeterUI(val);
             if (navigator.vibrate) navigator.vibrate(12);
 
-            // مهلة 160ms لضمان أن أي نقرة سريعة ترسل 1% بالضبط قبل بدء التصاعد
+            // مهلة 320ms لسهولة اختيار 1% بضغطة سريعة دون قفز، ثم تصاعد مخفف (42ms لكل 1%)
             chargeDelayTimer = setTimeout(() => {
                 if (!isChargingHeart) return;
                 chargeInterval = setInterval(() => {
@@ -754,12 +740,12 @@
                         val += 1;
                         updateLoveMeterUI(val);
 
-                        if (MILESTONE_LEVELS.includes(val) && navigator.vibrate) {
-                            navigator.vibrate(val === 100 ? [30, 40, 30] : 18);
+                        if ([25, 50, 75, 100].includes(val) && navigator.vibrate) {
+                            navigator.vibrate(val === 100 ? [30, 40, 30] : 16);
                         }
                     }
-                }, 22);
-            }, 160);
+                }, 42);
+            }, 320);
         }
 
         function releaseHeartCharge(e) {
@@ -780,7 +766,6 @@
             const selectedScore = currentLoveValue;
             sendLovePulseWithScore(selectedScore);
 
-            // إعادة المؤشر إلى 1% بعد الإرسال ليكون جاهزاً للنبضة القادمة
             setTimeout(() => {
                 if (!isChargingHeart) updateLoveMeterUI(1);
             }, 700);
@@ -890,8 +875,8 @@
                 });
 
                 document.getElementById('searchSendPulseBtn').onclick = () => {
+                    selectContactRecipient(rawCode);
                     switchMainView('home');
-                    openFriendProfile(rawCode);
                 };
 
                 document.getElementById('searchCopyLinkBtn').onclick = () => {
@@ -933,7 +918,7 @@
             renderRecentSearches();
         }
 
-        // ================= FRIEND PROFILE PAGE LOGIC =================
+        // ================= FRIEND PROFILE PAGE LOGIC (ONLY FOR DIRECT URL ?u=...) =================
         function openFriendProfile(handle) {
             const cleanHandle = handle.trim().toUpperCase();
             if (!cleanHandle) return;
@@ -953,7 +938,6 @@
 
                 const targetInput = document.getElementById('targetIdInput');
                 targetInput.value = cleanHandle;
-                document.getElementById('viewTargetProfileBtn').classList.remove('hidden');
 
                 friendStatsListenerRef = db.ref('stats/' + cleanHandle + '/receivedCount');
                 friendStatsListenerRef.on('value', countSnap => {
@@ -987,12 +971,6 @@
 
         function onTargetInputChange(val) {
             const clean = val.trim().toUpperCase();
-            const viewBtn = document.getElementById('viewTargetProfileBtn');
-            if (clean.length >= 1) {
-                viewBtn.classList.remove('hidden');
-            } else {
-                viewBtn.classList.add('hidden');
-            }
             checkTargetStreak(clean);
         }
 
@@ -1279,13 +1257,13 @@
             });
         }
 
-        // ================= STORIES-STYLE RECENT CONTACTS BAR =================
+        // ================= STORIES-STYLE RECENT CONTACTS BAR (بدون فتح الملف عند النقر) =================
         function selectContactRecipient(handle) {
             const clean = handle.toUpperCase();
             const input = document.getElementById('targetIdInput');
             input.value = clean;
             onTargetInputChange(clean);
-            openFriendProfile(clean);
+            if (navigator.vibrate) navigator.vibrate(10);
         }
 
         function renderRecentContactsBar() {
@@ -1443,7 +1421,14 @@
             renderPulsesList();
         }
 
-        function executePulseSend(targetHandle, senderName, score, note, isQuickReply = false) {
+        function getEffectiveSenderIdentity() {
+            if (isAnonymousMode || !userHandle) {
+                return { name: 'مجهول', handle: 'مجهول' };
+            }
+            return { name: userHandle, handle: userHandle };
+        }
+
+        function executePulseSend(targetHandle, score, note, isQuickReply = false) {
             if (isSendingPulse) return;
             if (!currentUser) return showToast('جاري تأمين الاتصال، حاول بعد لحظة', 'error');
             const cleanTarget = targetHandle.trim().toUpperCase();
@@ -1454,6 +1439,8 @@
                 return showToast('أضف رمز المستلم في البوكس أعلاه أولاً', 'error');
             }
 
+            const senderIdentity = getEffectiveSenderIdentity();
+
             isSendingPulse = true;
             db.ref('handles/' + cleanTarget).once('value', snapshot => {
                 if (!snapshot.exists()) {
@@ -1463,8 +1450,8 @@
 
                 const pulseData = { 
                     target: cleanTarget, 
-                    sender: senderName, 
-                    senderHandle: userHandle || senderName,
+                    sender: senderIdentity.name, 
+                    senderHandle: senderIdentity.handle,
                     score: score, 
                     note: note, 
                     timestamp: Date.now() 
@@ -1489,7 +1476,8 @@
                     renderRecentContactsBar();
                     if (!isQuickReply) {
                         document.getElementById('loveNote').value = '';
-                        showToast(`تم إرسال نبضة (${score}%) إلى (${cleanTarget})!`);
+                        const anonSuffix = isAnonymousMode ? ' (كمجهول)' : '';
+                        showToast(`تم إرسال نبضة (${score}%) إلى (${cleanTarget})${anonSuffix}!`);
                     } else {
                         showToast(`تم إرسال رد سريع إلى (${cleanTarget})`);
                     }
@@ -1503,10 +1491,9 @@
 
         function sendLovePulseWithScore(score) {
             const targetHandle = document.getElementById('targetIdInput').value.trim().toUpperCase();
-            const senderName = document.getElementById('senderNameInput').value.trim() || userHandle || 'مجهول';
             const note = document.getElementById('loveNote').value.trim();
 
-            executePulseSend(targetHandle, senderName, score, note, false);
+            executePulseSend(targetHandle, score, note, false);
         }
 
         function quickReplyPulse(e, recipientHandle, btnElement) {
@@ -1514,15 +1501,13 @@
             const cleanHandle = recipientHandle.trim().toUpperCase();
             document.getElementById('targetIdInput').value = cleanHandle;
             checkTargetStreak(cleanHandle);
-
-            const senderName = document.getElementById('senderNameInput').value.trim() || userHandle || 'مجهول';
             
             const originalHTML = btnElement.innerHTML;
             btnElement.disabled = true;
             btnElement.innerHTML = `${ICONS.check} <span>تم الرد</span>`;
             btnElement.classList.add('bg-rose-500', 'text-white', 'border-rose-500');
 
-            executePulseSend(cleanHandle, senderName, 100, 'رد سريع بنبضة حب', true);
+            executePulseSend(cleanHandle, 100, 'رد سريع بنبضة حب', true);
 
             setTimeout(() => {
                 btnElement.disabled = false;
@@ -1633,7 +1618,7 @@
                 const targetOrSender = isIncoming ? (item.senderHandle || item.sender) : item.target;
 
                 const currentStreakVal = activeStreaksCache[targetOrSender] || 0;
-                const streakBadge = currentStreakVal > 0 
+                const streakBadge = currentStreakVal > 0 && targetOrSender !== 'مجهول'
                     ? `<span class="inline-flex items-center gap-0.5 text-[10px] bg-rose-50 border border-rose-100 text-rose-600 font-black px-2 py-0.5 rounded-full">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
                     : '';
 
@@ -1651,7 +1636,9 @@
                 const pulseCard = document.createElement('div');
                 pulseCard.className = "flex items-start gap-3 rounded-2xl border border-rose-100/90 bg-[#fcf5f6] p-3.5 hover:border-rose-300 transition text-right cursor-pointer active:scale-[0.99]";
                 pulseCard.onclick = () => {
-                    selectContactRecipient(targetOrSender);
+                    if (targetOrSender !== 'مجهول') {
+                        selectContactRecipient(targetOrSender);
+                    }
                     if (isIncoming) {
                         triggerFloatingHearts(10);
                         playHeartbeatSound();
