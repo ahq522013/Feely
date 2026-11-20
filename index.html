@@ -50,7 +50,7 @@
             background: #f9eff1;
             border: 1.5px solid transparent;
             color: #1e293b;
-            border-radius: 20px;
+            border-radius: 18px;
             font-size: 16px;
             transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
@@ -307,19 +307,19 @@
                 </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة (نظام الشحن بالضغط المستمر + عداد المستويات الخمسة) -->
-            <section class="glass-card p-5 sm:p-6 space-y-4">
-                <div class="text-center space-y-2 pt-1">
-                    <!-- زر القلب التفاعلي للشحن والإرسال عند الإفلات -->
+            <!-- بطاقة إرسال النبضة (شحن سلس من 1 إلى 100 مع علامات المستويات الخمسة) -->
+            <section class="glass-card p-5 sm:p-6 space-y-3.5">
+                <div class="text-center space-y-2 pt-0.5">
+                    <!-- زر القلب التفاعلي للشحن المستمر -->
                     <button type="button" id="mainHeartOrb"
                             onpointerdown="startHeartCharge(event)"
                             onpointerup="releaseHeartCharge(event)"
                             onpointerleave="cancelHeartCharge()"
                             onpointercancel="cancelHeartCharge()"
                             oncontextmenu="return false;"
-                            title="اضغط ضغطة سريعة لـ 5% أو استمر بالضغط للوصول إلى 100%"
-                            class="heart-send-btn inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/80 border-2 border-rose-200 hover:border-rose-400 shadow-md cursor-pointer select-none transition-all duration-150">
-                        <svg id="dynamicHeartSvg" style="transform: scale(0.75);" class="w-12 h-12 transition-transform duration-150 drop-shadow-sm pointer-events-none" viewBox="0 0 24 24">
+                            title="استمر بالضغط على القلب لشحن النبضة من 1% حتى 100%"
+                            class="heart-send-btn inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/80 border-2 border-rose-200 hover:border-rose-400 shadow-md cursor-pointer select-none transition-shadow duration-150">
+                        <svg id="dynamicHeartSvg" style="transform: scale(0.72);" class="w-12 h-12 transition-transform duration-75 drop-shadow-sm pointer-events-none" viewBox="0 0 24 24">
                             <defs>
                                 <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stop-color="#fb7185"/>
@@ -332,58 +332,40 @@
 
                     <div>
                         <h2 class="text-lg font-black text-slate-900">أرسل نبضة حب</h2>
-                        <p id="holdHintText" class="text-[10px] text-slate-400 mt-0.5">ضغطة سريعة 5% · استمر بالضغط حتى 100%</p>
+                        <p id="holdHintText" class="text-[10px] text-slate-400 mt-0.5">استمر بالضغط على القلب من 1% حتى 100%</p>
                     </div>
 
                     <div class="inline-flex items-center gap-1.5 bg-rose-50 px-3.5 py-1 rounded-full border border-rose-100">
-                        <span id="moodLabel" class="text-[11px] font-bold text-rose-600">لمسة لطيفة</span>
+                        <span id="moodLabel" class="text-[11px] font-bold text-rose-600">بداية نبضة</span>
                         <span class="text-rose-300">•</span>
-                        <span id="rangeDisplay" class="text-xs font-black text-rose-600">5%</span>
+                        <span id="rangeDisplay" class="text-xs font-black text-rose-600 tabular-nums">1%</span>
                     </div>
                 </div>
 
-                <div class="space-y-4">
-                    <!-- عداد المستويات الخمسة المرئي (5% - 25% - 50% - 75% - 100%) -->
-                    <div class="bg-[#f9eff1] p-2 rounded-2xl border border-rose-100/80 space-y-2">
-                        <!-- شريط التقدم المقطّع لـ 5 مستويات -->
-                        <div class="grid grid-cols-5 gap-1.5 px-0.5" dir="ltr">
-                            <div id="seg-5" class="h-2 rounded-full bg-rose-500 transition-all duration-150"></div>
-                            <div id="seg-25" class="h-2 rounded-full bg-rose-200/70 transition-all duration-150"></div>
-                            <div id="seg-50" class="h-2 rounded-full bg-rose-200/70 transition-all duration-150"></div>
-                            <div id="seg-75" class="h-2 rounded-full bg-rose-200/70 transition-all duration-150"></div>
-                            <div id="seg-100" class="h-2 rounded-full bg-rose-200/70 transition-all duration-150"></div>
-                        </div>
-
-                        <!-- أزرار/مؤشرات النسب الخمس -->
-                        <div class="grid grid-cols-5 gap-1 text-center" dir="ltr">
-                            <button type="button" id="lvlBtn-5" onclick="previewLoveLevel(5)" class="py-1 rounded-xl text-[11px] font-black bg-white text-rose-600 shadow-2xs border border-rose-200 transition-all">5%</button>
-                            <button type="button" id="lvlBtn-25" onclick="previewLoveLevel(25)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">25%</button>
-                            <button type="button" id="lvlBtn-50" onclick="previewLoveLevel(50)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">50%</button>
-                            <button type="button" id="lvlBtn-75" onclick="previewLoveLevel(75)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">75%</button>
-                            <button type="button" id="lvlBtn-100" onclick="previewLoveLevel(100)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">100%</button>
-                        </div>
+                <!-- مؤشر التقدم السلس (1 إلى 100) مع علامات المستويات الخمسة -->
+                <div class="bg-[#f9eff1] p-2.5 rounded-2xl border border-rose-100/80 space-y-2" dir="ltr">
+                    <!-- شريط تعبئة متصل من 1% إلى 100% -->
+                    <div class="relative w-full h-2.5 bg-rose-200/60 rounded-full overflow-hidden">
+                        <div id="smoothChargeFill" style="width: 1%;" class="h-full bg-gradient-to-r from-rose-400 via-rose-500 to-pink-600 rounded-full transition-[width] duration-75 ease-linear"></div>
                     </div>
 
-                    <!-- شرائح رسائل سريعة بلمسة واحدة -->
-                    <div class="space-y-1.5">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] text-slate-400">اضغط للاختيار السريع</span>
-                            <label class="block text-xs font-bold text-slate-500 text-right">رسالة (اختياري)</label>
-                        </div>
-                        <div class="flex gap-1.5 overflow-x-auto pb-1 hide-scrollbar">
-                            <button type="button" onclick="applyQuickNote('أفكر فيك الحين')" class="shrink-0 text-[11px] font-semibold text-rose-600 bg-rose-50/90 hover:bg-rose-100 border border-rose-100 px-3 py-1.5 rounded-full transition active:scale-95">أفكر فيك الحين</button>
-                            <button type="button" onclick="applyQuickNote('اشتقت لك كثير')" class="shrink-0 text-[11px] font-semibold text-rose-600 bg-rose-50/90 hover:bg-rose-100 border border-rose-100 px-3 py-1.5 rounded-full transition active:scale-95">اشتقت لك كثير</button>
-                            <button type="button" onclick="applyQuickNote('أتمنى لك يوم جميل')" class="shrink-0 text-[11px] font-semibold text-rose-600 bg-rose-50/90 hover:bg-rose-100 border border-rose-100 px-3 py-1.5 rounded-full transition active:scale-95">أتمنى لك يوم جميل</button>
-                            <button type="button" onclick="applyQuickNote('وجودك يفرق معي')" class="shrink-0 text-[11px] font-semibold text-rose-600 bg-rose-50/90 hover:bg-rose-100 border border-rose-100 px-3 py-1.5 rounded-full transition active:scale-95">وجودك يفرق معي</button>
-                        </div>
-                        <textarea id="loveNote" rows="2" maxlength="140" placeholder="اكتب ما في قلبك…"
-                                  class="soft-input w-full p-3.5 text-right text-slate-800 outline-none resize-none rounded-2xl"></textarea>
+                    <!-- علامات المستويات الخمسة المرجعية -->
+                    <div class="grid grid-cols-5 gap-1 text-center">
+                        <button type="button" id="lvlBtn-5" onclick="previewLoveValue(5)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">5%</button>
+                        <button type="button" id="lvlBtn-25" onclick="previewLoveValue(25)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">25%</button>
+                        <button type="button" id="lvlBtn-50" onclick="previewLoveValue(50)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">50%</button>
+                        <button type="button" id="lvlBtn-75" onclick="previewLoveValue(75)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">75%</button>
+                        <button type="button" id="lvlBtn-100" onclick="previewLoveValue(100)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">100%</button>
                     </div>
+                </div>
 
-                    <div>
-                        <input type="text" id="senderNameInput" placeholder="اسمك الظاهر للمستلم (اختياري - افتراضياً مجهول)"
-                               class="soft-input w-full px-4 py-2.5 text-right text-sm text-slate-700 outline-none">
-                    </div>
+                <!-- صندوق الرسالة الصغير واسم المرسل -->
+                <div class="space-y-2.5">
+                    <input type="text" id="loveNote" maxlength="100" placeholder="رسالة قصيرة (اختياري)..."
+                           class="soft-input w-full px-4 py-2.5 text-right text-sm text-slate-800 outline-none">
+
+                    <input type="text" id="senderNameInput" placeholder="اسمك الظاهر للمستلم (اختياري - افتراضياً مجهول)"
+                           class="soft-input w-full px-4 py-2.5 text-right text-sm text-slate-700 outline-none">
                 </div>
             </section>
 
@@ -600,7 +582,7 @@
         </div>
     </div>
 
-    <!-- Firebase & Hold-to-Charge Logic Script -->
+    <!-- Firebase & Smooth 1-to-100 Hold-to-Charge Logic Script -->
     <script>
         const firebaseConfig = {
           apiKey: "AIzaSyCZLJ3VX05H05lTFWt3obbqVK71_jgaffs",
@@ -630,9 +612,9 @@
             pulseHeart: '<svg class="w-4 h-4 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'
         };
 
-        // المستويات الخمسة المطلوبة
-        const LOVE_LEVELS = [5, 25, 50, 75, 100];
-        let currentLoveLevel = 5;
+        // علامات المستويات الخمسة المرجعية فقط لتوضيح موضع العداد السلس (1 -> 100)
+        const MILESTONE_LEVELS = [5, 25, 50, 75, 100];
+        let currentLoveValue = 1;
         let chargeInterval = null;
         let isChargingHeart = false;
 
@@ -695,66 +677,66 @@
             }
 
             updateSoundUI();
-            updateLoveLevelUI(5);
+            updateLoveMeterUI(1);
             updateBellUI();
             renderPulsesList();
             renderRecentContactsBar();
             renderRecentSearches();
         });
 
-        // ================= 5-LEVEL HOLD-TO-CHARGE HEART LOGIC =================
-        function updateLoveLevelUI(level) {
-            currentLoveLevel = level;
-            document.getElementById('rangeDisplay').textContent = level + '%';
+        // ================= SMOOTH 1-TO-100 METER + 5 MILESTONES =================
+        function updateLoveMeterUI(val) {
+            const clamped = Math.max(1, Math.min(100, Math.round(val)));
+            currentLoveValue = clamped;
+            document.getElementById('rangeDisplay').textContent = clamped + '%';
 
-            const moodMap = {
-                5: 'لمسة لطيفة',
-                25: 'اهتمام وود',
-                50: 'نبضة دافئة',
-                75: 'حب كبير',
-                100: 'حب لا يوصف'
-            };
-            document.getElementById('moodLabel').textContent = moodMap[level] || 'نبضة حب';
+            // وصف الشعور حسب النطاق
+            let moodText = 'بداية نبضة';
+            if (clamped >= 100) moodText = 'حب لا يوصف';
+            else if (clamped >= 75) moodText = 'حب كبير';
+            else if (clamped >= 50) moodText = 'نبضة دافئة';
+            else if (clamped >= 25) moodText = 'اهتمام وود';
+            else if (clamped >= 5) moodText = 'لمسة لطيفة';
+            document.getElementById('moodLabel').textContent = moodText;
 
-            // تكبير القلب حسب المستوى الحالي
-            const scaleMap = {
-                5: 0.72,
-                25: 0.85,
-                50: 0.98,
-                75: 1.12,
-                100: 1.28
-            };
+            // تكبير القلب بسلاسة متناسبة من 1% إلى 100%
             const svg = document.getElementById('dynamicHeartSvg');
             if (svg) {
-                svg.style.transform = `scale(${scaleMap[level] || 1})`;
+                const scale = 0.72 + ((clamped - 1) / 99) * 0.56; // من 0.72 إلى 1.28
+                svg.style.transform = `scale(${scale.toFixed(3)})`;
             }
 
-            // تحديث شريط المستويات الخمسة والأزرار السفلية
-            const activeIndex = LOVE_LEVELS.indexOf(level);
-            LOVE_LEVELS.forEach((lvl, idx) => {
-                const seg = document.getElementById('seg-' + lvl);
-                const btn = document.getElementById('lvlBtn-' + lvl);
+            // تعبئة شريط التقدم المتصل بسلاسة من 1% إلى 100%
+            const fillBar = document.getElementById('smoothChargeFill');
+            if (fillBar) {
+                fillBar.style.width = clamped + '%';
+            }
 
-                if (seg) {
-                    seg.className = idx <= activeIndex
-                        ? 'h-2 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 transition-all duration-150 shadow-2xs'
-                        : 'h-2 rounded-full bg-rose-200/60 transition-all duration-150';
+            // إضاءة علامات المستويات الخمسة المرجعية (5, 25, 50, 75, 100) لتوضيح أين وصل العداد
+            let activeMilestone = null;
+            for (let i = MILESTONE_LEVELS.length - 1; i >= 0; i--) {
+                if (clamped >= MILESTONE_LEVELS[i]) {
+                    activeMilestone = MILESTONE_LEVELS[i];
+                    break;
                 }
+            }
 
-                if (btn) {
-                    if (lvl === level) {
-                        btn.className = 'py-1 rounded-xl text-[11px] font-black bg-white text-rose-600 shadow-2xs border border-rose-200 scale-105 transition-all';
-                    } else if (idx < activeIndex) {
-                        btn.className = 'py-1 rounded-xl text-[11px] font-bold text-rose-500 transition-all';
-                    } else {
-                        btn.className = 'py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all';
-                    }
+            MILESTONE_LEVELS.forEach(lvl => {
+                const btn = document.getElementById('lvlBtn-' + lvl);
+                if (!btn) return;
+
+                if (lvl === activeMilestone) {
+                    btn.className = 'py-1 rounded-xl text-[11px] font-black bg-white text-rose-600 shadow-2xs border border-rose-200 scale-105 transition-all';
+                } else if (clamped > lvl) {
+                    btn.className = 'py-1 rounded-xl text-[11px] font-bold text-rose-500 transition-all';
+                } else {
+                    btn.className = 'py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all';
                 }
             });
         }
 
-        function previewLoveLevel(level) {
-            updateLoveLevelUI(level);
+        function previewLoveValue(val) {
+            updateLoveMeterUI(val);
             if (navigator.vibrate) navigator.vibrate(10);
         }
 
@@ -766,23 +748,25 @@
             const orb = document.getElementById('mainHeartOrb');
             const hint = document.getElementById('holdHintText');
             if (orb) orb.classList.add('heart-charging');
-            if (hint) hint.textContent = 'استمر بالضغط لزيادة النسبة... ارفع إصبعك للإرسال';
+            if (hint) hint.textContent = 'جاري الشحن... ارفع إصبعك للإرسال';
 
-            // يبدأ فوراً من المستوى الأول 5% (للضغطة السريعة)
-            let stepIndex = 0;
-            updateLoveLevelUI(LOVE_LEVELS[stepIndex]);
-            if (navigator.vibrate) navigator.vibrate(15);
+            // يبدأ العداد من 1% وينتقل تدريجياً بسلاسة إلى 100%
+            let val = 1;
+            updateLoveMeterUI(val);
+            if (navigator.vibrate) navigator.vibrate(12);
 
-            // ينتقل للمستوى التالي كل 380 مللي ثانية أثناء استمرار الضغط
+            // زيادة 1% كل 22 مللي ثانية (يصل إلى 100% خلال ~2.2 ثانية بسلاسة تامة)
             chargeInterval = setInterval(() => {
-                if (stepIndex < LOVE_LEVELS.length - 1) {
-                    stepIndex++;
-                    updateLoveLevelUI(LOVE_LEVELS[stepIndex]);
-                    if (navigator.vibrate) {
-                        navigator.vibrate(stepIndex === LOVE_LEVELS.length - 1 ? [30, 40, 30] : 18);
+                if (val < 100) {
+                    val += 1;
+                    updateLoveMeterUI(val);
+
+                    // اهتزاز خفيف عند عبور كل مستوى من المستويات الخمسة
+                    if (MILESTONE_LEVELS.includes(val) && navigator.vibrate) {
+                        navigator.vibrate(val === 100 ? [30, 40, 30] : 18);
                     }
                 }
-            }, 380);
+            }, 22);
         }
 
         function releaseHeartCharge(e) {
@@ -796,15 +780,15 @@
             const orb = document.getElementById('mainHeartOrb');
             const hint = document.getElementById('holdHintText');
             if (orb) orb.classList.remove('heart-charging');
-            if (hint) hint.textContent = 'ضغطة سريعة 5% · استمر بالضغط حتى 100%';
+            if (hint) hint.textContent = 'استمر بالضغط على القلب من 1% حتى 100%';
 
-            const selectedScore = currentLoveLevel;
+            const selectedScore = currentLoveValue;
             sendLovePulseWithScore(selectedScore);
 
-            // إعادة المؤشر إلى 5% بعد لحظة قصيرة ليكون جاهزاً للنبضة القادمة
+            // إعادة المؤشر إلى 1% بعد الإرسال ليكون جاهزاً للنبضة القادمة
             setTimeout(() => {
-                if (!isChargingHeart) updateLoveLevelUI(5);
-            }, 650);
+                if (!isChargingHeart) updateLoveMeterUI(1);
+            }, 700);
         }
 
         function cancelHeartCharge() {
@@ -816,15 +800,8 @@
             const orb = document.getElementById('mainHeartOrb');
             const hint = document.getElementById('holdHintText');
             if (orb) orb.classList.remove('heart-charging');
-            if (hint) hint.textContent = 'ضغطة سريعة 5% · استمر بالضغط حتى 100%';
-            updateLoveLevelUI(5);
-        }
-
-        // ================= QUICK NOTE CHIPS =================
-        function applyQuickNote(text) {
-            const noteInput = document.getElementById('loveNote');
-            noteInput.value = text;
-            if (navigator.vibrate) navigator.vibrate(12);
+            if (hint) hint.textContent = 'استمر بالضغط على القلب من 1% حتى 100%';
+            updateLoveMeterUI(1);
         }
 
         // ================= RESPONSIVE NAVIGATION =================
@@ -1507,8 +1484,7 @@
                         recordTargetStreakInCloud(userHandle, cleanTarget);
                     }
 
-                    // عدد القلوب المتطايرة يتناسب مع نسبة الحب المرسلة
-                    const heartsCount = isQuickReply ? 12 : Math.max(6, Math.round(Number(score) / 5));
+                    const heartsCount = isQuickReply ? 12 : Math.max(5, Math.round(Number(score) / 5));
                     triggerFloatingHearts(heartsCount);
                     playHeartbeatSound();
                     if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
