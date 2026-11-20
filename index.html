@@ -55,7 +55,7 @@
             box-shadow: 0 0 0 4px rgba(251, 113, 133, 0.14);
         }
 
-        /* Compact White Box Inputs (Unified Style) */
+        /* Compact White Box Inputs */
         .white-compact-box {
             background: #ffffff;
             border: 1.5px solid #fecdd3;
@@ -68,16 +68,16 @@
             box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.14);
         }
 
-        /* Unified Field Text & Placeholder Typography */
+        /* Unified Right-Aligned Small Field Typography */
         .unified-field-text {
             font-family: 'Readex Pro', sans-serif;
-            font-size: 13px;
+            font-size: 11.5px;
             font-weight: 600;
             color: #334155;
         }
         .unified-field-text::placeholder {
             font-family: 'Readex Pro', sans-serif;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
             letter-spacing: normal;
             color: #94a3b8;
@@ -107,7 +107,7 @@
 
         /* Heart Send Button & Circular Progress Ring */
         @keyframes heartHalo {
-            0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.28); }
+            0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.25); }
             70% { box-shadow: 0 0 0 14px rgba(244, 63, 94, 0); }
             100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
         }
@@ -167,7 +167,7 @@
     <!-- حاوية الإشعارات الموحدة في منتصف الشاشة -->
     <div id="toastContainer" style="top: calc(1rem + var(--safe-top));" class="fixed inset-x-0 mx-auto z-50 pointer-events-none px-4 flex flex-col items-center justify-center w-full max-w-sm"></div>
 
-    <!-- Header العلوي الموحد بأيقونات مختصرة -->
+    <!-- Header العلوي الموحد -->
     <header class="w-full max-w-md mx-auto px-3.5 sm:px-5 pt-4 sm:pt-6 flex justify-between items-center gap-1.5">
         <div id="authStatusContainer" class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
             <!-- أيقونة حفظ الحساب / خروج -->
@@ -245,7 +245,7 @@
         <!-- ==================== VIEW 1: HOME ==================== -->
         <div id="viewHome" class="space-y-3.5">
 
-            <!-- بطاقة الهوية المصغرة في الأعلى (قلب + عدد القلوب فقط بدون كلمة وصلك) -->
+            <!-- بطاقة الهوية المصغرة في الأعلى -->
             <div onclick="switchMainView('profile')" class="glass-card px-4 py-3 flex items-center justify-between cursor-pointer hover:border-rose-300 transition active:scale-[0.99]">
                 <span class="inline-flex items-center gap-1.5 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1 rounded-full tabular-nums" id="miniHeartsBadge">
                     <svg class="w-3.5 h-3.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
@@ -279,7 +279,7 @@
                 <!-- دوائر الأصدقاء -->
                 <div id="recentContactsList" class="hidden flex gap-3 overflow-x-auto pb-1 pt-1.5 px-1 hide-scrollbar"></div>
 
-                <!-- بوكس إضافة رمز المستلم -->
+                <!-- بوكس إضافة رمز المستلم (محاذاة لليمين وخط أصغر) -->
                 <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
                     <button type="button" onclick="confirmAddRecipient()" title="إضافة"
                             class="size-7 rounded-xl bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-200/80 flex items-center justify-center shrink-0 transition-all active:scale-90">
@@ -290,8 +290,7 @@
                     <input type="text" id="targetIdInput" placeholder="أضف رمز المستلم" autocapitalize="characters" autocomplete="off"
                            oninput="onTargetInputChange(this.value)"
                            onkeydown="if(event.key==='Enter'){event.preventDefault(); confirmAddRecipient();}"
-                           class="w-full bg-transparent text-center unified-field-text tracking-wider outline-none uppercase">
-                    <span class="size-7 shrink-0"></span>
+                           class="w-full bg-transparent text-right unified-field-text tracking-wider outline-none uppercase pr-1">
                 </div>
             </section>
 
@@ -327,17 +326,20 @@
                 </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة (مضغوطة بأقل قدر ممكن من الكتابة) -->
+            <!-- بطاقة إرسال النبضة -->
             <section class="glass-card p-5 sm:p-6 space-y-4 relative">
-                <!-- أيقونة وضع المجهول -->
-                <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="مجهول"
-                        class="absolute top-4 right-4 z-10 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[#f9eff1] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90">
-                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
-                        <circle cx="12" cy="12" r="3"/>
-                        <line id="anonSlashLine" x1="3" y1="3" x2="21" y2="21" class="hidden"/>
+                <!-- أيقونة التصفح الخفي (مجهول) صغيرة بدون كتابة -->
+                <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="التصفح الخفي"
+                        class="absolute top-4 right-4 z-10 grid size-8 place-items-center rounded-full bg-[#f9eff1] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- قبعة التصفح الخفي -->
+                        <path d="M3 11h18"/>
+                        <path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/>
+                        <!-- نظارة التصفح الخفي -->
+                        <circle cx="7.5" cy="16.5" r="2.5"/>
+                        <circle cx="16.5" cy="16.5" r="2.5"/>
+                        <path d="M10 16.5h4"/>
                     </svg>
-                    <span id="anonStatusLabel" class="text-[10px] font-bold">مجهول</span>
                 </button>
 
                 <div class="text-center space-y-2.5 pt-2">
@@ -348,40 +350,38 @@
                             onpointerleave="cancelHeartCharge()"
                             onpointercancel="cancelHeartCharge()"
                             oncontextmenu="return false;"
-                            class="heart-send-btn relative inline-flex items-center justify-center w-28 h-28 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/70 shadow-md cursor-pointer select-none transition-all duration-150">
+                            class="heart-send-btn relative inline-flex items-center justify-center w-28 h-28 rounded-full bg-gradient-to-b from-rose-50/70 to-pink-100/50 shadow-md cursor-pointer select-none transition-all duration-150">
                         
                         <svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 100 100">
                             <defs>
                                 <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#fb7185"/>
+                                    <stop offset="0%" stop-color="#fda4af"/>
                                     <stop offset="50%" stop-color="#f43f5e"/>
-                                    <stop offset="100%" stop-color="#e11d48"/>
+                                    <stop offset="100%" stop-color="#be123c"/>
                                 </linearGradient>
                             </defs>
                             <circle cx="50" cy="50" r="45" fill="none" stroke="#ffe4e6" stroke-width="5.5"/>
                             <circle id="circularChargeRing" cx="50" cy="50" r="45" fill="none"
                                     stroke="url(#ringGrad)" stroke-width="5.5" stroke-linecap="round"
-                                    stroke-dasharray="282.74" stroke-dashoffset="279.91"/>
+                                    stroke-dasharray="282.74" stroke-dashoffset="282.74"/>
                         </svg>
 
-                        <svg id="dynamicHeartSvg" style="transform: scale(0.72);" class="w-12 h-12 transition-transform duration-75 drop-shadow-sm pointer-events-none relative z-10" viewBox="0 0 24 24">
-                            <defs>
-                                <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#fb7185"/>
-                                    <stop offset="100%" stop-color="#e11d48"/>
-                                </linearGradient>
-                            </defs>
-                            <path fill="url(#heartGrad)" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        <!-- أيقونة القلب التي تبدأ باهتة وتزداد احمراراً وحجماً مع الشحن -->
+                        <svg id="dynamicHeartSvg" style="transform: scale(0.70);" class="w-12 h-12 transition-transform duration-75 drop-shadow-sm pointer-events-none relative z-10" viewBox="0 0 24 24">
+                            <path id="dynamicHeartPath" fill="#fecdd3" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                         </svg>
                     </button>
 
-                    <!-- النسبة المئوية فقط -->
-                    <div>
-                        <span id="rangeDisplay" class="inline-flex items-center justify-center bg-rose-50 px-4 py-1 rounded-full border border-rose-100 text-xs font-black text-rose-600 tabular-nums">1%</span>
+                    <!-- النص الإرشادي بخط صغير رصاصي + النسبة المئوية ابتداءً من 0% -->
+                    <div class="space-y-1.5">
+                        <p class="text-[11px] font-medium text-slate-400">اضغط باستمرار لإرسال نبضة الحب</p>
+                        <div>
+                            <span id="rangeDisplay" class="inline-flex items-center justify-center bg-rose-50 px-4 py-1 rounded-full border border-rose-100 text-xs font-black text-rose-600 tabular-nums">0%</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- بوكس إضافة رسالة -->
+                <!-- بوكس إضافة رسالة (محاذاة لليمين وخط أصغر) -->
                 <div class="relative">
                     <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
                         <button type="button" id="emojiPickerToggleBtn" onclick="toggleEmojiPicker()"
@@ -392,8 +392,7 @@
                         </button>
 
                         <input type="text" id="loveNote" maxlength="100" placeholder="أضف رسالة قصيرة"
-                               class="w-full bg-transparent text-center unified-field-text outline-none">
-                        <span class="size-7 shrink-0"></span>
+                               class="w-full bg-transparent text-right unified-field-text outline-none pr-1">
                     </div>
 
                     <div id="emojiPickerPopover" class="hidden mt-1.5 p-2 rounded-2xl bg-white border border-rose-200 shadow-lg grid grid-cols-6 gap-1 text-center">
@@ -451,8 +450,7 @@
                         </button>
                         <input type="text" id="searchFriendInput" required placeholder="ابحث برمز الصديق" autocapitalize="characters" autocomplete="off"
                                oninput="handleLiveSearchInput(this.value)"
-                               class="w-full bg-transparent text-center unified-field-text tracking-wider outline-none uppercase">
-                        <span class="size-7 shrink-0"></span>
+                               class="w-full bg-transparent text-right unified-field-text tracking-wider outline-none uppercase pr-1">
                     </div>
                 </form>
 
@@ -465,7 +463,7 @@
                     <div id="recentSearchesList" class="flex flex-wrap gap-1.5"></div>
                 </div>
 
-                <!-- نتيجة البحث (قلب + العدد فقط بدون نص) -->
+                <!-- نتيجة البحث -->
                 <div id="searchResultBox" class="hidden pt-2 border-t border-rose-100 space-y-3">
                     <div class="bg-gradient-to-b from-[#fff2f4] to-white rounded-3xl p-5 border border-rose-200/80 text-center space-y-3 shadow-xs">
                         <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-rose-500 to-pink-400 text-white font-mono text-xl font-black flex items-center justify-center mx-auto shadow-md shadow-rose-200" id="searchResultAvatar">
@@ -503,7 +501,6 @@
         <!-- ==================== VIEW 3: PROFILE ==================== -->
         <div id="viewProfile" class="hidden space-y-4">
             <section class="glass-card p-5 sm:p-6 relative overflow-hidden space-y-4 border-2 border-rose-100">
-                <!-- بطاقة الهوية الاجتماعية (قلب + عدد القلوب فقط بدون كلمة وصلك) -->
                 <div class="bg-gradient-to-b from-[#fff1f3] via-white to-[#fff8f9] rounded-3xl p-5 border border-rose-200/70 shadow-xs text-center space-y-3.5">
                     <div class="story-ring w-18 h-18 inline-block mx-auto shadow-md shadow-rose-200">
                         <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center text-rose-500">
@@ -521,9 +518,8 @@
                             </svg>
                         </button>
                         <input type="text" id="usernameInput" autocapitalize="characters" autocomplete="off"
-                               class="w-full bg-transparent text-center unified-field-text tracking-wider outline-none uppercase"
+                               class="w-full bg-transparent text-right unified-field-text tracking-wider outline-none uppercase pr-1"
                                placeholder="اكتب رمزك الخاص">
-                        <span class="size-7 shrink-0"></span>
                     </div>
 
                     <div class="flex items-center justify-center pt-1">
@@ -534,7 +530,6 @@
                     </div>
                 </div>
 
-                <!-- زر تفعيل أو مشاركة الرابط -->
                 <div class="pt-1">
                     <button id="handleActionBtn" onclick="registerHandle()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-2xl text-xs shadow-md transition active:scale-[0.98] inline-flex items-center justify-center gap-1.5">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
@@ -613,12 +608,12 @@
             soundOff: '<svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>',
             share: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
             check: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
-            anonMask: '<svg class="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/><line x1="3" y1="3" x2="21" y2="21"/></svg>'
+            incognitoIcon: '<svg class="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/><path d="M10 16.5h4"/></svg>'
         };
 
         const RING_CIRCUMFERENCE = 2 * Math.PI * 45;
 
-        let currentLoveValue = 1;
+        let currentLoveValue = 0;
         let chargeDelayTimer = null;
         let chargeStepTimer = null;
         let isChargingHeart = false;
@@ -643,7 +638,7 @@
         let isFirstPulseLoad = true;
         let activeStreaksCache = {};
 
-        // ================= FORMAT EXACT DATE & TIME (HOUR:MINUTE · DD/MM/YYYY) =================
+        // ================= FORMAT EXACT DATE & TIME =================
         function formatExactDateTime(ts) {
             if (!ts) return '';
             const d = new Date(ts);
@@ -658,7 +653,7 @@
             return `${day}/${month}/${year} · ${timeStr}`;
         }
 
-        // ================= NOTIFICATION BELL (UNREAD INDICATOR) =================
+        // ================= NOTIFICATION BELL =================
         function updateBellBadgeState() {
             const bellBadge = document.getElementById('bellBadge');
             const bellBtn = document.getElementById('notificationBellBtn');
@@ -765,19 +760,16 @@
             if (navigator.vibrate) navigator.vibrate(10);
         }
 
-        // ================= ANONYMOUS TOGGLE LOGIC =================
+        // ================= INCOGNITO / ANONYMOUS TOGGLE LOGIC =================
         function toggleAnonymousMode() {
             isAnonymousMode = !isAnonymousMode;
             const btn = document.getElementById('anonymousToggleBtn');
-            const slash = document.getElementById('anonSlashLine');
 
             if (isAnonymousMode) {
-                btn.className = "absolute top-4 right-4 z-10 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-slate-900 text-white border border-slate-800 shadow-xs transition-all active:scale-90";
-                slash.classList.remove('hidden');
-                showToast("وضع المجهول");
+                btn.className = "absolute top-4 right-4 z-10 grid size-8 place-items-center rounded-full bg-slate-900 text-white border border-slate-800 shadow-xs transition-all active:scale-90";
+                showToast("وضع التخفي");
             } else {
-                btn.className = "absolute top-4 right-4 z-10 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[#f9eff1] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90";
-                slash.classList.add('hidden');
+                btn.className = "absolute top-4 right-4 z-10 grid size-8 place-items-center rounded-full bg-[#f9eff1] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90";
             }
             if (navigator.vibrate) navigator.vibrate(12);
         }
@@ -826,25 +818,43 @@
             }
 
             updateSoundUI();
-            updateLoveMeterUI(1);
+            updateLoveMeterUI(0);
             updateBellBadgeState();
             renderPulsesList();
             renderRecentContactsBar();
             renderRecentSearches();
         });
 
-        // ================= ACCELERATING CIRCULAR RING 1-TO-100 METER =================
+        // ================= PROGRESSIVE COLOR & SCALE 0-TO-100 METER =================
+        function getInterpolatedHeartColor(pct) {
+            // من وردي باهت جداً عند 0% إلى أحمر قاني مشبع عند 100%
+            // Start: rgb(254, 205, 211) [#fecdd3] -> End: rgb(225, 29, 72) [#e11d48]
+            const t = Math.max(0, Math.min(1, pct / 100));
+            const r = Math.round(254 + (225 - 254) * t);
+            const g = Math.round(205 + (29 - 205) * t);
+            const b = Math.round(211 + (72 - 211) * t);
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
         function updateLoveMeterUI(val) {
-            const clamped = Math.max(1, Math.min(100, Math.round(val)));
+            const clamped = Math.max(0, Math.min(100, Math.round(val)));
             currentLoveValue = clamped;
             document.getElementById('rangeDisplay').textContent = clamped + '%';
 
+            // تكبير القلب بسلاسة من 0% إلى 100%
             const svg = document.getElementById('dynamicHeartSvg');
             if (svg) {
-                const scale = 0.72 + ((clamped - 1) / 99) * 0.56;
+                const scale = 0.70 + (clamped / 100) * 0.58;
                 svg.style.transform = `scale(${scale.toFixed(3)})`;
             }
 
+            // تدرج احمرار القلب من الباهت عند 0% إلى الأحمر القاني عند 100%
+            const heartPath = document.getElementById('dynamicHeartPath');
+            if (heartPath) {
+                heartPath.setAttribute('fill', getInterpolatedHeartColor(clamped));
+            }
+
+            // تحديث حلقة الشحن الدائرية
             const ring = document.getElementById('circularChargeRing');
             if (ring) {
                 const offset = RING_CIRCUMFERENCE * (1 - clamped / 100);
@@ -860,7 +870,7 @@
             const orb = document.getElementById('mainHeartOrb');
             if (orb) orb.classList.add('heart-charging');
 
-            let val = 1;
+            let val = 0;
             updateLoveMeterUI(val);
             if (navigator.vibrate) navigator.vibrate(12);
 
@@ -882,7 +892,7 @@
                 };
 
                 tick();
-            }, 320);
+            }, 260);
         }
 
         function releaseHeartCharge(e) {
@@ -902,7 +912,7 @@
             sendLovePulseWithScore(selectedScore);
 
             setTimeout(() => {
-                if (!isChargingHeart) updateLoveMeterUI(1);
+                if (!isChargingHeart) updateLoveMeterUI(0);
             }, 700);
         }
 
@@ -916,7 +926,7 @@
 
             const orb = document.getElementById('mainHeartOrb');
             if (orb) orb.classList.remove('heart-charging');
-            updateLoveMeterUI(1);
+            updateLoveMeterUI(0);
         }
 
         // ================= TOP HEADER NAVIGATION =================
@@ -1657,7 +1667,6 @@
                 const miniBadge = document.getElementById('miniHeartsBadge');
                 const tabBadge = document.getElementById('incomingTabCountBadge');
 
-                // أيقونة قلب وبجانبها العدد فقط بدون كلمة وصلك
                 if (countBadge) countBadge.innerHTML = `${ICONS.heartMed} <span>${totalCount}</span>`;
                 if (miniBadge) miniBadge.innerHTML = `${ICONS.heartFill} <span>${totalCount}</span>`;
                 if (tabBadge) tabBadge.textContent = totalCount;
@@ -1716,7 +1725,7 @@
 
                 const directionLabel = isIncoming ? 'من' : 'إلى';
                 const avatarHTML = isAnonSender
-                    ? `<div class="size-10 rounded-full bg-slate-100 border border-slate-200/80 flex items-center justify-center shrink-0">${ICONS.anonMask}</div>`
+                    ? `<div class="size-10 rounded-full bg-slate-100 border border-slate-200/80 flex items-center justify-center shrink-0">${ICONS.incognitoIcon}</div>`
                     : `<div class="story-ring shrink-0">
                            <div class="size-9 rounded-full bg-white flex items-center justify-center font-mono text-xs font-black text-slate-900">
                                ${targetOrSender.charAt(0)}
