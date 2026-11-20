@@ -307,7 +307,7 @@
                 </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة (شحن سلس من 1 إلى 100 مع علامات المستويات الخمسة) -->
+            <!-- بطاقة إرسال النبضة (بدون وصف الشعور + 1% دقيق للضغطة السريعة) -->
             <section class="glass-card p-5 sm:p-6 space-y-3.5">
                 <div class="text-center space-y-2 pt-0.5">
                     <!-- زر القلب التفاعلي للشحن المستمر -->
@@ -317,7 +317,7 @@
                             onpointerleave="cancelHeartCharge()"
                             onpointercancel="cancelHeartCharge()"
                             oncontextmenu="return false;"
-                            title="استمر بالضغط على القلب لشحن النبضة من 1% حتى 100%"
+                            title="ضغطة سريعة 1% أو استمر بالضغط حتى 100%"
                             class="heart-send-btn inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/80 border-2 border-rose-200 hover:border-rose-400 shadow-md cursor-pointer select-none transition-shadow duration-150">
                         <svg id="dynamicHeartSvg" style="transform: scale(0.72);" class="w-12 h-12 transition-transform duration-75 drop-shadow-sm pointer-events-none" viewBox="0 0 24 24">
                             <defs>
@@ -332,12 +332,11 @@
 
                     <div>
                         <h2 class="text-lg font-black text-slate-900">أرسل نبضة حب</h2>
-                        <p id="holdHintText" class="text-[10px] text-slate-400 mt-0.5">استمر بالضغط على القلب من 1% حتى 100%</p>
+                        <p id="holdHintText" class="text-[10px] text-slate-400 mt-0.5">ضغطة سريعة 1% · استمر بالضغط حتى 100%</p>
                     </div>
 
-                    <div class="inline-flex items-center gap-1.5 bg-rose-50 px-3.5 py-1 rounded-full border border-rose-100">
-                        <span id="moodLabel" class="text-[11px] font-bold text-rose-600">بداية نبضة</span>
-                        <span class="text-rose-300">•</span>
+                    <!-- عرض النسبة المئوية فقط بدون وصف الشعور -->
+                    <div class="inline-flex items-center justify-center bg-rose-50 px-4 py-1 rounded-full border border-rose-100">
                         <span id="rangeDisplay" class="text-xs font-black text-rose-600 tabular-nums">1%</span>
                     </div>
                 </div>
@@ -349,9 +348,9 @@
                         <div id="smoothChargeFill" style="width: 1%;" class="h-full bg-gradient-to-r from-rose-400 via-rose-500 to-pink-600 rounded-full transition-[width] duration-75 ease-linear"></div>
                     </div>
 
-                    <!-- علامات المستويات الخمسة المرجعية -->
+                    <!-- علامات المستويات الخمسة المرجعية (1, 25, 50, 75, 100) -->
                     <div class="grid grid-cols-5 gap-1 text-center">
-                        <button type="button" id="lvlBtn-5" onclick="previewLoveValue(5)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">5%</button>
+                        <button type="button" id="lvlBtn-1" onclick="previewLoveValue(1)" class="py-1 rounded-xl text-[11px] font-black bg-white text-rose-600 shadow-2xs border border-rose-200 scale-105 transition-all">1%</button>
                         <button type="button" id="lvlBtn-25" onclick="previewLoveValue(25)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">25%</button>
                         <button type="button" id="lvlBtn-50" onclick="previewLoveValue(50)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">50%</button>
                         <button type="button" id="lvlBtn-75" onclick="previewLoveValue(75)" class="py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-rose-500 transition-all">75%</button>
@@ -612,9 +611,10 @@
             pulseHeart: '<svg class="w-4 h-4 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'
         };
 
-        // علامات المستويات الخمسة المرجعية فقط لتوضيح موضع العداد السلس (1 -> 100)
-        const MILESTONE_LEVELS = [5, 25, 50, 75, 100];
+        // علامات المستويات الخمسة المرجعية (1 - 25 - 50 - 75 - 100)
+        const MILESTONE_LEVELS = [1, 25, 50, 75, 100];
         let currentLoveValue = 1;
+        let chargeDelayTimer = null;
         let chargeInterval = null;
         let isChargingHeart = false;
 
@@ -690,19 +690,10 @@
             currentLoveValue = clamped;
             document.getElementById('rangeDisplay').textContent = clamped + '%';
 
-            // وصف الشعور حسب النطاق
-            let moodText = 'بداية نبضة';
-            if (clamped >= 100) moodText = 'حب لا يوصف';
-            else if (clamped >= 75) moodText = 'حب كبير';
-            else if (clamped >= 50) moodText = 'نبضة دافئة';
-            else if (clamped >= 25) moodText = 'اهتمام وود';
-            else if (clamped >= 5) moodText = 'لمسة لطيفة';
-            document.getElementById('moodLabel').textContent = moodText;
-
             // تكبير القلب بسلاسة متناسبة من 1% إلى 100%
             const svg = document.getElementById('dynamicHeartSvg');
             if (svg) {
-                const scale = 0.72 + ((clamped - 1) / 99) * 0.56; // من 0.72 إلى 1.28
+                const scale = 0.72 + ((clamped - 1) / 99) * 0.56;
                 svg.style.transform = `scale(${scale.toFixed(3)})`;
             }
 
@@ -712,8 +703,8 @@
                 fillBar.style.width = clamped + '%';
             }
 
-            // إضاءة علامات المستويات الخمسة المرجعية (5, 25, 50, 75, 100) لتوضيح أين وصل العداد
-            let activeMilestone = null;
+            // إضاءة علامات المستويات الخمسة المرجعية (1, 25, 50, 75, 100)
+            let activeMilestone = 1;
             for (let i = MILESTONE_LEVELS.length - 1; i >= 0; i--) {
                 if (clamped >= MILESTONE_LEVELS[i]) {
                     activeMilestone = MILESTONE_LEVELS[i];
@@ -750,37 +741,41 @@
             if (orb) orb.classList.add('heart-charging');
             if (hint) hint.textContent = 'جاري الشحن... ارفع إصبعك للإرسال';
 
-            // يبدأ العداد من 1% وينتقل تدريجياً بسلاسة إلى 100%
+            // يثبت على 1% عند اللمس
             let val = 1;
             updateLoveMeterUI(val);
             if (navigator.vibrate) navigator.vibrate(12);
 
-            // زيادة 1% كل 22 مللي ثانية (يصل إلى 100% خلال ~2.2 ثانية بسلاسة تامة)
-            chargeInterval = setInterval(() => {
-                if (val < 100) {
-                    val += 1;
-                    updateLoveMeterUI(val);
+            // مهلة 160ms لضمان أن أي نقرة سريعة ترسل 1% بالضبط قبل بدء التصاعد
+            chargeDelayTimer = setTimeout(() => {
+                if (!isChargingHeart) return;
+                chargeInterval = setInterval(() => {
+                    if (val < 100) {
+                        val += 1;
+                        updateLoveMeterUI(val);
 
-                    // اهتزاز خفيف عند عبور كل مستوى من المستويات الخمسة
-                    if (MILESTONE_LEVELS.includes(val) && navigator.vibrate) {
-                        navigator.vibrate(val === 100 ? [30, 40, 30] : 18);
+                        if (MILESTONE_LEVELS.includes(val) && navigator.vibrate) {
+                            navigator.vibrate(val === 100 ? [30, 40, 30] : 18);
+                        }
                     }
-                }
-            }, 22);
+                }, 22);
+            }, 160);
         }
 
         function releaseHeartCharge(e) {
             if (e) e.preventDefault();
             if (!isChargingHeart) return;
 
+            clearTimeout(chargeDelayTimer);
             clearInterval(chargeInterval);
+            chargeDelayTimer = null;
             chargeInterval = null;
             isChargingHeart = false;
 
             const orb = document.getElementById('mainHeartOrb');
             const hint = document.getElementById('holdHintText');
             if (orb) orb.classList.remove('heart-charging');
-            if (hint) hint.textContent = 'استمر بالضغط على القلب من 1% حتى 100%';
+            if (hint) hint.textContent = 'ضغطة سريعة 1% · استمر بالضغط حتى 100%';
 
             const selectedScore = currentLoveValue;
             sendLovePulseWithScore(selectedScore);
@@ -793,14 +788,16 @@
 
         function cancelHeartCharge() {
             if (!isChargingHeart) return;
+            clearTimeout(chargeDelayTimer);
             clearInterval(chargeInterval);
+            chargeDelayTimer = null;
             chargeInterval = null;
             isChargingHeart = false;
 
             const orb = document.getElementById('mainHeartOrb');
             const hint = document.getElementById('holdHintText');
             if (orb) orb.classList.remove('heart-charging');
-            if (hint) hint.textContent = 'استمر بالضغط على القلب من 1% حتى 100%';
+            if (hint) hint.textContent = 'ضغطة سريعة 1% · استمر بالضغط حتى 100%';
             updateLoveMeterUI(1);
         }
 
