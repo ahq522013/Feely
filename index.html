@@ -61,11 +61,21 @@
             box-shadow: 0 0 0 4px rgba(251, 113, 133, 0.14);
         }
 
-        /* Story Avatar Ring (Instagram / Snapchat Style) */
+        /* Story Avatar Ring */
         .story-ring {
             background: linear-gradient(135deg, #fb7185 0%, #e11d48 50%, #f472b6 100%);
             padding: 2.5px;
             border-radius: 9999px;
+        }
+
+        /* Heart Send Button Pulse Ring */
+        @keyframes heartHalo {
+            0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.35); }
+            70% { box-shadow: 0 0 0 16px rgba(244, 63, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+        }
+        .heart-send-btn {
+            animation: heartHalo 2.2s infinite;
         }
 
         /* Custom Tactile Slider */
@@ -128,10 +138,10 @@
 </head>
 <body class="text-slate-800 min-h-[100dvh] flex flex-col justify-between antialiased selection:bg-rose-100 selection:text-rose-700">
 
-    <!-- إشعار Toast عائم حديث بدلاً من نوافذ alert المزعجة -->
+    <!-- إشعار Toast عائم حديث -->
     <div id="toastContainer" style="top: calc(0.9rem + var(--safe-top));" class="fixed left-1/2 -translate-x-1/2 z-50 pointer-events-none w-[92%] max-w-sm"></div>
 
-    <!-- شريط التنقل المتجاوب: شريط سفلي عائم على الجوال وعمودي جانبي على الشاشات الأكبر -->
+    <!-- شريط التنقل المتجاوب -->
     <nav aria-label="التنقل السريع" 
          style="bottom: calc(0.85rem + var(--safe-bottom));"
          class="fixed left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-5 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2 z-40 flex flex-row sm:flex-col items-center gap-2 sm:gap-2.5 bg-slate-900/95 backdrop-blur-xl p-1.5 sm:p-2 rounded-full shadow-xl shadow-slate-900/15 border border-white/10">
@@ -216,7 +226,7 @@
         <!-- ==================== VIEW 1: HOME ==================== -->
         <div id="viewHome" class="space-y-3.5">
 
-            <!-- بطاقة الهوية المصغرة في الأعلى (تأخذك للبروفايل) -->
+            <!-- بطاقة الهوية المصغرة في الأعلى -->
             <div onclick="switchMainView('profile')" class="glass-card px-4 py-3 flex items-center justify-between cursor-pointer hover:border-rose-300 transition active:scale-[0.99]">
                 <span class="inline-flex items-center gap-1.5 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1 rounded-full" id="miniHeartsBadge">
                     <span>0</span>
@@ -233,16 +243,35 @@
                 </div>
             </div>
 
-            <!-- شريط أصدقاء النبض بأسلوب القصص (Stories Avatars Bar) -->
-            <section id="recentContactsSection" class="hidden glass-card p-3.5 space-y-2.5">
+            <!-- بوكس أصدقاء النبض المدمج (الدوائر في الأعلى + مربع أضف رمز المستلم تحتها مباشرة بدون عنوان) -->
+            <section id="recentContactsSection" class="glass-card p-4 space-y-3">
                 <div class="flex items-center justify-between px-1">
-                    <span class="text-[10px] text-slate-400 font-medium">اختر صديقاً لإرسال نبضة</span>
-                    <h3 class="text-xs font-extrabold text-slate-800 flex items-center gap-1">
+                    <div class="flex items-center gap-1.5">
+                        <span id="targetStreakIndicator" class="hidden inline-flex items-center gap-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200/70 px-2 py-0.5 rounded-full">
+                            <svg class="w-2.5 h-2.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            <span>ستريك: 0</span>
+                        </span>
+                        <button type="button" id="viewTargetProfileBtn" onclick="openFriendProfile(document.getElementById('targetIdInput').value)" class="hidden inline-flex items-center gap-1 text-[10px] font-bold text-slate-600 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 px-2 py-0.5 rounded-full transition">
+                            <span>ملفه</span>
+                            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
                         <span>أصدقاء النبض</span>
                         <span class="inline-block size-1.5 rounded-full bg-rose-500"></span>
                     </h3>
                 </div>
-                <div id="recentContactsList" class="flex gap-3 overflow-x-auto pb-1 pt-0.5 px-1 hide-scrollbar"></div>
+
+                <!-- دوائر الأصدقاء -->
+                <div id="recentContactsList" class="hidden flex gap-3 overflow-x-auto pb-1 pt-0.5 px-1 hide-scrollbar"></div>
+
+                <!-- بوكس إضافة رمز المستلم بدون أي عنوان خارجي -->
+                <div>
+                    <input type="text" id="targetIdInput" placeholder="أضف رمز المستلم" autocapitalize="characters" autocomplete="off" oninput="onTargetInputChange(this.value)"
+                           class="soft-input w-full px-4 py-3 text-center font-mono font-black tracking-[0.2em] text-slate-900 placeholder:font-sans placeholder:font-semibold placeholder:tracking-normal placeholder:text-slate-400 outline-none uppercase">
+                </div>
             </section>
 
             <!-- بطاقة صفحة الصديق (تظهر عند اختيار صديق أو فتح رابطه) -->
@@ -285,16 +314,17 @@
                         <svg class="w-3.5 h-3.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                         <span>ستريك مشترك: 0 أيام</span>
                     </span>
-                    <span class="text-slate-400">جاهز لاستقبال نبضتك</span>
+                    <span class="text-slate-400">اضغط على القلب أدناه للإرسال</span>
                 </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة (Composer Card) -->
+            <!-- بطاقة إرسال النبضة (القلب نفسه هو زر الإرسال) -->
             <section class="glass-card p-5 sm:p-6 space-y-4">
-                <div class="text-center space-y-1.5">
-                    <div id="mainHeartOrb" onclick="triggerFloatingHearts(8); playHeartbeatSound();" 
-                         class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/70 border border-rose-200/70 shadow-inner cursor-pointer select-none transition-transform duration-150">
-                        <svg id="dynamicHeartSvg" style="transform: scale(1.05);" class="w-11 h-11 transition-transform duration-150 drop-shadow-sm" viewBox="0 0 24 24">
+                <div class="text-center space-y-2 pt-1">
+                    <!-- زر القلب التفاعلي للإرسال -->
+                    <button type="button" id="mainHeartOrb" onclick="sendLovePulse(event)" title="اضغط لإرسال نبضة حب"
+                            class="heart-send-btn inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/80 border-2 border-rose-200 hover:border-rose-400 shadow-md cursor-pointer select-none transition-transform duration-150 active:scale-90">
+                        <svg id="dynamicHeartSvg" style="transform: scale(1.05);" class="w-12 h-12 transition-transform duration-150 drop-shadow-sm" viewBox="0 0 24 24">
                             <defs>
                                 <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stop-color="#fb7185"/>
@@ -303,8 +333,13 @@
                             </defs>
                             <path fill="url(#heartGrad)" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                         </svg>
+                    </button>
+
+                    <div>
+                        <h2 onclick="sendLovePulse(event)" class="text-lg font-black text-slate-900 cursor-pointer hover:text-rose-600 transition">أرسل نبضة حب</h2>
+                        <p class="text-[10px] text-slate-400 mt-0.5">اضغط على القلب لإرسال النبضة</p>
                     </div>
-                    <h2 class="text-lg font-black text-slate-900">أرسل نبضة حب</h2>
+
                     <div class="inline-flex items-center gap-1.5 bg-rose-50 px-3 py-0.5 rounded-full border border-rose-100">
                         <span id="moodLabel" class="text-[11px] font-bold text-rose-600">حب كبير</span>
                         <span class="text-rose-300">•</span>
@@ -312,33 +347,13 @@
                     </div>
                 </div>
 
-                <form onsubmit="sendLovePulse(event)" class="space-y-3.5">
-                    <div>
-                        <div class="flex justify-between items-center mb-1.5 gap-2">
-                            <div class="flex items-center gap-1.5 flex-wrap">
-                                <span id="targetStreakIndicator" class="hidden inline-flex items-center gap-1 text-[11px] font-black text-rose-600 bg-rose-50 border border-rose-200/70 px-2.5 py-0.5 rounded-full">
-                                    <svg class="w-3 h-3 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                                    <span>ستريك: 0</span>
-                                </span>
-                                <button type="button" id="viewTargetProfileBtn" onclick="openFriendProfile(document.getElementById('targetIdInput').value)" class="hidden inline-flex items-center gap-1 text-[10px] font-bold text-slate-600 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 px-2.5 py-0.5 rounded-full transition">
-                                    <span>ملفه</span>
-                                    <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <label class="block text-xs font-bold text-slate-500 text-right shrink-0">رمز المستلم</label>
-                        </div>
-                        <input type="text" id="targetIdInput" required placeholder="أدخل رمز الصديق..." autocapitalize="characters" autocomplete="off" oninput="onTargetInputChange(this.value)"
-                               class="soft-input w-full px-4 py-3 text-center font-mono font-black tracking-[0.25em] text-slate-900 outline-none uppercase">
-                    </div>
-
+                <div class="space-y-3.5">
                     <!-- Slider -->
                     <div class="px-1">
                         <input type="range" id="loveSlider" min="1" max="100" value="75" oninput="updateOrb(this.value)" class="w-full">
                     </div>
 
-                    <!-- شرائح رسائل سريعة بلمسة واحدة (Quick Note Chips) -->
+                    <!-- شرائح رسائل سريعة بلمسة واحدة -->
                     <div class="space-y-1.5">
                         <div class="flex items-center justify-between">
                             <span class="text-[10px] text-slate-400">اضغط للاختيار السريع</span>
@@ -358,14 +373,7 @@
                         <input type="text" id="senderNameInput" placeholder="اسمك الظاهر للمستلم (اختياري - افتراضياً مجهول)"
                                class="soft-input w-full px-4 py-2.5 text-right text-sm text-slate-700 outline-none">
                     </div>
-
-                    <button type="submit" id="submitBtn" class="w-full bg-gradient-to-l from-rose-600 via-rose-500 to-pink-500 hover:brightness-105 text-white font-bold py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 transition active:scale-[0.98] shadow-lg shadow-rose-500/25">
-                        <span>إرسال النبضة</span>
-                        <svg class="w-4 h-4 transform -rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                        </svg>
-                    </button>
-                </form>
+                </div>
             </section>
 
             <!-- صندوق النبضات (Feed / Inbox) -->
@@ -619,6 +627,7 @@
         let activeFriendHandle = null;
         let friendStatsListenerRef = null;
         let liveSearchTimer = null;
+        let isSendingPulse = false;
         
         let incomingPulses = [];
         let sentPulses = JSON.parse(localStorage.getItem('feely_sent_pulses') || '[]');
@@ -626,7 +635,7 @@
         let isFirstPulseLoad = true;
         let activeStreaksCache = {};
 
-        // ================= MODERN TOAST NOTIFICATION (بديل alert) =================
+        // ================= MODERN TOAST NOTIFICATION =================
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             if (!container) return;
@@ -1171,18 +1180,17 @@
         }
 
         function renderRecentContactsBar() {
-            const container = document.getElementById('recentContactsSection');
             const list = document.getElementById('recentContactsList');
-            if (!container || !list) return;
+            if (!list) return;
 
             const uniqueRecipients = [...new Set(sentPulses.map(p => p.target).filter(Boolean))];
 
             if (uniqueRecipients.length === 0) {
-                container.classList.add('hidden');
+                list.classList.add('hidden');
                 return;
             }
 
-            container.classList.remove('hidden');
+            list.classList.remove('hidden');
             list.innerHTML = '';
 
             uniqueRecipients.forEach(handle => {
@@ -1227,7 +1235,6 @@
             return new Date(ts).toLocaleDateString('ar-SA');
         }
 
-        // تكبير ديناميكي للقلب حسب نسبة الحب
         function updateOrb(val) {
             const intensity = Number(val);
             document.getElementById('rangeDisplay').textContent = intensity + '%';
@@ -1348,13 +1355,22 @@
         }
 
         function executePulseSend(targetHandle, senderName, score, note, isQuickReply = false) {
+            if (isSendingPulse) return;
             if (!currentUser) return showToast('جاري تأمين الاتصال، حاول بعد لحظة', 'error');
             const cleanTarget = targetHandle.trim().toUpperCase();
 
-            if (!cleanTarget || cleanTarget.length < 1) return showToast('يرجى إدخال رمز مستلم صحيح', 'error');
+            if (!cleanTarget || cleanTarget.length < 1) {
+                const targetInput = document.getElementById('targetIdInput');
+                if (targetInput) targetInput.focus();
+                return showToast('أضف رمز المستلم في البوكس أعلاه أولاً', 'error');
+            }
 
+            isSendingPulse = true;
             db.ref('handles/' + cleanTarget).once('value', snapshot => {
-                if (!snapshot.exists()) return showToast(`الرمز (${cleanTarget}) غير موجود أو لم يُفعّل بعد`, 'error');
+                if (!snapshot.exists()) {
+                    isSendingPulse = false;
+                    return showToast(`الرمز (${cleanTarget}) غير موجود أو لم يُفعّل بعد`, 'error');
+                }
 
                 const pulseData = { 
                     target: cleanTarget, 
@@ -1366,6 +1382,7 @@
                 };
 
                 db.ref('pulses/' + cleanTarget).push(pulseData).then(() => {
+                    isSendingPulse = false;
                     db.ref('stats/' + cleanTarget + '/receivedCount').transaction(curr => (curr || 0) + 1);
 
                     sentPulses.unshift(pulseData);
@@ -1387,12 +1404,15 @@
                         showToast(`تم إرسال رد سريع إلى (${cleanTarget})`);
                     }
                     if (activeTab === 'sent') renderPulsesList();
-                }).catch(err => showToast('حدث خطأ: ' + err.message, 'error'));
+                }).catch(err => {
+                    isSendingPulse = false;
+                    showToast('حدث خطأ: ' + err.message, 'error');
+                });
             });
         }
 
         function sendLovePulse(e) {
-            e.preventDefault();
+            if (e) e.preventDefault();
             const targetHandle = document.getElementById('targetIdInput').value.trim().toUpperCase();
             const senderName = document.getElementById('senderNameInput').value.trim() || userHandle || 'مجهول';
             const score = document.getElementById('loveSlider').value;
