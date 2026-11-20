@@ -122,13 +122,52 @@
     <!-- Main Workspace -->
     <main class="w-full max-w-md mx-auto px-4 py-6 space-y-4 flex-grow">
 
-        <!-- Receive Code Card -->
+        <!-- Friend Profile Card (صفحة الصديق عند الدخول على رمزه أو اختياره) -->
+        <section id="friendProfileCard" class="hidden minimal-card p-6 relative overflow-hidden space-y-3 border-2 border-rose-300/80 bg-gradient-to-b from-[#fff5f6] to-white">
+            <div class="flex items-center justify-between">
+                <button type="button" onclick="closeFriendProfile()" class="text-[11px] font-bold text-slate-400 hover:text-slate-700 bg-white px-2.5 py-1 rounded-full border border-slate-200/70 transition">
+                    ✕ إغلاق الصفحة
+                </button>
+                <span class="text-xs font-black text-rose-600 flex items-center gap-1">
+                    <span>صفحة الصديق</span>
+                    <span>👤</span>
+                </span>
+            </div>
+
+            <div class="flex items-center justify-between gap-3 bg-white rounded-2xl px-4 py-3 border border-rose-100 shadow-2xs">
+                <span class="text-xs font-black text-rose-500 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-full shrink-0" id="friendHeartsReceivedBadge">
+                    0 ❤️ وصله
+                </span>
+
+                <div class="flex items-center gap-2">
+                    <span id="friendProfileHandle" class="font-mono text-xl font-black tracking-[0.25em] text-slate-900 uppercase">---</span>
+                    <button type="button" onclick="copyFriendLink()" title="نسخ رابط صفحة الصديق"
+                            class="p-1.5 text-slate-500 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition active:scale-90">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] px-1">
+                <span id="friendProfileStreakText" class="font-bold text-rose-500">❤️ ستريك مشترك: 0 أيام</span>
+                <span class="text-slate-400">يمكنك إرسال نبضة له من البطاقة أدناه</span>
+            </div>
+        </section>
+
+        <!-- Receive Code Card (بطاقة رمزك الخاص) -->
         <section class="minimal-card p-6 relative overflow-hidden space-y-3">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-black text-rose-500 bg-rose-50 border border-rose-100 px-3 py-1 rounded-full shadow-2xs" id="totalHeartsReceivedBadge">
                     0 ❤️ وصلك
                 </span>
-                <p class="text-xs font-bold text-slate-400">رمزك الخاص</p>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="promptOpenFriendPage()" class="text-[11px] font-bold text-rose-500 hover:text-rose-600 bg-rose-50/80 hover:bg-rose-100/70 px-2.5 py-1 rounded-full transition">
+                        🔍 صفحة صديق
+                    </button>
+                    <p class="text-xs font-bold text-slate-400">رمزك الخاص</p>
+                </div>
             </div>
 
             <div class="flex items-center justify-between gap-2 bg-[#fbf1f2] rounded-2xl px-4 py-2 border border-rose-100/60">
@@ -157,7 +196,7 @@
         <!-- Quick Contacts Bar -->
         <section id="recentContactsSection" class="hidden minimal-card p-4 space-y-2 border border-rose-100/70">
             <div class="flex items-center justify-between">
-                <span class="text-[10px] text-slate-400 font-medium">اضغط للإرسال المباشر</span>
+                <span class="text-[10px] text-slate-400 font-medium">اضغط لعرض صفحته والإرسال</span>
                 <h3 class="text-xs font-bold text-slate-800 flex items-center gap-1">
                     <span>أصدقاء النبض</span>
                     <span>✨</span>
@@ -179,12 +218,17 @@
             <form onsubmit="sendLovePulse(event)" class="space-y-4">
                 <div>
                     <div class="flex justify-between items-center mb-1.5">
-                        <span id="targetStreakIndicator" class="hidden text-[11px] font-black text-rose-500 bg-rose-50 border border-rose-200/60 px-2 py-0.5 rounded-full">
-                            ❤️ ستريك: 0 أيام
-                        </span>
+                        <div class="flex items-center gap-1.5">
+                            <span id="targetStreakIndicator" class="hidden text-[11px] font-black text-rose-500 bg-rose-50 border border-rose-200/60 px-2 py-0.5 rounded-full">
+                                ❤️ ستريك: 0 أيام
+                            </span>
+                            <button type="button" id="viewTargetProfileBtn" onclick="openFriendProfile(document.getElementById('targetIdInput').value)" class="hidden text-[10px] font-bold text-slate-600 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 px-2 py-0.5 rounded-full transition">
+                                عرض صفحته 👤
+                            </button>
+                        </div>
                         <label class="block text-xs font-bold text-slate-400 text-right">رمز المستلم</label>
                     </div>
-                    <input type="text" id="targetIdInput" required placeholder="ABC123" oninput="checkTargetStreak(this.value)"
+                    <input type="text" id="targetIdInput" required placeholder="ABC123" oninput="onTargetInputChange(this.value)"
                            class="minimal-input w-full px-4 py-3.5 text-center font-mono font-bold tracking-widest text-slate-800 text-sm outline-none uppercase">
                 </div>
 
@@ -305,6 +349,8 @@
         let userHandle = localStorage.getItem('feely_user_handle') || null;
         let activeTab = 'incoming';
         let isSoundEnabled = localStorage.getItem('feely_sound_enabled') !== 'false';
+        let activeFriendHandle = null;
+        let friendStatsListenerRef = null;
         
         let incomingPulses = [];
         let sentPulses = JSON.parse(localStorage.getItem('feely_sent_pulses') || '[]');
@@ -315,7 +361,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const userParam = urlParams.get('u');
             if (userParam) {
-                selectContactRecipient(userParam.toUpperCase());
+                openFriendProfile(userParam.toUpperCase());
             }
 
             updateSoundUI();
@@ -324,6 +370,80 @@
             renderPulsesList();
             renderRecentContactsBar();
         });
+
+        // ================= FRIEND PROFILE PAGE LOGIC =================
+        function promptOpenFriendPage() {
+            const code = prompt("أدخل رمز الصديق الذي تريد زيارة صفحته:");
+            if (code && code.trim().length >= 1) {
+                openFriendProfile(code.trim().toUpperCase());
+            }
+        }
+
+        function openFriendProfile(handle) {
+            const cleanHandle = handle.trim().toUpperCase();
+            if (!cleanHandle) return;
+
+            db.ref('handles/' + cleanHandle).once('value', snapshot => {
+                if (!snapshot.exists()) {
+                    return alert(`الرمز (${cleanHandle}) غير مسجل أو غير مفعل حالياً.`);
+                }
+
+                // إزالة المستمع السابق إن وجد
+                if (friendStatsListenerRef) {
+                    friendStatsListenerRef.off();
+                }
+
+                activeFriendHandle = cleanHandle;
+                document.getElementById('friendProfileHandle').textContent = cleanHandle;
+                document.getElementById('friendProfileCard').classList.remove('hidden');
+
+                // تعبئة رمز المستلم تلقائياً لتسهيل الإرسال له
+                const targetInput = document.getElementById('targetIdInput');
+                targetInput.value = cleanHandle;
+                document.getElementById('viewTargetProfileBtn').classList.remove('hidden');
+
+                // الاستماع اللحظي لعدد القلوب التي وصلت للصديق
+                friendStatsListenerRef = db.ref('stats/' + cleanHandle + '/receivedCount');
+                friendStatsListenerRef.on('value', countSnap => {
+                    const totalHearts = countSnap.val() || 0;
+                    document.getElementById('friendHeartsReceivedBadge').textContent = `${totalHearts} ❤️ وصله`;
+                });
+
+                // تحديث الستريك المشترك في بطاقة الصديق
+                checkTargetStreak(cleanHandle, (streakVal) => {
+                    document.getElementById('friendProfileStreakText').textContent = `❤️ ستريك مشترك: ${streakVal} أيام`;
+                });
+
+                document.getElementById('friendProfileCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+
+        function closeFriendProfile() {
+            if (friendStatsListenerRef) {
+                friendStatsListenerRef.off();
+                friendStatsListenerRef = null;
+            }
+            activeFriendHandle = null;
+            document.getElementById('friendProfileCard').classList.add('hidden');
+        }
+
+        function copyFriendLink() {
+            if (!activeFriendHandle) return;
+            const link = window.location.origin + window.location.pathname + '?u=' + activeFriendHandle;
+            navigator.clipboard.writeText(link);
+            alert(`تم نسخ رابط صفحة (${activeFriendHandle}) بنجاح! 📋\n` + link);
+        }
+
+        function onTargetInputChange(val) {
+            const clean = val.trim().toUpperCase();
+            const viewBtn = document.getElementById('viewTargetProfileBtn');
+            if (clean.length >= 1) {
+                viewBtn.classList.remove('hidden');
+            } else {
+                viewBtn.classList.add('hidden');
+            }
+            checkTargetStreak(clean);
+        }
 
         // ================= INTERACTIVE EFFECTS (HEARTS + HEARTBEAT SOUND) =================
         function updateSoundUI() {
@@ -361,7 +481,6 @@
                     osc.stop(ctx.currentTime + delay + duration + 0.02);
                 };
 
-                // نغمة دقة قلب دافئة (Lub - Dub)
                 beat(0, 125, 0.16);
                 beat(0.20, 105, 0.22);
             } catch (e) {}
@@ -375,9 +494,9 @@
                     heart.className = 'floating-heart';
                     heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
                     
-                    const leftPos = Math.random() * 90 + 5; // 5% to 95%
-                    const size = Math.random() * 18 + 18; // 18px to 36px
-                    const duration = Math.random() * 1.4 + 1.8; // 1.8s to 3.2s
+                    const leftPos = Math.random() * 90 + 5;
+                    const size = Math.random() * 18 + 18;
+                    const duration = Math.random() * 1.4 + 1.8;
                     const rotation = (Math.random() * 50 - 25) + 'deg';
 
                     heart.style.left = leftPos + 'vw';
@@ -593,6 +712,9 @@
                 }).then(() => {
                     activeStreaksCache[targetHandle] = newStreak;
                     checkTargetStreak(targetHandle);
+                    if (activeFriendHandle === targetHandle) {
+                        document.getElementById('friendProfileStreakText').textContent = `❤️ ستريك مشترك: ${newStreak} أيام`;
+                    }
                     renderPulsesList();
                     renderRecentContactsBar();
                 });
@@ -601,10 +723,11 @@
 
         // ================= RECENT CONTACTS / QUICK SELECT =================
         function selectContactRecipient(handle) {
+            const clean = handle.toUpperCase();
             const input = document.getElementById('targetIdInput');
-            input.value = handle.toUpperCase();
-            checkTargetStreak(handle);
-            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            input.value = clean;
+            onTargetInputChange(clean);
+            openFriendProfile(clean);
         }
 
         function renderRecentContactsBar() {
@@ -698,6 +821,7 @@
                 localStorage.setItem('feely_user_handle', handle);
 
                 db.ref('users/' + currentUser.uid + '/handle').set(handle);
+                db.ref('stats/' + handle + '/receivedCount').transaction(curr => curr || 0);
 
                 setHandleLockedState(userHandle);
                 listenForIncomingPulses(userHandle);
@@ -780,6 +904,9 @@
                 };
 
                 db.ref('pulses/' + cleanTarget).push(pulseData).then(() => {
+                    // زيادة عداد القلوب العام في صفحة الصديق تلقائياً
+                    db.ref('stats/' + cleanTarget + '/receivedCount').transaction(curr => (curr || 0) + 1);
+
                     sentPulses.unshift(pulseData);
                     localStorage.setItem('feely_sent_pulses', JSON.stringify(sentPulses));
                     
@@ -787,7 +914,6 @@
                         recordTargetStreakInCloud(userHandle, cleanTarget);
                     }
 
-                    // تأثيرات الإرسال التفاعلية
                     triggerFloatingHearts(isQuickReply ? 12 : 18);
                     playHeartbeatSound();
                     if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
@@ -812,7 +938,6 @@
             executePulseSend(targetHandle, senderName, score, note, false);
         }
 
-        // ميزة الرد السريع بنقرة واحدة
         function quickReplyPulse(e, recipientHandle, btnElement) {
             e.stopPropagation();
             const cleanHandle = recipientHandle.trim().toUpperCase();
@@ -849,8 +974,12 @@
                 }
                 isFirstPulseLoad = false;
                 
+                const totalCount = incomingPulses.length;
                 const countBadge = document.getElementById('totalHeartsReceivedBadge');
-                if (countBadge) countBadge.textContent = `${incomingPulses.length} ❤️ وصلك`;
+                if (countBadge) countBadge.textContent = `${totalCount} ❤️ وصلك`;
+
+                // مزامنة العداد الفعلي مع السحابة
+                db.ref('stats/' + handle + '/receivedCount').set(totalCount);
 
                 if (activeTab === 'incoming') renderPulsesList();
             });
