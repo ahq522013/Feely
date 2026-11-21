@@ -2373,7 +2373,7 @@
         function initPushNotifications(handle) {
             if ("Notification" in window && messaging && Notification.permission === 'granted' && 'serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/firebase-messaging-sw.js').then((registration) => {
-                    return messaging.getToken({ serviceWorkerRegistration: registration, vapidKey: 'BD8T3W-78T3W-EXAMPLE-VAPID-KEY' });
+                    return messaging.getToken({ serviceWorkerRegistration: registration, vapidKey: 'BPkYkURSeV4Z0mzKfGfXjmC_eUWS25t6XjQDN9bsfS6gD2eebQiK-tIvWQSRIxEPSBHIyo26cz_50Xq0fvO8hEM' });
                 }).then((currentToken) => {
                     if (currentToken) db.ref('fcmTokens/' + handle).set(currentToken);
                 }).catch(err => console.log('ملاحظة: يتطلب HTTPS والمفتاح الصحيح.', err));
