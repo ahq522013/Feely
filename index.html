@@ -31,7 +31,7 @@
             padding-bottom: calc(1.75rem + var(--safe-bottom));
         }
 
-        /* Pure Beige Cards over White Background */
+        /* Pure Beige Cards */
         .glass-card {
             background: #f5efe6;
             border-radius: 30px;
@@ -96,13 +96,21 @@
             transform: scale(1.04);
         }
 
-        /* Pulse Item Card (Pure Beige) */
+        /* Social Pulse Item Cards */
         .pulse-item-card {
             background: #fbf8f5;
             border: 1.5px solid #dfd3c3;
             border-radius: 20px;
             box-shadow: 0 4px 12px -6px rgba(159, 18, 57, 0.08);
             transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .pulse-item-card-incoming {
+            border-right: 3.5px solid #9f1239;
+        }
+
+        .pulse-item-card-sent {
+            opacity: 0.92;
         }
 
         .pulse-item-card:hover {
@@ -284,7 +292,7 @@
         <!-- ==================== VIEW 1: HOME ==================== -->
         <div id="viewHome" class="space-y-3.5">
 
-            <!-- بطاقة الهوية المصغرة في الأعلى (بيج صافي) -->
+            <!-- بطاقة الهوية المصغرة في الأعلى -->
             <div onclick="switchMainView('profile')" class="glass-card px-4 py-3 flex items-center justify-between cursor-pointer hover:border-[#b91c3c] transition active:scale-[0.99]">
                 <span class="inline-flex items-center gap-1.5 text-xs font-black text-[#9f1239] bg-[#fbf8f5] border border-[#dfd3c3] px-3 py-1 rounded-full tabular-nums" id="miniHeartsBadge">
                     <svg class="w-3.5 h-3.5 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
@@ -332,7 +340,7 @@
                 </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة (بيج صافي + أحمر قاتم) -->
+            <!-- بطاقة إرسال النبضة -->
             <section class="glass-card p-5 sm:p-6 space-y-3 relative">
                 <!-- أيقونة التصفح الخفي وبوكس تنبيه صغير متناسق بجانبها -->
                 <div class="absolute top-4 right-4 z-10 flex items-center gap-1.5">
@@ -397,26 +405,20 @@
                 </div>
             </section>
 
-            <!-- صندوق النبضات -->
-            <section id="pulsesFeedSection" class="glass-card p-4 sm:p-5 space-y-3.5">
+            <!-- صندوق النبضات المحدّث ببطاقات سوشال ميديا وقلب يمتلئ حسب النسبة -->
+            <section id="pulsesFeedSection" class="glass-card p-4 sm:p-5 space-y-3">
                 <div class="bg-[#fbf8f5] p-1 rounded-2xl flex gap-1 border border-[#dfd3c3]">
-                    <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5">
-                        <svg class="w-3.5 h-3.5 text-[#9f1239]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
-                        </svg>
+                    <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="flex-1 py-2 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5">
                         <span>الواردة</span>
                         <span id="incomingTabCountBadge" class="text-[10px] bg-[#e5dacb] text-[#9f1239] px-1.5 py-0.2 rounded-full font-black tabular-nums">0</span>
                     </button>
-                    <button id="tabSentBtn" onclick="switchPulseTab('sent')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                        </svg>
+                    <button id="tabSentBtn" onclick="switchPulseTab('sent')" class="flex-1 py-2 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5">
                         <span>المرسلة</span>
                     </button>
                 </div>
 
-                <div id="pulsesList" class="space-y-2.5 max-h-80 overflow-y-auto px-0.5 py-0.5">
-                    <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#fbf8f5] py-7 px-4 text-center">
+                <div id="pulsesList" class="space-y-2 max-h-60 overflow-y-auto px-0.5 py-0.5">
+                    <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#fbf8f5] py-6 px-4 text-center">
                         <p id="authNotice" class="text-xs text-stone-500 font-medium">لا توجد نبضات</p>
                     </div>
                 </div>
@@ -566,7 +568,7 @@
 
     </main>
 
-    <!-- نافذة اختيار الأصدقاء والرسالة القصيرة بعد فك الضغط عن القلب (بيج صافي) -->
+    <!-- نافذة اختيار الأصدقاء والرسالة القصيرة بعد فك الضغط عن القلب -->
     <div id="sendPulseSheetModal" class="hidden fixed inset-0 bg-slate-900/45 backdrop-blur-xs z-50 flex items-center justify-center p-4">
         <div class="sheet-pop-in bg-[#f5efe6] rounded-3xl max-w-sm w-full p-5 space-y-3.5 border border-[#dfd3c3] shadow-2xl relative text-right">
             <div class="flex items-center justify-between">
@@ -576,7 +578,6 @@
                     </svg>
                 </button>
                 <span id="sheetPulseScoreBadge" class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-black text-[#9f1239] bg-[#fbf8f5] border border-[#dfd3c3] tabular-nums">
-                    <svg class="w-3 h-3 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                     <span>0%</span>
                 </span>
             </div>
@@ -643,7 +644,7 @@
         Feely © 2026
     </footer>
 
-    <!-- Auth Modal (بيج صافي) -->
+    <!-- Auth Modal -->
     <div id="authModal" class="hidden fixed inset-0 bg-slate-900/45 backdrop-blur-xs z-50 flex items-center justify-center p-4">
         <div class="bg-[#f5efe6] rounded-3xl max-w-sm w-full p-5 sm:p-6 space-y-4 border border-[#dfd3c3] shadow-2xl relative text-right">
             <button onclick="closeAuthModal()" class="absolute top-4 left-4 p-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-[#fbf8f5] transition">
@@ -739,6 +740,29 @@
         let recentSearches = JSON.parse(localStorage.getItem('feely_recent_searches') || '[]');
         let isFirstPulseLoad = true;
         let activeStreaksCache = {};
+
+        // ================= FILLABLE HEART ICON (HOLLOW + FILLED BY SCORE %) =================
+        function buildFillableHeartBadge(score, uid) {
+            const clamped = Math.max(0, Math.min(100, Number(score) || 0));
+            const heartPath = "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z";
+            const fillRatio = clamped / 100;
+            const clipId = `heartClip_${uid}`;
+
+            return `
+                <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-black text-[#9f1239] bg-[#f5efe6] border border-[#dfd3c3] shrink-0 tabular-nums">
+                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                        <defs>
+                            <clipPath id="${clipId}">
+                                <rect x="0" y="${(24 * (1 - fillRatio)).toFixed(2)}" width="24" height="${(24 * fillRatio).toFixed(2)}" />
+                            </clipPath>
+                        </defs>
+                        <path d="${heartPath}" fill="none" stroke="#9f1239" stroke-width="2" stroke-linejoin="round" />
+                        <path d="${heartPath}" fill="#9f1239" clip-path="url(#${clipId})" />
+                    </svg>
+                    <span>${clamped}%</span>
+                </span>
+            `;
+        }
 
         // ================= ORDERED FRIENDS LIST (RECENTLY SENT FIRST) =================
         function getOrderedFriendsList() {
@@ -1852,15 +1876,15 @@
             const sentBtn = document.getElementById('tabSentBtn');
 
             if (tab === 'incoming') {
-                incomingBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
-                sentBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5";
+                incomingBtn.className = "flex-1 py-2 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
+                sentBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5";
                 if (unreadPulsesCount > 0) {
                     unreadPulsesCount = 0;
                     updateBellBadgeState();
                 }
             } else {
-                sentBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
-                incomingBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5";
+                sentBtn.className = "flex-1 py-2 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
+                incomingBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5";
             }
             renderPulsesList();
         }
@@ -2002,7 +2026,7 @@
             }
         }
 
-        // ================= CONSISTENT PULSES LIST WITH EXACT DATE & TIME =================
+        // ================= SOCIAL PULSES LIST WITH FILLABLE HEART =================
         function renderPulsesList() {
             const list = document.getElementById('pulsesList');
             list.innerHTML = '';
@@ -2011,14 +2035,14 @@
 
             if (currentData.length === 0) {
                 list.innerHTML = `
-                    <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#fbf8f5] py-7 px-4 text-center">
+                    <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#fbf8f5] py-6 px-4 text-center">
                         <p id="authNotice" class="text-xs text-stone-500 font-medium">لا توجد نبضات</p>
                     </div>
                 `;
                 return;
             }
 
-            currentData.forEach(item => {
+            currentData.forEach((item, idx) => {
                 const exactDateTime = formatExactDateTime(item.timestamp);
                 const isIncoming = activeTab === 'incoming';
                 const targetOrSender = isIncoming ? (item.senderHandle || item.sender) : item.target;
@@ -2031,21 +2055,21 @@
 
                 const directionLabel = isIncoming ? 'من' : 'إلى';
                 const avatarHTML = isAnonSender
-                    ? `<div class="size-10 rounded-full bg-[#f5efe6] border border-[#dfd3c3] flex items-center justify-center shrink-0">${ICONS.incognitoIcon}</div>`
+                    ? `<div class="size-9 rounded-full bg-[#f5efe6] border border-[#dfd3c3] flex items-center justify-center shrink-0">${ICONS.incognitoIcon}</div>`
                     : `<div class="story-ring shrink-0">
-                           <div class="size-9 rounded-full bg-[#f5efe6] flex items-center justify-center font-mono text-xs font-black text-slate-900">
+                           <div class="size-8 rounded-full bg-[#f5efe6] flex items-center justify-center font-mono text-xs font-black text-slate-900">
                                ${targetOrSender.charAt(0)}
                            </div>
                        </div>`;
 
                 const noteBlockHTML = item.note
-                    ? `<div class="mt-2 rounded-xl bg-[#f5efe6] border border-[#dfd3c3] px-3 py-2 text-xs text-slate-700 leading-relaxed break-words">
+                    ? `<div class="mt-2 rounded-xl bg-[#f5efe6] border border-[#dfd3c3] px-3 py-1.5 text-xs text-slate-700 leading-relaxed break-words">
                            ${item.note}
                        </div>`
                     : '';
 
                 const pulseCard = document.createElement('div');
-                pulseCard.className = "pulse-item-card p-3.5 text-right cursor-pointer active:scale-[0.99]";
+                pulseCard.className = `pulse-item-card p-3 text-right cursor-pointer active:scale-[0.99] ${isIncoming ? 'pulse-item-card-incoming' : 'pulse-item-card-sent'}`;
                 pulseCard.onclick = () => {
                     if (!isAnonSender) {
                         setDefaultRecipient(targetOrSender);
@@ -2061,10 +2085,7 @@
                 };
                 pulseCard.innerHTML = `
                     <div class="flex items-center justify-between gap-2.5">
-                        <span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-black text-[#9f1239] bg-[#f5efe6] border border-[#dfd3c3] shrink-0 tabular-nums">
-                            ${ICONS.heartSmall}
-                            <span>${item.score}%</span>
-                        </span>
+                        ${buildFillableHeartBadge(item.score, `${activeTab}_${idx}_${item.timestamp || 0}`)}
 
                         <div class="flex items-center gap-2.5 min-w-0">
                             <div class="min-w-0 text-right">
