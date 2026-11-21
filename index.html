@@ -213,6 +213,12 @@
             animation: sheetPopIn 0.24s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
+        .smooth-scroll-list {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            scroll-behavior: smooth;
+        }
+
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -451,7 +457,7 @@
                     </button>
                 </div>
 
-                <div id="pulsesList" class="space-y-2 max-h-60 overflow-y-auto px-0.5 py-0.5">
+                <div id="pulsesList" class="smooth-scroll-list space-y-2 max-h-60 overflow-y-auto px-0.5 py-0.5">
                     <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#fbf8f5] py-6 px-4 text-center">
                         <p id="authNotice" class="text-[10px] text-stone-500 font-medium">لا توجد نبضات</p>
                     </div>
@@ -459,7 +465,7 @@
             </section>
         </div>
 
-        <!-- ==================== VIEW 2: FRIENDS MANAGEMENT PAGE (STEP 2) ==================== -->
+        <!-- ==================== VIEW 2: FRIENDS MANAGEMENT PAGE ==================== -->
         <div id="viewFriends" class="hidden space-y-4">
             <section class="glass-card p-5 sm:p-6 space-y-3.5">
                 <div class="flex items-center justify-between px-1">
@@ -510,7 +516,7 @@
                 </div>
 
                 <!-- قائمة الأصدقاء للإدارة والتثبيت والحذف والاختيار الافتراضي -->
-                <div id="friendsManageList" class="space-y-2 max-h-96 overflow-y-auto px-0.5 py-0.5">
+                <div id="friendsManageList" class="smooth-scroll-list space-y-2 max-h-96 overflow-y-auto px-0.5 py-0.5">
                     <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#fbf8f5] py-7 px-4 text-center">
                         <p class="text-xs text-stone-500 font-medium">لا يوجد أصدقاء</p>
                     </div>
@@ -624,23 +630,27 @@
 
     </main>
 
-    <!-- نافذة اختيار الأصدقاء والرسالة القصيرة بعد فك الضغط عن القلب -->
+    <!-- نافذة اختيار الأصدقاء والرسالة القصيرة بعد فك الضغط عن القلب (الخطوة 3: إشارة هوية المرسل) -->
     <div id="sendPulseSheetModal" class="hidden fixed inset-0 bg-slate-900/45 backdrop-blur-xs z-50 flex items-center justify-center p-4">
         <div class="sheet-pop-in bg-[#f5efe6] rounded-3xl max-w-sm w-full p-5 space-y-3 border border-[#dfd3c3] shadow-2xl relative text-right">
-            <!-- الشريط العلوي للنافذة: إغلاق يمين، قلب مفرغ يمتلئ بالنسبة يسار مع تلميح النسبة -->
-            <div class="flex items-center justify-between">
-                <button type="button" onclick="closeSendPulseSheet()" class="grid size-7 place-items-center rounded-full text-slate-600 hover:text-slate-900 bg-[#fbf8f5] border border-[#dfd3c3] transition active:scale-90">
+            <!-- الشريط العلوي للنافذة: إغلاق يمين، هوية المرسل في الوسط، قلب مفرغ يمتلئ بالنسبة يسار -->
+            <div class="flex items-center justify-between gap-2">
+                <button type="button" onclick="closeSendPulseSheet()" class="grid size-7 place-items-center rounded-full text-slate-600 hover:text-slate-900 bg-[#fbf8f5] border border-[#dfd3c3] transition active:scale-90 shrink-0">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
                 </button>
+
+                <!-- إشارة هوية الإرسال (باسمك أو كمجهول) -->
+                <span id="sheetSenderIdentityBadge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#fbf8f5] border border-[#dfd3c3] text-[10px] font-bold text-stone-600 truncate"></span>
+
                 <div id="sheetPulseScoreHeart"></div>
             </div>
 
             <!-- عنوان وقائمة الأصدقاء -->
             <div class="space-y-1.5">
                 <p class="text-[11px] font-bold text-stone-600 px-0.5">اختر صديق:</p>
-                <div id="sheetFriendsContainer" class="flex gap-2.5 overflow-x-auto pb-1.5 pt-0.5 px-0.5 hide-scrollbar"></div>
+                <div id="sheetFriendsContainer" class="smooth-scroll-list flex gap-2.5 overflow-x-auto pb-1.5 pt-0.5 px-0.5 hide-scrollbar"></div>
             </div>
 
             <!-- بوكس إضافة رسالة قصيرة (سطر واحد يتمدد تلقائياً عند النزول لسطر جديد) -->
@@ -757,10 +767,11 @@
             soundOff: '<svg class="w-4 h-4 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>',
             share: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
             check: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
-            incognitoIcon: '<svg class="w-4 h-4 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/><path d="M10 16.5h4"/></svg>',
+            incognitoIcon: '<svg class="w-3.5 h-3.5 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/><path d="M10 16.5h4"/></svg>',
             quickReply: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>',
             miniCheck: '<svg class="w-3 h-3 text-[#9f1239] inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
-            pin: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>'
+            pin: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>',
+            trashMini: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
         };
 
         const RING_CIRCUMFERENCE = 2 * Math.PI * 45;
@@ -789,6 +800,7 @@
         
         let incomingPulses = [];
         let sentPulses = JSON.parse(localStorage.getItem('feely_sent_pulses') || '[]');
+        let dismissedIncomingKeys = JSON.parse(localStorage.getItem('feely_dismissed_incoming') || '[]');
         let pinnedFriends = JSON.parse(localStorage.getItem('feely_pinned_friends') || '[]');
         let favoriteFriends = JSON.parse(localStorage.getItem('feely_favorite_friends') || '[]');
         let hiddenFriends = JSON.parse(localStorage.getItem('feely_hidden_friends') || '[]');
@@ -796,6 +808,32 @@
         let isFirstPulseLoad = true;
         let activeStreaksCache = {};
         let streakDatesCache = {};
+
+        // ================= DELETE PULSE FROM HISTORY =================
+        function deletePulseFromHistory(e, isIncoming, index, firebaseKey) {
+            if (e) e.stopPropagation();
+            if (isIncoming) {
+                const targetItem = incomingPulses[index];
+                if (!targetItem) return;
+                const keyToRemove = firebaseKey || targetItem._fbKey;
+                if (keyToRemove && userHandle) {
+                    db.ref('pulses/' + userHandle + '/' + keyToRemove).remove().catch(() => {
+                        if (!dismissedIncomingKeys.includes(keyToRemove)) {
+                            dismissedIncomingKeys.push(keyToRemove);
+                            localStorage.setItem('feely_dismissed_incoming', JSON.stringify(dismissedIncomingKeys));
+                        }
+                    });
+                }
+                incomingPulses.splice(index, 1);
+                const tabBadge = document.getElementById('incomingTabCountBadge');
+                if (tabBadge) tabBadge.textContent = incomingPulses.length;
+            } else {
+                sentPulses.splice(index, 1);
+                localStorage.setItem('feely_sent_pulses', JSON.stringify(sentPulses));
+            }
+            if (navigator.vibrate) navigator.vibrate(10);
+            renderPulsesList();
+        }
 
         // ================= SUBTLE SOCIAL DELIVERY STATUS HELPER =================
         function setSheetDeliveryStatus(text, isError = false, autoHideMs = 2200) {
@@ -1129,6 +1167,16 @@
         }
 
         // ================= PULSE RECIPIENT & NOTE SHEET MODAL =================
+        function updateSheetSenderBadge() {
+            const badge = document.getElementById('sheetSenderIdentityBadge');
+            if (!badge) return;
+            if (isAnonymousMode || !userHandle) {
+                badge.innerHTML = `${ICONS.incognitoIcon} <span>إرسال كمجهول</span>`;
+            } else {
+                badge.innerHTML = `<span class="size-1.5 rounded-full bg-[#9f1239]"></span> <span class="font-mono uppercase">${userHandle}</span>`;
+            }
+        }
+
         function openSendPulseSheet(score) {
             pendingPulseScore = score;
             const modal = document.getElementById('sendPulseSheetModal');
@@ -1136,6 +1184,8 @@
             const noteInput = document.getElementById('loveNote');
             const emojiPopover = document.getElementById('sheetEmojiPickerPopover');
             const statusBox = document.getElementById('sheetDeliveryStatus');
+
+            updateSheetSenderBadge();
 
             if (scoreHeartHost) {
                 scoreHeartHost.innerHTML = buildAccurateHeartFill(score, `sheet_${Date.now()}`, 'w-5 h-5');
@@ -1296,6 +1346,7 @@
                     heartPath.setAttribute('stroke-width', '0');
                 }
             }
+            updateSheetSenderBadge();
         }
 
         function showAnonMiniPill(text) {
@@ -2168,7 +2219,11 @@
                 incomingPulses = [];
                 const data = snapshot.val();
                 if (data) {
-                    Object.keys(data).forEach(key => incomingPulses.unshift(data[key]));
+                    Object.keys(data).forEach(key => {
+                        if (!dismissedIncomingKeys.includes(key)) {
+                            incomingPulses.unshift({ ...data[key], _fbKey: key });
+                        }
+                    });
                     if (!isFirstPulseLoad && incomingPulses.length > previousCount) {
                         const newAdditions = incomingPulses.length - previousCount;
                         unreadPulsesCount += newAdditions;
@@ -2215,7 +2270,7 @@
             }
         }
 
-        // ================= RTL SOCIAL PULSES LIST WITH DIRECT QUICK REPLY =================
+        // ================= RTL SOCIAL PULSES LIST WITH QUICK REPLY & DELETE =================
         function renderPulsesList() {
             const list = document.getElementById('pulsesList');
             list.innerHTML = '';
@@ -2266,6 +2321,16 @@
                        </button>`
                     : '';
 
+                const fbKeySafe = (item._fbKey || '').replace(/'/g, '');
+                const deleteBtnHTML = `
+                    <button type="button"
+                            onclick="deletePulseFromHistory(event, ${isIncoming}, ${idx}, '${fbKeySafe}')"
+                            title="حذف"
+                            class="grid size-6 place-items-center rounded-full bg-[#f5efe6] hover:bg-[#9f1239] text-stone-400 hover:text-white border border-[#dfd3c3] transition active:scale-90 shrink-0">
+                        ${ICONS.trashMini}
+                    </button>
+                `;
+
                 const noteBlockHTML = item.note
                     ? `<div class="mt-1.5 rounded-xl bg-[#ffffff] border border-[#e7ddd0] px-2.5 py-1 text-[10px] text-stone-600 leading-snug break-words">
                            ${item.note}
@@ -2288,7 +2353,7 @@
                     }
                 };
                 pulseCard.innerHTML = `
-                    <div class="flex items-center justify-between gap-2.5">
+                    <div class="flex items-center justify-between gap-2">
                         <div class="flex items-center gap-2 min-w-0">
                             ${avatarHTML}
                             <div class="min-w-0 text-right">
@@ -2302,7 +2367,8 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-1.5 shrink-0">
+                        <div class="flex items-center gap-1 shrink-0">
+                            ${deleteBtnHTML}
                             ${quickReplyBtnHTML}
                             ${buildAccurateHeartFill(item.score, cardKey)}
                         </div>
