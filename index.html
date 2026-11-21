@@ -88,6 +88,12 @@
             background: linear-gradient(135deg, #fb7185 0%, #e11d48 50%, #f472b6 100%);
             padding: 2.5px;
             border-radius: 9999px;
+            transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .story-ring-selected {
+            box-shadow: 0 0 0 2.5px #ffffff, 0 0 0 4.5px #e11d48;
+            transform: scale(1.04);
         }
 
         /* Pulse Item Card */
@@ -278,7 +284,7 @@
                 </div>
             </div>
 
-            <!-- بوكس أصدقاء النبض المدمج -->
+            <!-- بوكس أصدقاء النبض المحسّن -->
             <section id="recentContactsSection" class="glass-card p-4 space-y-3">
                 <div class="flex items-center justify-between px-1">
                     <div class="flex items-center gap-1.5">
@@ -293,8 +299,8 @@
                     </h3>
                 </div>
 
-                <!-- دوائر الأصدقاء -->
-                <div id="recentContactsList" class="hidden flex gap-3 overflow-x-auto pb-1 pt-1.5 px-1 hide-scrollbar"></div>
+                <!-- دوائر الأصدقاء (حرف واحد داخل الدائرة + الرمز الكامل أسفلها) -->
+                <div id="recentContactsList" class="hidden flex gap-3.5 overflow-x-auto pb-1.5 pt-2 px-1.5 hide-scrollbar"></div>
 
                 <!-- بوكس إضافة رمز المستلم -->
                 <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
@@ -830,7 +836,7 @@
         function toggleAnonymousMode() {
             isAnonymousMode = !isAnonymousMode;
             applyDisguiseHeartAppearance();
-            showAnonMiniPill(isAnonymousMode ? "تفعيل وضع التخفي" : "إلغاء وضع التخفي");
+            showAnonMiniPill(isAnonymousMode ? "تفعيل وضع التخفي" : "إلغاء التخفي");
             if (navigator.vibrate) navigator.vibrate(12);
         }
 
@@ -1196,6 +1202,7 @@
         function onTargetInputChange(val) {
             const clean = val.trim().toUpperCase();
             checkTargetStreak(clean);
+            renderRecentContactsBar();
         }
 
         // ================= INTERACTIVE EFFECTS =================
@@ -1478,7 +1485,7 @@
             });
         }
 
-        // ================= STORIES-STYLE RECENT CONTACTS BAR =================
+        // ================= IMPROVED RECENT CONTACTS BAR =================
         function selectContactRecipient(handle) {
             const clean = handle.toUpperCase();
             const input = document.getElementById('targetIdInput');
@@ -1491,6 +1498,7 @@
             const list = document.getElementById('recentContactsList');
             if (!list) return;
 
+            const currentSelected = (document.getElementById('targetIdInput')?.value || '').trim().toUpperCase();
             const sentTargets = sentPulses.map(p => p.target).filter(Boolean);
             const uniqueRecipients = [...new Set([...pinnedFriends, ...sentTargets])].filter(
                 h => !hiddenFriends.includes(h.toUpperCase())
@@ -1505,37 +1513,39 @@
             list.innerHTML = '';
 
             uniqueRecipients.forEach(handle => {
-                const streakVal = activeStreaksCache[handle] !== undefined ? activeStreaksCache[handle] : 0;
-                const initial = handle.charAt(0);
+                const cleanHandle = handle.toUpperCase();
+                const isSelected = currentSelected === cleanHandle;
+                const streakVal = activeStreaksCache[cleanHandle] !== undefined ? activeStreaksCache[cleanHandle] : 0;
+                const initialChar = cleanHandle.charAt(0);
                 
                 const wrapper = document.createElement('div');
-                wrapper.className = "relative flex flex-col items-center gap-1 shrink-0 group";
+                wrapper.className = "relative flex flex-col items-center gap-1 shrink-0 transition-all duration-200 group";
                 wrapper.innerHTML = `
-                    <button type="button" onclick="removeFriendFromBar(event, '${handle}')"
+                    <button type="button" onclick="removeFriendFromBar(event, '${cleanHandle}')"
                             class="absolute -top-1 -left-1 z-10 size-4 rounded-full bg-slate-200 hover:bg-rose-500 text-slate-600 hover:text-white border border-white shadow-2xs flex items-center justify-center transition-colors active:scale-90">
                         <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                         </svg>
                     </button>
 
-                    <button type="button" onclick="selectContactRecipient('${handle}')" class="flex flex-col items-center gap-1 transition active:scale-90">
+                    <button type="button" onclick="selectContactRecipient('${cleanHandle}')" class="flex flex-col items-center gap-1 transition active:scale-90">
                         <div class="relative">
-                            <div class="story-ring">
-                                <div class="size-12 rounded-full bg-white flex items-center justify-center font-mono text-base font-black text-slate-900 group-hover:bg-rose-50 transition">
-                                    ${initial}
+                            <div class="story-ring ${isSelected ? 'story-ring-selected' : ''}">
+                                <div class="size-12 rounded-full ${isSelected ? 'bg-rose-50 text-rose-600' : 'bg-white text-slate-900 group-hover:bg-rose-50'} flex items-center justify-center font-mono text-base font-black transition">
+                                    ${initialChar}
                                 </div>
                             </div>
                             <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white border border-rose-200 text-rose-600 text-[9px] font-black px-1.5 py-0.2 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap tabular-nums">
                                 ${ICONS.heartSmall} <span>${streakVal}</span>
                             </span>
                         </div>
-                        <span class="font-mono text-[10px] font-bold text-slate-700 uppercase max-w-[56px] truncate mt-0.5">${handle}</span>
+                        <span class="font-mono text-[10px] ${isSelected ? 'font-black text-rose-600' : 'font-bold text-slate-700'} uppercase max-w-[60px] truncate mt-0.5">${cleanHandle}</span>
                     </button>
                 `;
                 list.appendChild(wrapper);
 
-                if (userHandle && activeStreaksCache[handle] === undefined) {
-                    checkTargetStreak(handle, (val) => {
+                if (userHandle && activeStreaksCache[cleanHandle] === undefined) {
+                    checkTargetStreak(cleanHandle, (val) => {
                         const pillSpan = wrapper.querySelector('.streak-pill span');
                         if (pillSpan) pillSpan.textContent = val;
                     });
