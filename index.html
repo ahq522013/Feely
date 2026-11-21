@@ -404,21 +404,21 @@
                 </div>
             </section>
 
-            <!-- صندوق النبضات المحدّث (بدون إطار حول القلب/النسبة، بدون رقم النسبة، قلب يمتلئ حسب النسبة بدقة) -->
+            <!-- صندوق النبضات المحدّث: القلب على اليسار، التفاصيل على اليمين، خط 10 وأفتح قليلاً -->
             <section id="pulsesFeedSection" class="glass-card p-4 sm:p-5 space-y-3">
                 <div class="bg-[#fbf8f5] p-1 rounded-2xl flex gap-1 border border-[#dfd3c3]">
-                    <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="flex-1 py-2 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5">
+                    <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="flex-1 py-2 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-stone-700 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5">
                         <span>الواردة</span>
                         <span id="incomingTabCountBadge" class="text-[10px] bg-[#e5dacb] text-[#9f1239] px-1.5 py-0.2 rounded-full font-black tabular-nums">0</span>
                     </button>
-                    <button id="tabSentBtn" onclick="switchPulseTab('sent')" class="flex-1 py-2 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5">
+                    <button id="tabSentBtn" onclick="switchPulseTab('sent')" class="flex-1 py-2 rounded-xl text-xs font-bold transition text-stone-500 hover:text-stone-700 inline-flex items-center justify-center gap-1.5">
                         <span>المرسلة</span>
                     </button>
                 </div>
 
                 <div id="pulsesList" class="space-y-2 max-h-60 overflow-y-auto px-0.5 py-0.5">
                     <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#fbf8f5] py-6 px-4 text-center">
-                        <p id="authNotice" class="text-xs text-stone-500 font-medium">لا توجد نبضات</p>
+                        <p id="authNotice" class="text-[10px] text-stone-500 font-medium">لا توجد نبضات</p>
                     </div>
                 </div>
             </section>
@@ -707,7 +707,7 @@
             soundOff: '<svg class="w-4 h-4 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>',
             share: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
             check: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
-            incognitoIcon: '<svg class="w-4 h-4 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/><path d="M10 16.5h4"/></svg>'
+            incognitoIcon: '<svg class="w-4 h-4 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/><path d="M10 16.5h4"/></svg>'
         };
 
         const RING_CIRCUMFERENCE = 2 * Math.PI * 45;
@@ -740,30 +740,30 @@
         let isFirstPulseLoad = true;
         let activeStreaksCache = {};
 
-        // ================= EXACT PROPORTIONAL FILLABLE HEART (NO PERCENTAGE TEXT, NO BOX) =================
-        function buildFillableHeartOnly(score, uid) {
+        // ================= ACCURATE HEART AREA FILL (FROM BOTTOM y=21.35 TO TOP y=3) =================
+        function buildAccurateHeartFill(score, uid) {
             const clamped = Math.max(0, Math.min(100, Number(score) || 0));
             const heartPath = "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z";
-            // ارتفاع القلب الفعلي يمتد تقريباً من y=2.5 إلى y=22 (ارتفاع ≈ 19.5 وحدة)
-            const heartTop = 2.5;
-            const heartHeight = 19.5;
+            // المساحة الرأسية الحقيقية للقلب تبدأ من قاعه عند y=21.35 وتصعد إلى قمته عند y=3 (المسافة = 18.35)
+            const heartBottom = 21.35;
+            const heartSpan = 18.35;
             const fillRatio = clamped / 100;
-            const clipHeight = +(heartHeight * fillRatio).toFixed(3);
-            const clipY = +(heartTop + (heartHeight - clipHeight)).toFixed(3);
-            const clipId = `heartExactClip_${uid}`;
+            const filledHeight = +(heartSpan * fillRatio).toFixed(3);
+            const filledTopY = +(heartBottom - filledHeight).toFixed(3);
+            const clipId = `heartAreaClip_${uid}`;
 
             return `
-                <span class="inline-flex items-center justify-center shrink-0">
+                <div class="inline-flex items-center justify-center shrink-0">
                     <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                         <defs>
                             <clipPath id="${clipId}">
-                                <rect x="1.5" y="${clipY}" width="21" height="${clipHeight}" />
+                                <rect x="2" y="${filledTopY}" width="20" height="${filledHeight}" />
                             </clipPath>
                         </defs>
-                        <path d="${heartPath}" fill="none" stroke="#9f1239" stroke-width="2" stroke-linejoin="round" />
+                        <path d="${heartPath}" fill="none" stroke="#9f1239" stroke-width="1.8" stroke-linejoin="round" />
                         <path d="${heartPath}" fill="#9f1239" clip-path="url(#${clipId})" />
                     </svg>
-                </span>
+                </div>
             `;
         }
 
@@ -1879,15 +1879,15 @@
             const sentBtn = document.getElementById('tabSentBtn');
 
             if (tab === 'incoming') {
-                incomingBtn.className = "flex-1 py-2 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
-                sentBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5";
+                incomingBtn.className = "flex-1 py-2 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-stone-700 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
+                sentBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold transition text-stone-500 hover:text-stone-700 inline-flex items-center justify-center gap-1.5";
                 if (unreadPulsesCount > 0) {
                     unreadPulsesCount = 0;
                     updateBellBadgeState();
                 }
             } else {
-                sentBtn.className = "flex-1 py-2 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
-                incomingBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5";
+                sentBtn.className = "flex-1 py-2 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-stone-700 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
+                incomingBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold transition text-stone-500 hover:text-stone-700 inline-flex items-center justify-center gap-1.5";
             }
             renderPulsesList();
         }
@@ -2029,7 +2029,7 @@
             }
         }
 
-        // ================= UNIFIED SOCIAL PULSES LIST =================
+        // ================= RTL SOCIAL PULSES LIST (DETAILS RIGHT, HEART LEFT, 10PX SOFT TEXT) =================
         function renderPulsesList() {
             const list = document.getElementById('pulsesList');
             list.innerHTML = '';
@@ -2039,7 +2039,7 @@
             if (currentData.length === 0) {
                 list.innerHTML = `
                     <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#fbf8f5] py-6 px-4 text-center">
-                        <p id="authNotice" class="text-xs text-stone-500 font-medium">لا توجد نبضات</p>
+                        <p id="authNotice" class="text-[10px] text-stone-500 font-medium">لا توجد نبضات</p>
                     </div>
                 `;
                 return;
@@ -2053,20 +2053,20 @@
 
                 const currentStreakVal = activeStreaksCache[targetOrSender] || 0;
                 const streakBadge = currentStreakVal > 0 && !isAnonSender
-                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] font-black px-2 py-0.5 rounded-full tabular-nums">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
+                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] font-black px-1.5 py-0.5 rounded-full tabular-nums">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
                     : '';
 
                 const directionLabel = isIncoming ? 'من' : 'إلى';
                 const avatarHTML = isAnonSender
-                    ? `<div class="size-9 rounded-full bg-[#f5efe6] border border-[#dfd3c3] flex items-center justify-center shrink-0">${ICONS.incognitoIcon}</div>`
+                    ? `<div class="size-8 rounded-full bg-[#f5efe6] border border-[#dfd3c3] flex items-center justify-center shrink-0">${ICONS.incognitoIcon}</div>`
                     : `<div class="pulse-neutral-ring shrink-0">
-                           <div class="size-8 rounded-full bg-[#f5efe6] flex items-center justify-center font-mono text-xs font-black text-slate-900">
+                           <div class="size-8 rounded-full bg-[#f5efe6] flex items-center justify-center font-mono text-[10px] font-black text-stone-700">
                                ${targetOrSender.charAt(0)}
                            </div>
                        </div>`;
 
                 const noteBlockHTML = item.note
-                    ? `<div class="mt-1.5 rounded-xl bg-[#ffffff] border border-[#e7ddd0] px-2.5 py-1 text-[11px] text-slate-700 leading-snug break-words">
+                    ? `<div class="mt-1.5 rounded-xl bg-[#ffffff] border border-[#e7ddd0] px-2.5 py-1 text-[10px] text-stone-600 leading-snug break-words">
                            ${item.note}
                        </div>`
                     : '';
@@ -2086,21 +2086,22 @@
                         }
                     }
                 };
+                // في RTL: العنصر الأول يظهر على اليمين (المرسل وتفاصيله) والعنصر الثاني يظهر على اليسار (القلب)
                 pulseCard.innerHTML = `
                     <div class="flex items-center justify-between gap-2.5">
-                        ${buildFillableHeartOnly(item.score, `${activeTab}_${idx}_${item.timestamp || 0}`)}
-
-                        <div class="flex items-center gap-2.5 min-w-0">
-                            <div class="min-w-0 text-right">
-                                <div class="flex items-center justify-end gap-1.5">
-                                    ${streakBadge}
-                                    <span class="font-mono text-xs font-black text-slate-900 uppercase truncate">${isIncoming ? item.sender : item.target}</span>
-                                    <span class="text-[10px] font-bold text-stone-500">${directionLabel}</span>
-                                </div>
-                                <p class="text-[9px] text-stone-500 font-medium mt-0.5 tabular-nums tracking-tight">${exactDateTime}</p>
-                            </div>
+                        <div class="flex items-center gap-2 min-w-0">
                             ${avatarHTML}
+                            <div class="min-w-0 text-right">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[10px] font-bold text-stone-500">${directionLabel}</span>
+                                    <span class="font-mono text-[10px] font-black text-stone-700 uppercase truncate">${isIncoming ? item.sender : item.target}</span>
+                                    ${streakBadge}
+                                </div>
+                                <p class="text-[10px] text-stone-500 font-medium mt-0.5 tabular-nums tracking-tight">${exactDateTime}</p>
+                            </div>
                         </div>
+
+                        ${buildAccurateHeartFill(item.score, `${activeTab}_${idx}_${item.timestamp || 0}`)}
                     </div>
                     ${noteBlockHTML}
                 `;
