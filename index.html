@@ -173,6 +173,14 @@
 </head>
 <body class="text-slate-800 min-h-[100dvh] flex flex-col justify-between antialiased selection:bg-rose-100 selection:text-rose-700">
 
+    <!-- عداد شفاف ~50% يظهر فوق مكان ضغط الإصبع أثناء الشحن ويختفي عند الإفلات -->
+    <div id="fingerChargeCounter"
+         style="left: 0px; top: 0px; transform: translate(-50%, -145%) scale(0.88);"
+         class="fixed z-[9998] opacity-0 pointer-events-none transition-opacity duration-150 px-3.5 py-1 rounded-full bg-slate-900/50 backdrop-blur-sm border border-white/25 shadow-md flex items-center gap-1.5">
+        <span class="size-1.5 rounded-full bg-rose-400"></span>
+        <span id="rangeDisplay" class="text-xs font-black text-white/95 tabular-nums tracking-tight">0%</span>
+    </div>
+
     <!-- حاوية الإشعارات الموحدة في منتصف الشاشة -->
     <div id="toastContainer" style="top: calc(1rem + var(--safe-top));" class="fixed inset-x-0 mx-auto z-50 pointer-events-none px-4 flex flex-col items-center justify-center w-full max-w-sm"></div>
 
@@ -339,7 +347,7 @@
             <section class="glass-card p-5 sm:p-6 space-y-4 relative">
                 <!-- أيقونة التصفح الخفي وبوكس تنبيه صغير متناسق بجانبها -->
                 <div class="absolute top-4 right-4 z-10 flex items-center gap-1.5">
-                    <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="وضع المجهول"
+                    <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="التصفح الخفي"
                             class="grid size-8 place-items-center rounded-full bg-[#fdf9f5] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90 shrink-0">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 11h18"/>
@@ -361,9 +369,6 @@
                     <div class="relative inline-flex flex-col items-center justify-center">
                         <button type="button" id="mainHeartOrb"
                                 onpointerdown="startHeartCharge(event)"
-                                onpointerup="releaseHeartCharge(event)"
-                                onpointerleave="cancelHeartCharge()"
-                                onpointercancel="cancelHeartCharge()"
                                 oncontextmenu="return false;"
                                 class="heart-send-btn relative inline-flex items-center justify-center w-28 h-28 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/70 shadow-md cursor-pointer select-none transition-all duration-150">
                             
@@ -381,7 +386,7 @@
                                         stroke-dasharray="282.74" stroke-dashoffset="282.74"/>
                             </svg>
 
-                            <!-- القلب بلونه الأصلي المتدرج مع كاب ونظارة على مقاس القلب -->
+                            <!-- القلب بلونه الأصلي المتدرج مع كاب ونظارة مملوءة باللون على مقاس القلب -->
                             <div id="dynamicHeartWrapper" style="transform: scale(0.68);" class="relative z-10 inline-flex items-center justify-center transition-transform duration-75 pointer-events-none">
                                 <svg class="w-12 h-12 drop-shadow-sm" viewBox="0 0 24 24">
                                     <defs>
@@ -393,25 +398,18 @@
                                     <path fill="url(#heartGrad)" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                                 </svg>
 
-                                <!-- كاب ونظارة التخفي بمقاس القلب مباشرة -->
-                                <svg id="heartDisguiseOverlay" class="hidden absolute inset-0 w-12 h-12 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <!-- كاب التخفي على أعلى القلب -->
-                                    <path d="M5.5 7.2C6 4.6 8.6 3.2 12 3.2C15.4 3.2 18 4.6 18.5 7.2" fill="#be123c" stroke="#1e293b" stroke-width="1.5"/>
-                                    <path d="M4 7.5H20" stroke="#1e293b" stroke-width="1.6"/>
-                                    <!-- نظارة التخفي على منتصف القلب -->
-                                    <rect x="6.2" y="10.2" width="4.5" height="3" rx="1" fill="#0f172a" stroke="#ffffff" stroke-width="0.9"/>
-                                    <rect x="13.3" y="10.2" width="4.5" height="3" rx="1" fill="#0f172a" stroke="#ffffff" stroke-width="0.9"/>
-                                    <line x1="10.7" y1="11.6" x2="13.3" y2="11.6" stroke="#0f172a" stroke-width="1.2"/>
+                                <!-- كاب ونظارة مملوءة باللون على مقاس القلب -->
+                                <svg id="heartDisguiseOverlay" class="hidden absolute inset-0 w-12 h-12 pointer-events-none" viewBox="0 0 24 24" fill="none">
+                                    <!-- كاب مملوء باللون فوق القلب -->
+                                    <path d="M5.8 7.5C6.2 4.6 8.7 3 12 3C15.3 3 17.8 4.6 18.2 7.5H5.8Z" fill="#1e293b"/>
+                                    <rect x="3.5" y="7.2" width="17" height="1.6" rx="0.8" fill="#0f172a"/>
+                                    <!-- نظارة شمسية مملوءة باللون على القلب -->
+                                    <rect x="5.6" y="10.2" width="5.4" height="3.2" rx="1.1" fill="#0f172a"/>
+                                    <rect x="13" y="10.2" width="5.4" height="3.2" rx="1.1" fill="#0f172a"/>
+                                    <rect x="10.8" y="11" width="2.4" height="1.2" rx="0.5" fill="#0f172a"/>
                                 </svg>
                             </div>
                         </button>
-
-                        <!-- عداد شفاف حديث يظهر فقط عند الضغط واستمراره ويختفي عند التوقف -->
-                        <div id="transparentChargeCounter"
-                             class="opacity-0 scale-90 pointer-events-none transition-all duration-200 mt-2 px-4 py-1 rounded-full bg-white/55 backdrop-blur-md border border-rose-200/60 shadow-xs inline-flex items-center gap-1.5">
-                            <span class="size-1.5 rounded-full bg-rose-500 animate-pulse"></span>
-                            <span id="rangeDisplay" class="text-sm font-black text-rose-600/90 tabular-nums tracking-tight">0%</span>
-                        </div>
                     </div>
 
                     <!-- النص الإرشادي بخط صغير رصاصي تحت القلب -->
@@ -834,7 +832,7 @@
         function toggleAnonymousMode() {
             isAnonymousMode = !isAnonymousMode;
             applyDisguiseHeartAppearance();
-            showAnonMiniPill(isAnonymousMode ? "تفعيل وضع المجهول" : "إلغاء وضع المجهول");
+            showAnonMiniPill(isAnonymousMode ? "تفعيل وضع التخفي" : "إلغاء التخفي");
             if (navigator.vibrate) navigator.vibrate(12);
         }
 
@@ -890,16 +888,25 @@
             renderRecentSearches();
         });
 
-        // ================= TRANSPARENT COUNTER & HEART SCALE (0% TO 100%) =================
-        function setTransparentCounterVisible(visible) {
-            const counter = document.getElementById('transparentChargeCounter');
+        // ================= FINGER-FOLLOWING TRANSPARENT COUNTER & GLOBAL HOLD =================
+        function positionFingerCounter(clientX, clientY) {
+            const counter = document.getElementById('fingerChargeCounter');
+            if (!counter) return;
+            counter.style.left = clientX + 'px';
+            counter.style.top = clientY + 'px';
+        }
+
+        function setFingerCounterVisible(visible) {
+            const counter = document.getElementById('fingerChargeCounter');
             if (!counter) return;
             if (visible) {
-                counter.classList.remove('opacity-0', 'scale-90');
-                counter.classList.add('opacity-100', 'scale-100');
+                counter.classList.remove('opacity-0');
+                counter.classList.add('opacity-100');
+                counter.style.transform = 'translate(-50%, -155%) scale(1)';
             } else {
-                counter.classList.remove('opacity-100', 'scale-100');
-                counter.classList.add('opacity-0', 'scale-90');
+                counter.classList.remove('opacity-100');
+                counter.classList.add('opacity-0');
+                counter.style.transform = 'translate(-50%, -145%) scale(0.88)';
             }
         }
 
@@ -923,6 +930,28 @@
             }
         }
 
+        function handleGlobalPointerMove(e) {
+            if (!isChargingHeart) return;
+            positionFingerCounter(e.clientX, e.clientY);
+        }
+
+        function handleGlobalPointerUp(e) {
+            if (!isChargingHeart) return;
+            finishAndSendHeartCharge();
+        }
+
+        function attachGlobalChargeListeners() {
+            window.addEventListener('pointermove', handleGlobalPointerMove, { passive: true });
+            window.addEventListener('pointerup', handleGlobalPointerUp);
+            window.addEventListener('pointercancel', handleGlobalPointerUp);
+        }
+
+        function detachGlobalChargeListeners() {
+            window.removeEventListener('pointermove', handleGlobalPointerMove);
+            window.removeEventListener('pointerup', handleGlobalPointerUp);
+            window.removeEventListener('pointercancel', handleGlobalPointerUp);
+        }
+
         function startHeartCharge(e) {
             if (e) e.preventDefault();
             if (isSendingPulse || isChargingHeart) return;
@@ -933,7 +962,11 @@
 
             let val = 0;
             updateLoveMeterUI(val);
-            setTransparentCounterVisible(true);
+            if (typeof e.clientX === 'number' && typeof e.clientY === 'number') {
+                positionFingerCounter(e.clientX, e.clientY);
+            }
+            setFingerCounterVisible(true);
+            attachGlobalChargeListeners();
             if (navigator.vibrate) navigator.vibrate(12);
 
             chargeDelayTimer = setTimeout(() => {
@@ -957,8 +990,7 @@
             }, 220);
         }
 
-        function releaseHeartCharge(e) {
-            if (e) e.preventDefault();
+        function finishAndSendHeartCharge() {
             if (!isChargingHeart) return;
 
             clearTimeout(chargeDelayTimer);
@@ -966,10 +998,11 @@
             chargeDelayTimer = null;
             chargeStepTimer = null;
             isChargingHeart = false;
+            detachGlobalChargeListeners();
 
             const orb = document.getElementById('mainHeartOrb');
             if (orb) orb.classList.remove('heart-charging');
-            setTransparentCounterVisible(false);
+            setFingerCounterVisible(false);
 
             const selectedScore = currentLoveValue;
             sendLovePulseWithScore(selectedScore);
@@ -986,10 +1019,11 @@
             chargeDelayTimer = null;
             chargeStepTimer = null;
             isChargingHeart = false;
+            detachGlobalChargeListeners();
 
             const orb = document.getElementById('mainHeartOrb');
             if (orb) orb.classList.remove('heart-charging');
-            setTransparentCounterVisible(false);
+            setFingerCounterVisible(false);
             updateLoveMeterUI(0);
         }
 
