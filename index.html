@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#fbf7f2">
+    <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Feely</title>
@@ -19,8 +19,8 @@
 
         html, body {
             font-family: 'Readex Pro', sans-serif;
-            background-color: #fbf7f2;
-            background-image: radial-gradient(circle at 50% 0%, #fff9f2 0%, #fbf7f2 68%);
+            background-color: #ffffff;
+            background-image: radial-gradient(circle at 50% 0%, #fcfbfa 0%, #ffffff 70%);
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
@@ -31,18 +31,17 @@
             padding-bottom: calc(1.75rem + var(--safe-bottom));
         }
 
+        /* Pure Beige Cards over White Background */
         .glass-card {
-            background: rgba(255, 255, 255, 0.94);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: #f5efe6;
             border-radius: 30px;
-            box-shadow: 0 12px 32px -12px rgba(225, 29, 72, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
-            border: 1px solid rgba(255, 228, 233, 0.9);
+            box-shadow: 0 10px 26px -14px rgba(159, 18, 57, 0.12), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+            border: 1px solid #e7ddd0;
         }
 
         .soft-input {
-            background: #fdf9f5;
-            border: 1.5px solid #f3e8dc;
+            background: #ffffff;
+            border: 1.5px solid #dfd3c3;
             color: #1e293b;
             border-radius: 18px;
             font-size: 16px;
@@ -50,22 +49,23 @@
         }
 
         .soft-input:focus {
-            border-color: #fb7185;
+            border-color: #b91c3c;
             background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(251, 113, 133, 0.14);
+            box-shadow: 0 0 0 4px rgba(185, 28, 60, 0.12);
         }
 
-        /* Compact White Box Inputs */
+        /* Compact Beige Box Inputs */
         .white-compact-box {
-            background: #ffffff;
-            border: 1.5px solid #fecdd3;
+            background: #efe7dc;
+            border: 1.5px solid #dfd3c3;
             border-radius: 16px;
             transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .white-compact-box:focus-within {
-            border-color: #fb7185;
-            box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.14);
+            border-color: #b91c3c;
+            background: #f7f2ea;
+            box-shadow: 0 0 0 3px rgba(185, 28, 60, 0.12);
         }
 
         /* Unified Right-Aligned Small Field Typography */
@@ -80,42 +80,42 @@
             font-size: 11px;
             font-weight: 500;
             letter-spacing: normal;
-            color: #94a3b8;
+            color: #8c8275;
         }
 
-        /* Story Avatar Ring */
+        /* Story Avatar Ring (Deep Crimson Tone) */
         .story-ring {
-            background: linear-gradient(135deg, #fb7185 0%, #e11d48 50%, #f472b6 100%);
+            background: linear-gradient(135deg, #b91c3c 0%, #881337 100%);
             padding: 2.5px;
             border-radius: 9999px;
             transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .story-ring-selected {
-            box-shadow: 0 0 0 2.5px #ffffff, 0 0 0 4.5px #e11d48;
+            box-shadow: 0 0 0 2.5px #f5efe6, 0 0 0 4.5px #9f1239;
             transform: scale(1.04);
         }
 
-        /* Pulse Item Card */
+        /* Pulse Item Card (Pure Beige) */
         .pulse-item-card {
-            background: #ffffff;
-            border: 1.5px solid #ffe4e6;
+            background: #efe7dc;
+            border: 1.5px solid #dfd3c3;
             border-radius: 20px;
-            box-shadow: 0 4px 14px -6px rgba(225, 29, 72, 0.07);
+            box-shadow: 0 4px 12px -6px rgba(159, 18, 57, 0.08);
             transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .pulse-item-card:hover {
-            border-color: #fda4af;
+            border-color: #b91c3c;
             transform: translateY(-1px);
-            box-shadow: 0 8px 20px -8px rgba(225, 29, 72, 0.14);
+            box-shadow: 0 8px 18px -8px rgba(159, 18, 57, 0.14);
         }
 
         /* Heart Send Button & Circular Progress Ring */
         @keyframes heartHalo {
-            0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.25); }
-            70% { box-shadow: 0 0 0 14px rgba(244, 63, 94, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(159, 18, 57, 0.25); }
+            70% { box-shadow: 0 0 0 14px rgba(159, 18, 57, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(159, 18, 57, 0); }
         }
         .heart-send-btn {
             animation: heartHalo 2.2s infinite;
@@ -125,7 +125,7 @@
         }
         .heart-charging {
             animation: none !important;
-            box-shadow: 0 0 0 12px rgba(225, 29, 72, 0.14), 0 12px 28px -6px rgba(225, 29, 72, 0.35);
+            box-shadow: 0 0 0 12px rgba(159, 18, 57, 0.14), 0 12px 28px -6px rgba(136, 19, 55, 0.35);
             transform: scale(1.05);
         }
 
@@ -176,7 +176,7 @@
 
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #fecdd3; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #dfd3c3; border-radius: 10px; }
     </style>
 
     <!-- Firebase SDKs -->
@@ -185,7 +185,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
 </head>
-<body class="text-slate-800 min-h-[100dvh] flex flex-col justify-between antialiased selection:bg-rose-100 selection:text-rose-700">
+<body class="text-slate-800 min-h-[100dvh] flex flex-col justify-between antialiased selection:bg-rose-900/15 selection:text-rose-900">
 
     <!-- عداد شفاف ~50% يظهر فوق مكان ضغط الإصبع أثناء الشحن ويختفي عند الإفلات -->
     <div id="fingerChargeCounter"
@@ -198,18 +198,18 @@
     <!-- حاوية الإشعارات الموحدة في منتصف الشاشة -->
     <div id="toastContainer" style="top: calc(1rem + var(--safe-top));" class="fixed inset-x-0 mx-auto z-[9999] pointer-events-none px-4 flex flex-col items-center justify-center w-full max-w-sm"></div>
 
-    <!-- Header العلوي الموحد (يضم النبض، الأصدقاء، البحث، ملفي، الإشعارات، الصوت، وحفظ الحساب) -->
+    <!-- Header العلوي الموحد -->
     <header class="w-full max-w-md mx-auto px-3.5 sm:px-5 pt-4 sm:pt-6 flex justify-between items-center gap-1.5">
         <div id="authStatusContainer" class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
             <!-- أيقونة حفظ الحساب / خروج -->
             <button id="openAuthModalBtn" onclick="openAuthModal()" title="حفظ الحساب"
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 hover:bg-white text-slate-700 border border-rose-100 transition shadow-2xs active:scale-95">
-                <svg class="w-4 h-4 text-rose-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] hover:bg-[#efe7dc] text-slate-700 border border-[#dfd3c3] transition shadow-2xs active:scale-95">
+                <svg class="w-4 h-4 text-[#9f1239]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
                 </svg>
             </button>
             <button id="logoutBtn" onclick="logout()" title="خروج"
-                    class="hidden grid size-8 sm:size-9 place-items-center rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 transition active:scale-95">
+                    class="hidden grid size-8 sm:size-9 place-items-center rounded-full bg-[#efe7dc] hover:bg-[#e5dacb] text-[#9f1239] border border-[#dfd3c3] transition active:scale-95">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
                 </svg>
@@ -217,7 +217,7 @@
 
             <!-- زر النبض (الرئيسية) -->
             <button type="button" id="navHomeBtn" onclick="switchMainView('home')" title="النبض"
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-rose-500 text-white shadow-sm shadow-rose-200 transition-all active:scale-90">
+                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#9f1239] text-white shadow-sm shadow-rose-900/20 transition-all active:scale-90">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
                 </svg>
@@ -225,7 +225,7 @@
 
             <!-- زر صفحة أصدقاء النبض المستقلة -->
             <button type="button" id="navFriendsBtn" onclick="switchMainView('friends')" title="أصدقاء النبض"
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 text-slate-600 hover:text-rose-500 border border-rose-100 shadow-2xs transition-all active:scale-90">
+                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
@@ -233,7 +233,7 @@
 
             <!-- زر عدسة البحث -->
             <button type="button" id="navSearchBtn" onclick="switchMainView('search')" title="بحث"
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 text-slate-600 hover:text-rose-500 border border-rose-100 shadow-2xs transition-all active:scale-90">
+                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                 </svg>
@@ -241,28 +241,28 @@
 
             <!-- زر البروفايل الشخصي -->
             <button type="button" id="navProfileBtn" onclick="switchMainView('profile')" title="ملفي"
-                    class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 text-slate-600 hover:text-rose-500 border border-rose-100 shadow-2xs transition-all active:scale-90">
+                    class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                 </svg>
-                <span id="profileAlertDot" class="hidden absolute right-1.5 top-1.5 size-2 rounded-full bg-rose-500 ring-2 ring-white"></span>
+                <span id="profileAlertDot" class="hidden absolute right-1.5 top-1.5 size-2 rounded-full bg-[#9f1239] ring-2 ring-[#f5efe6]"></span>
             </button>
 
             <!-- أيقونة الإشعارات -->
             <button id="notificationBellBtn" onclick="handleBellClick()" title="الإشعارات" 
-                    class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 text-slate-600 hover:text-rose-500 transition border border-rose-100 shadow-2xs active:scale-90">
+                    class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] transition border border-[#dfd3c3] shadow-2xs active:scale-90">
                 <svg id="bellSvgIcon" class="w-4 h-4 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
                 </svg>
                 <span id="bellBadge" class="hidden absolute right-1.5 top-1.5 flex size-2.5">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full size-2.5 bg-rose-500 ring-2 ring-white"></span>
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full size-2.5 bg-[#9f1239] ring-2 ring-[#f5efe6]"></span>
                 </span>
             </button>
 
             <!-- زر نغمة النبض -->
             <button id="soundToggleBtn" onclick="toggleSoundEffect()" title="الصوت" 
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 text-slate-600 hover:text-rose-500 transition border border-rose-100 shadow-2xs active:scale-90">
+                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] transition border border-[#dfd3c3] shadow-2xs active:scale-90">
                 <span id="soundIcon" class="flex items-center justify-center"></span>
             </button>
         </div>
@@ -270,7 +270,7 @@
         <!-- الشعار -->
         <div onclick="switchMainView('home')" class="flex items-center gap-2 cursor-pointer select-none group shrink-0">
             <h1 class="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-none">Feely</h1>
-            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-2xl bg-gradient-to-tr from-rose-600 via-rose-500 to-pink-400 flex items-center justify-center text-white shadow-md shadow-rose-200 group-active:scale-95 transition">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-2xl bg-gradient-to-tr from-[#881337] via-[#9f1239] to-[#be123c] flex items-center justify-center text-white shadow-md shadow-rose-900/20 group-active:scale-95 transition">
                 <svg class="w-4 h-4 sm:w-5 sm:h-5 fill-white" viewBox="0 0 24 24">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                 </svg>
@@ -284,15 +284,15 @@
         <!-- ==================== VIEW 1: HOME ==================== -->
         <div id="viewHome" class="space-y-3.5">
 
-            <!-- بطاقة الهوية المصغرة في الأعلى -->
-            <div onclick="switchMainView('profile')" class="glass-card px-4 py-3 flex items-center justify-between cursor-pointer hover:border-rose-300 transition active:scale-[0.99]">
-                <span class="inline-flex items-center gap-1.5 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1 rounded-full tabular-nums" id="miniHeartsBadge">
-                    <svg class="w-3.5 h-3.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <!-- بطاقة الهوية المصغرة في الأعلى (بيج صافي) -->
+            <div onclick="switchMainView('profile')" class="glass-card px-4 py-3 flex items-center justify-between cursor-pointer hover:border-[#b91c3c] transition active:scale-[0.99]">
+                <span class="inline-flex items-center gap-1.5 text-xs font-black text-[#9f1239] bg-[#efe7dc] border border-[#dfd3c3] px-3 py-1 rounded-full tabular-nums" id="miniHeartsBadge">
+                    <svg class="w-3.5 h-3.5 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                     <span>0</span>
                 </span>
                 <div class="flex items-center gap-2 min-w-0">
                     <span id="miniHandleDisplay" class="unified-field-text uppercase truncate">فعّل رمزك</span>
-                    <div class="size-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                    <div class="size-7 rounded-full bg-[#efe7dc] border border-[#dfd3c3] text-[#9f1239] flex items-center justify-center shrink-0">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                         </svg>
@@ -301,29 +301,29 @@
             </div>
 
             <!-- بطاقة صفحة الصديق (عند فتح رابط مباشر ?u=...) -->
-            <section id="friendProfileCard" class="hidden glass-card p-4 sm:p-5 relative overflow-hidden space-y-3 border-2 border-rose-300 bg-gradient-to-b from-[#fff2f4] to-white">
+            <section id="friendProfileCard" class="hidden glass-card p-4 sm:p-5 relative overflow-hidden space-y-3 border-2 border-[#b91c3c]">
                 <div class="flex items-center justify-between">
-                    <button type="button" onclick="closeFriendProfile()" class="grid size-7 place-items-center text-slate-500 hover:text-slate-800 bg-white rounded-full border border-slate-200/80 transition active:scale-95">
+                    <button type="button" onclick="closeFriendProfile()" class="grid size-7 place-items-center text-slate-600 hover:text-slate-900 bg-[#efe7dc] rounded-full border border-[#dfd3c3] transition active:scale-95">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                         </svg>
                     </button>
-                    <span id="friendProfileStreakText" class="inline-flex items-center gap-1 text-xs font-black text-rose-600 tabular-nums">
-                        <svg class="w-3.5 h-3.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    <span id="friendProfileStreakText" class="inline-flex items-center gap-1 text-xs font-black text-[#9f1239] tabular-nums">
+                        <svg class="w-3.5 h-3.5 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                         <span>0</span>
                     </span>
                 </div>
 
-                <div class="flex items-center justify-between gap-2 bg-white rounded-2xl px-3.5 py-3 border border-rose-100 shadow-2xs">
-                    <span class="inline-flex items-center gap-1.5 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-full shrink-0 tabular-nums" id="friendHeartsReceivedBadge">
-                        <svg class="w-3.5 h-3.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <div class="flex items-center justify-between gap-2 bg-[#efe7dc] rounded-2xl px-3.5 py-3 border border-[#dfd3c3]">
+                    <span class="inline-flex items-center gap-1.5 text-xs font-black text-[#9f1239] bg-[#f5efe6] border border-[#dfd3c3] px-3 py-1.5 rounded-full shrink-0 tabular-nums" id="friendHeartsReceivedBadge">
+                        <svg class="w-3.5 h-3.5 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                         <span>0</span>
                     </span>
 
                     <div class="flex items-center gap-2 min-w-0">
                         <span id="friendProfileHandle" class="font-mono text-xl font-black tracking-[0.22em] text-slate-900 uppercase truncate">---</span>
                         <button type="button" onclick="copyFriendLink()" title="نسخ"
-                                class="p-1.5 text-slate-500 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition active:scale-90 shrink-0">
+                                class="p-1.5 text-slate-600 hover:text-[#9f1239] hover:bg-[#f5efe6] rounded-xl transition active:scale-90 shrink-0">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                             </svg>
@@ -332,12 +332,12 @@
                 </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة (بدون حقل الرسالة القصيرة وبدون بوكس أصدقاء النبض) -->
+            <!-- بطاقة إرسال النبضة (بيج صافي + أحمر قاتم) -->
             <section class="glass-card p-5 sm:p-6 space-y-3 relative">
                 <!-- أيقونة التصفح الخفي وبوكس تنبيه صغير متناسق بجانبها -->
                 <div class="absolute top-4 right-4 z-10 flex items-center gap-1.5">
                     <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="التصفح الخفي"
-                            class="grid size-8 place-items-center rounded-full bg-[#fdf9f5] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90 shrink-0">
+                            class="grid size-8 place-items-center rounded-full bg-[#efe7dc] text-slate-600 border border-[#dfd3c3] hover:border-[#b91c3c] transition-all active:scale-90 shrink-0">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 11h18"/>
                             <path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/>
@@ -347,8 +347,8 @@
                         </svg>
                     </button>
 
-                    <div id="anonMiniPill" class="hidden mini-pill-pop px-2.5 py-1 rounded-full bg-[#fdf9f5] border border-rose-200/80 shadow-2xs">
-                        <span id="anonMiniPillText" class="text-[10px] font-bold text-rose-600 leading-none">تفعيل وضع التخفي</span>
+                    <div id="anonMiniPill" class="hidden mini-pill-pop px-2.5 py-1 rounded-full bg-[#efe7dc] border border-[#dfd3c3] shadow-2xs">
+                        <span id="anonMiniPillText" class="text-[10px] font-bold text-[#9f1239] leading-none">تفعيل وضع التخفي</span>
                     </div>
                 </div>
 
@@ -358,28 +358,28 @@
                         <button type="button" id="mainHeartOrb"
                                 onpointerdown="startHeartCharge(event)"
                                 oncontextmenu="return false;"
-                                class="heart-send-btn relative inline-flex items-center justify-center w-28 h-28 rounded-full bg-gradient-to-b from-rose-50 to-pink-100/70 shadow-md cursor-pointer select-none transition-all duration-150">
+                                class="heart-send-btn relative inline-flex items-center justify-center w-28 h-28 rounded-full bg-[#efe7dc] border border-[#dfd3c3] shadow-md cursor-pointer select-none transition-all duration-150">
                             
                             <svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 100 100">
                                 <defs>
                                     <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#fb7185"/>
-                                        <stop offset="50%" stop-color="#f43f5e"/>
-                                        <stop offset="100%" stop-color="#e11d48"/>
+                                        <stop offset="0%" stop-color="#be123c"/>
+                                        <stop offset="50%" stop-color="#9f1239"/>
+                                        <stop offset="100%" stop-color="#881337"/>
                                     </linearGradient>
                                 </defs>
-                                <circle cx="50" cy="50" r="45" fill="none" stroke="#ffe4e6" stroke-width="5.5"/>
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e5dacb" stroke-width="5.5"/>
                                 <circle id="circularChargeRing" cx="50" cy="50" r="45" fill="none"
                                         stroke="url(#ringGrad)" stroke-width="5.5" stroke-linecap="round"
                                         stroke-dasharray="282.74" stroke-dashoffset="282.74"/>
                             </svg>
 
-                            <!-- القلب مع حد أسود بحجم مناسب عند تفعيل وضع التخفي -->
+                            <!-- القلب بلون أحمر قاتم متزن ومع حد أسود عند تفعيل وضع التخفي -->
                             <svg id="dynamicHeartSvg" style="transform: scale(0.68);" class="w-12 h-12 transition-transform duration-75 drop-shadow-sm pointer-events-none relative z-10" viewBox="0 0 24 24">
                                 <defs>
                                     <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#fb7185"/>
-                                        <stop offset="100%" stop-color="#e11d48"/>
+                                        <stop offset="0%" stop-color="#be123c"/>
+                                        <stop offset="100%" stop-color="#881337"/>
                                     </linearGradient>
                                 </defs>
                                 <path id="dynamicHeartMainPath"
@@ -393,21 +393,21 @@
                     </div>
 
                     <!-- النص الإرشادي بخط صغير رصاصي تحت القلب -->
-                    <p class="text-[11px] font-medium text-slate-400 pt-0.5">اضغط باستمرار لإرسال نبضة الحب</p>
+                    <p class="text-[11px] font-medium text-stone-500 pt-0.5">اضغط باستمرار لإرسال نبضة الحب</p>
                 </div>
             </section>
 
             <!-- صندوق النبضات -->
             <section id="pulsesFeedSection" class="glass-card p-4 sm:p-5 space-y-3.5">
-                <div class="bg-[#fdf9f5] p-1 rounded-2xl flex gap-1 border border-[#f3e8dc]">
-                    <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-white text-slate-900 shadow-2xs inline-flex items-center justify-center gap-1.5">
-                        <svg class="w-3.5 h-3.5 text-rose-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <div class="bg-[#efe7dc] p-1 rounded-2xl flex gap-1 border border-[#dfd3c3]">
+                    <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 text-[#9f1239]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
                         </svg>
                         <span>الواردة</span>
-                        <span id="incomingTabCountBadge" class="text-[10px] bg-rose-50 text-rose-600 border border-rose-100 px-1.5 py-0.2 rounded-full font-black tabular-nums">0</span>
+                        <span id="incomingTabCountBadge" class="text-[10px] bg-[#e5dacb] text-[#9f1239] px-1.5 py-0.2 rounded-full font-black tabular-nums">0</span>
                     </button>
-                    <button id="tabSentBtn" onclick="switchPulseTab('sent')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition text-slate-500 hover:text-slate-800 inline-flex items-center justify-center gap-1.5">
+                    <button id="tabSentBtn" onclick="switchPulseTab('sent')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
                         </svg>
@@ -416,8 +416,8 @@
                 </div>
 
                 <div id="pulsesList" class="space-y-2.5 max-h-80 overflow-y-auto px-0.5 py-0.5">
-                    <div class="rounded-2xl border border-dashed border-rose-200/80 bg-[#fdf9f5] py-7 px-4 text-center">
-                        <p id="authNotice" class="text-xs text-slate-400 font-medium">لا توجد نبضات</p>
+                    <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#efe7dc] py-7 px-4 text-center">
+                        <p id="authNotice" class="text-xs text-stone-500 font-medium">لا توجد نبضات</p>
                     </div>
                 </div>
             </section>
@@ -427,20 +427,20 @@
         <div id="viewFriends" class="hidden space-y-4">
             <section class="glass-card p-5 sm:p-6 space-y-4">
                 <div class="flex items-center justify-between px-1">
-                    <span id="targetStreakIndicator" class="hidden inline-flex items-center gap-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200/70 px-2.5 py-0.5 rounded-full tabular-nums">
-                        <svg class="w-2.5 h-2.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    <span id="targetStreakIndicator" class="hidden inline-flex items-center gap-1 text-[10px] font-black text-[#9f1239] bg-[#efe7dc] border border-[#dfd3c3] px-2.5 py-0.5 rounded-full tabular-nums">
+                        <svg class="w-2.5 h-2.5 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                         <span>0</span>
                     </span>
                     <h2 class="text-sm font-black text-slate-900 flex items-center gap-1.5">
                         <span>أصدقاء النبض</span>
-                        <span class="inline-block size-1.5 rounded-full bg-rose-500"></span>
+                        <span class="inline-block size-1.5 rounded-full bg-[#9f1239]"></span>
                     </h2>
                 </div>
 
                 <!-- إضافة رمز صديق جديد -->
                 <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
                     <button type="button" onclick="confirmAddRecipient()" title="إضافة"
-                            class="size-7 rounded-xl bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-200/80 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                            class="size-7 rounded-xl bg-[#f5efe6] hover:bg-[#9f1239] text-[#9f1239] hover:text-white border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                         </svg>
@@ -453,8 +453,8 @@
 
                 <!-- قائمة الأصدقاء للإدارة والحذف والاختيار الافتراضي -->
                 <div id="friendsManageList" class="space-y-2 max-h-96 overflow-y-auto px-0.5 py-0.5">
-                    <div class="rounded-2xl border border-dashed border-rose-200/80 bg-[#fdf9f5] py-7 px-4 text-center">
-                        <p class="text-xs text-slate-400 font-medium">لا يوجد أصدقاء</p>
+                    <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#efe7dc] py-7 px-4 text-center">
+                        <p class="text-xs text-stone-500 font-medium">لا يوجد أصدقاء</p>
                     </div>
                 </div>
             </section>
@@ -465,7 +465,7 @@
             <section class="glass-card p-5 sm:p-6 space-y-4">
                 <form onsubmit="executeFriendSearch(event)" class="space-y-2.5">
                     <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
-                        <button type="submit" class="size-7 rounded-xl bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-200/80 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                        <button type="submit" class="size-7 rounded-xl bg-[#f5efe6] hover:bg-[#9f1239] text-[#9f1239] hover:text-white border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                             </svg>
@@ -479,35 +479,35 @@
                 <!-- آخر عمليات البحث -->
                 <div id="recentSearchesSection" class="hidden space-y-1.5 pt-1">
                     <div class="flex items-center justify-between">
-                        <button type="button" onclick="clearRecentSearches()" class="text-[10px] text-slate-400 hover:text-rose-500">مسح</button>
-                        <span class="text-[10px] font-bold text-slate-400">السابقة</span>
+                        <button type="button" onclick="clearRecentSearches()" class="text-[10px] text-stone-500 hover:text-[#9f1239]">مسح</button>
+                        <span class="text-[10px] font-bold text-stone-500">السابقة</span>
                     </div>
                     <div id="recentSearchesList" class="flex flex-wrap gap-1.5"></div>
                 </div>
 
                 <!-- نتيجة البحث -->
-                <div id="searchResultBox" class="hidden pt-2 border-t border-rose-100 space-y-3">
-                    <div class="bg-gradient-to-b from-[#fff2f4] to-white rounded-3xl p-5 border border-rose-200/80 text-center space-y-3 shadow-xs">
-                        <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-rose-500 to-pink-400 text-white font-mono text-xl font-black flex items-center justify-center mx-auto shadow-md shadow-rose-200" id="searchResultAvatar">
+                <div id="searchResultBox" class="hidden pt-2 border-t border-[#dfd3c3] space-y-3">
+                    <div class="bg-[#efe7dc] rounded-3xl p-5 border border-[#dfd3c3] text-center space-y-3 shadow-xs">
+                        <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-[#881337] to-[#be123c] text-white font-mono text-xl font-black flex items-center justify-center mx-auto shadow-md" id="searchResultAvatar">
                             ?
                         </div>
                         <div id="searchResultHandle" class="font-mono text-2xl font-black tracking-[0.25em] text-slate-900 uppercase break-all">---</div>
                         
                         <div class="flex flex-wrap items-center justify-center gap-2">
-                            <span id="searchResultHearts" class="inline-flex items-center gap-1.5 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 px-3.5 py-1.5 rounded-full tabular-nums">
+                            <span id="searchResultHearts" class="inline-flex items-center gap-1.5 text-xs font-black text-[#9f1239] bg-[#f5efe6] border border-[#dfd3c3] px-3.5 py-1.5 rounded-full tabular-nums">
                                 0
                             </span>
-                            <span id="searchResultStreak" class="inline-flex items-center gap-1 text-xs font-bold text-slate-600 bg-slate-50 border border-slate-200/70 px-3 py-1.5 rounded-full tabular-nums">
+                            <span id="searchResultStreak" class="inline-flex items-center gap-1 text-xs font-bold text-slate-700 bg-[#f5efe6] border border-[#dfd3c3] px-3 py-1.5 rounded-full tabular-nums">
                                 0
                             </span>
                         </div>
 
                         <div class="pt-2 flex gap-2">
-                            <button type="button" id="searchSendPulseBtn" class="flex-1 bg-gradient-to-l from-rose-600 to-pink-500 text-white font-bold py-3 rounded-2xl text-xs shadow-md shadow-rose-500/20 transition active:scale-95 inline-flex items-center justify-center gap-1.5">
+                            <button type="button" id="searchSendPulseBtn" class="flex-1 bg-gradient-to-l from-[#881337] to-[#be123c] text-white font-bold py-3 rounded-2xl text-xs shadow-md transition active:scale-95 inline-flex items-center justify-center gap-1.5">
                                 <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                                 <span>إرسال</span>
                             </button>
-                            <button type="button" id="searchCopyLinkBtn" class="p-3 bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-500 rounded-2xl border border-rose-100 transition active:scale-95 shrink-0">
+                            <button type="button" id="searchCopyLinkBtn" class="p-3 bg-[#f5efe6] hover:bg-[#e5dacb] text-slate-700 hover:text-[#9f1239] rounded-2xl border border-[#dfd3c3] transition active:scale-95 shrink-0">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                                 </svg>
@@ -516,25 +516,25 @@
                     </div>
                 </div>
 
-                <p id="searchErrorMsg" class="hidden text-center text-xs font-bold text-rose-600 bg-rose-50 border border-rose-100 py-3 rounded-2xl px-3"></p>
+                <p id="searchErrorMsg" class="hidden text-center text-xs font-bold text-[#9f1239] bg-[#efe7dc] border border-[#dfd3c3] py-3 rounded-2xl px-3"></p>
             </section>
         </div>
 
         <!-- ==================== VIEW 4: PROFILE ==================== -->
         <div id="viewProfile" class="hidden space-y-4">
-            <section class="glass-card p-5 sm:p-6 relative overflow-hidden space-y-4 border-2 border-rose-100">
-                <div class="bg-gradient-to-b from-[#fff1f3] via-white to-[#fff8f9] rounded-3xl p-5 border border-rose-200/70 shadow-xs text-center space-y-3.5">
-                    <div class="story-ring w-18 h-18 inline-block mx-auto shadow-md shadow-rose-200">
-                        <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center text-rose-500">
-                            <svg class="w-8 h-8 fill-rose-500" viewBox="0 0 24 24">
+            <section class="glass-card p-5 sm:p-6 relative overflow-hidden space-y-4">
+                <div class="bg-[#efe7dc] rounded-3xl p-5 border border-[#dfd3c3] shadow-xs text-center space-y-3.5">
+                    <div class="story-ring w-18 h-18 inline-block mx-auto shadow-md">
+                        <div class="w-16 h-16 rounded-full bg-[#f5efe6] flex items-center justify-center text-[#9f1239]">
+                            <svg class="w-8 h-8 fill-[#9f1239]" viewBox="0 0 24 24">
                                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                             </svg>
                         </div>
                     </div>
 
-                    <div class="white-compact-box flex items-center justify-center gap-1.5 px-2 py-1.5 shadow-2xs">
+                    <div class="white-compact-box bg-[#f5efe6] flex items-center justify-center gap-1.5 px-2 py-1.5 shadow-2xs">
                         <button type="button" id="copyBtn" onclick="copyMyLink()"
-                                class="size-7 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 border border-rose-200/70 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                                class="size-7 rounded-xl bg-[#efe7dc] hover:bg-[#e5dacb] text-[#9f1239] border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                             </svg>
@@ -545,8 +545,8 @@
                     </div>
 
                     <div class="flex items-center justify-center pt-1">
-                        <span class="inline-flex items-center gap-1.5 text-sm font-black text-rose-600 bg-rose-50 border border-rose-100 px-4 py-1.5 rounded-full tabular-nums" id="totalHeartsReceivedBadge">
-                            <svg class="w-4 h-4 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        <span class="inline-flex items-center gap-1.5 text-sm font-black text-[#9f1239] bg-[#f5efe6] border border-[#dfd3c3] px-4 py-1.5 rounded-full tabular-nums" id="totalHeartsReceivedBadge">
+                            <svg class="w-4 h-4 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                             <span>0</span>
                         </span>
                     </div>
@@ -560,23 +560,23 @@
                         <span>حفظ وتفعيل</span>
                     </button>
                 </div>
-                <p id="handleStatusAlert" class="text-[11px] text-center hidden font-semibold text-rose-600"></p>
+                <p id="handleStatusAlert" class="text-[11px] text-center hidden font-semibold text-[#9f1239]"></p>
             </section>
         </div>
 
     </main>
 
-    <!-- نافذة اختيار الأصدقاء والرسالة القصيرة بعد فك الضغط عن القلب -->
+    <!-- نافذة اختيار الأصدقاء والرسالة القصيرة بعد فك الضغط عن القلب (بيج صافي) -->
     <div id="sendPulseSheetModal" class="hidden fixed inset-0 bg-slate-900/45 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-        <div class="sheet-pop-in bg-white rounded-3xl max-w-sm w-full p-5 space-y-3.5 border border-rose-100 shadow-2xl relative text-right">
+        <div class="sheet-pop-in bg-[#f5efe6] rounded-3xl max-w-sm w-full p-5 space-y-3.5 border border-[#dfd3c3] shadow-2xl relative text-right">
             <div class="flex items-center justify-between">
-                <button type="button" onclick="closeSendPulseSheet()" class="grid size-7 place-items-center rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition active:scale-90">
+                <button type="button" onclick="closeSendPulseSheet()" class="grid size-7 place-items-center rounded-full text-slate-600 hover:text-slate-900 bg-[#efe7dc] border border-[#dfd3c3] transition active:scale-90">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
                 </button>
-                <span id="sheetPulseScoreBadge" class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 tabular-nums">
-                    <svg class="w-3 h-3 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <span id="sheetPulseScoreBadge" class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-black text-[#9f1239] bg-[#efe7dc] border border-[#dfd3c3] tabular-nums">
+                    <svg class="w-3 h-3 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                     <span>0%</span>
                 </span>
             </div>
@@ -585,9 +585,9 @@
             <div id="sheetFriendsContainer" class="flex gap-3 overflow-x-auto pb-1.5 pt-1 px-1 hide-scrollbar"></div>
 
             <!-- إضافة مستلم سريع داخل النافذة إذا لم يكن موجوداً -->
-            <div class="white-compact-box flex items-center gap-1.5 px-2 py-1 shadow-2xs">
+            <div class="white-compact-box bg-[#efe7dc] flex items-center gap-1.5 px-2 py-1 shadow-2xs">
                 <button type="button" onclick="addQuickFriendInSheet()" title="إضافة"
-                        class="size-6 rounded-lg bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-200/80 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                        class="size-6 rounded-lg bg-[#f5efe6] hover:bg-[#9f1239] text-[#9f1239] hover:text-white border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
                     <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
@@ -599,9 +599,9 @@
 
             <!-- بوكس إضافة رسالة قصيرة + زر الإرسال -->
             <div class="relative">
-                <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
+                <div class="white-compact-box bg-[#efe7dc] flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
                     <button type="button" id="sheetEmojiToggleBtn" onclick="toggleSheetEmojiPicker()"
-                            class="size-7 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 border border-rose-200/70 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                            class="size-7 rounded-xl bg-[#f5efe6] hover:bg-[#e5dacb] text-[#9f1239] border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
                         </svg>
@@ -613,47 +613,47 @@
 
                     <!-- أيقونة الإرسال -->
                     <button type="button" id="sheetSendBtn" onclick="submitSheetPulse()" title="إرسال"
-                            class="size-8 rounded-xl bg-gradient-to-tr from-rose-600 to-pink-500 text-white flex items-center justify-center shrink-0 shadow-sm shadow-rose-200 transition-all active:scale-90">
+                            class="size-8 rounded-xl bg-gradient-to-tr from-[#881337] to-[#be123c] text-white flex items-center justify-center shrink-0 shadow-sm transition-all active:scale-90">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
                         </svg>
                     </button>
                 </div>
 
-                <div id="sheetEmojiPickerPopover" class="hidden mt-1.5 p-2 rounded-2xl bg-white border border-rose-200 shadow-lg grid grid-cols-6 gap-1 text-center">
-                    <button type="button" onclick="insertEmojiToNote('🫶🏻')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫶🏻</button>
-                    <button type="button" onclick="insertEmojiToNote('🥹')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🥹</button>
-                    <button type="button" onclick="insertEmojiToNote('🫂')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫂</button>
-                    <button type="button" onclick="insertEmojiToNote('💓')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">💓</button>
-                    <button type="button" onclick="insertEmojiToNote('🫠')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫠</button>
-                    <button type="button" onclick="insertEmojiToNote('💌')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">💌</button>
-                    <button type="button" onclick="insertEmojiToNote('🌷')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🌷</button>
-                    <button type="button" onclick="insertEmojiToNote('🦋')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🦋</button>
-                    <button type="button" onclick="insertEmojiToNote('✨')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">✨</button>
-                    <button type="button" onclick="insertEmojiToNote('🔥')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🔥</button>
-                    <button type="button" onclick="insertEmojiToNote('🤍')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🤍</button>
-                    <button type="button" onclick="insertEmojiToNote('💫')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">💫</button>
+                <div id="sheetEmojiPickerPopover" class="hidden mt-1.5 p-2 rounded-2xl bg-[#efe7dc] border border-[#dfd3c3] shadow-lg grid grid-cols-6 gap-1 text-center">
+                    <button type="button" onclick="insertEmojiToNote('🫶🏻')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🫶🏻</button>
+                    <button type="button" onclick="insertEmojiToNote('🥹')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🥹</button>
+                    <button type="button" onclick="insertEmojiToNote('🫂')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🫂</button>
+                    <button type="button" onclick="insertEmojiToNote('💓')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">💓</button>
+                    <button type="button" onclick="insertEmojiToNote('🫠')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🫠</button>
+                    <button type="button" onclick="insertEmojiToNote('💌')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">💌</button>
+                    <button type="button" onclick="insertEmojiToNote('🌷')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🌷</button>
+                    <button type="button" onclick="insertEmojiToNote('🦋')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🦋</button>
+                    <button type="button" onclick="insertEmojiToNote('✨')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">✨</button>
+                    <button type="button" onclick="insertEmojiToNote('🔥')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🔥</button>
+                    <button type="button" onclick="insertEmojiToNote('🤍')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🤍</button>
+                    <button type="button" onclick="insertEmojiToNote('💫')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">💫</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="mt-2 text-center text-[11px] text-slate-400 py-3">
+    <footer class="mt-2 text-center text-[11px] text-stone-500 py-3">
         Feely © 2026
     </footer>
 
-    <!-- Auth Modal -->
-    <div id="authModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-5 sm:p-6 space-y-4 border border-rose-100 shadow-2xl relative text-right">
-            <button onclick="closeAuthModal()" class="absolute top-4 left-4 p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition">
+    <!-- Auth Modal (بيج صافي) -->
+    <div id="authModal" class="hidden fixed inset-0 bg-slate-900/45 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-[#f5efe6] rounded-3xl max-w-sm w-full p-5 sm:p-6 space-y-4 border border-[#dfd3c3] shadow-2xl relative text-right">
+            <button onclick="closeAuthModal()" class="absolute top-4 left-4 p-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-[#efe7dc] transition">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                 </svg>
             </button>
             
             <div class="text-center space-y-1">
-                <div class="w-11 h-11 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mx-auto mb-1 border border-rose-100">
+                <div class="w-11 h-11 rounded-2xl bg-[#efe7dc] text-[#9f1239] flex items-center justify-center mx-auto mb-1 border border-[#dfd3c3]">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
                     </svg>
@@ -661,7 +661,7 @@
                 <h3 class="text-sm font-black text-slate-900">حفظ الحساب</h3>
             </div>
 
-            <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold py-3 rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-2xs active:scale-98">
+            <button onclick="loginWithGoogle()" class="w-full bg-[#efe7dc] hover:bg-[#e5dacb] border border-[#dfd3c3] text-slate-800 font-bold py-3 rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-2xs active:scale-98">
                 <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
                 <span>Google</span>
             </button>
@@ -676,7 +676,7 @@
                     دخول
                 </button>
             </form>
-            <p id="authErrorMsg" class="text-[10px] text-center text-rose-500 hidden font-medium"></p>
+            <p id="authErrorMsg" class="text-[10px] text-center text-[#9f1239] hidden font-medium"></p>
         </div>
     </div>
 
@@ -700,14 +700,14 @@
         try { messaging = firebase.messaging(); } catch (e) {}
 
         const ICONS = {
-            heartFill: '<svg class="w-3.5 h-3.5 fill-rose-500 inline-block" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
-            heartMed: '<svg class="w-4 h-4 fill-rose-500 inline-block" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
-            heartSmall: '<svg class="w-2.5 h-2.5 fill-rose-500 inline-block" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+            heartFill: '<svg class="w-3.5 h-3.5 fill-[#9f1239] inline-block" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+            heartMed: '<svg class="w-4 h-4 fill-[#9f1239] inline-block" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+            heartSmall: '<svg class="w-2.5 h-2.5 fill-[#9f1239] inline-block" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
             soundOn: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>',
-            soundOff: '<svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>',
+            soundOff: '<svg class="w-4 h-4 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>',
             share: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
             check: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
-            incognitoIcon: '<svg class="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/><path d="M10 16.5h4"/></svg>'
+            incognitoIcon: '<svg class="w-4 h-4 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/><path d="M10 16.5h4"/></svg>'
         };
 
         const RING_CIRCUMFERENCE = 2 * Math.PI * 45;
@@ -771,12 +771,12 @@
 
             if (unreadPulsesCount > 0) {
                 bellBadge.classList.remove('hidden');
-                bellBtn.classList.add('text-rose-500', 'border-rose-200', 'bg-rose-50/70');
-                bellBtn.classList.remove('text-slate-600', 'bg-white/95');
+                bellBtn.classList.add('text-[#9f1239]', 'border-[#b91c3c]', 'bg-[#efe7dc]');
+                bellBtn.classList.remove('text-slate-600', 'bg-[#f5efe6]');
             } else {
                 bellBadge.classList.add('hidden');
-                bellBtn.classList.remove('text-rose-500', 'border-rose-200', 'bg-rose-50/70');
-                bellBtn.classList.add('text-slate-600', 'bg-white/95');
+                bellBtn.classList.remove('text-[#9f1239]', 'border-[#b91c3c]', 'bg-[#efe7dc]');
+                bellBtn.classList.add('text-slate-600', 'bg-[#f5efe6]');
             }
         }
 
@@ -877,8 +877,8 @@
 
             if (friends.length === 0) {
                 list.innerHTML = `
-                    <div class="rounded-2xl border border-dashed border-rose-200/80 bg-[#fdf9f5] py-7 px-4 text-center">
-                        <p class="text-xs text-slate-400 font-medium">لا يوجد أصدقاء</p>
+                    <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#efe7dc] py-7 px-4 text-center">
+                        <p class="text-xs text-stone-500 font-medium">لا يوجد أصدقاء</p>
                     </div>
                 `;
                 return;
@@ -891,13 +891,13 @@
 
                 const row = document.createElement('div');
                 row.className = `flex items-center justify-between gap-2.5 rounded-2xl p-3 border transition cursor-pointer active:scale-[0.99] ${
-                    isDefault ? 'bg-rose-50/70 border-rose-300' : 'bg-white border-rose-100 hover:border-rose-200'
+                    isDefault ? 'bg-[#efe7dc] border-[#9f1239]' : 'bg-[#efe7dc] border-[#dfd3c3] hover:border-[#b91c3c]'
                 }`;
                 row.onclick = () => setDefaultRecipient(handle);
                 row.innerHTML = `
                     <div class="flex items-center gap-1.5 shrink-0">
                         <button type="button" onclick="removeFriendFromManage(event, '${handle}')" title="حذف"
-                                class="grid size-7 place-items-center rounded-full bg-slate-100 hover:bg-rose-500 text-slate-500 hover:text-white transition active:scale-90">
+                                class="grid size-7 place-items-center rounded-full bg-[#f5efe6] hover:bg-[#9f1239] text-slate-600 hover:text-white border border-[#dfd3c3] transition active:scale-90">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                             </svg>
@@ -908,14 +908,14 @@
                         <div class="text-right min-w-0">
                             <div class="flex items-center justify-end gap-1.5">
                                 <span class="font-mono text-xs font-black text-slate-900 uppercase truncate">${handle}</span>
-                                ${isDefault ? `<span class="size-2 rounded-full bg-rose-500"></span>` : ''}
+                                ${isDefault ? `<span class="size-2 rounded-full bg-[#9f1239]"></span>` : ''}
                             </div>
-                            <span class="inline-flex items-center gap-0.5 text-[10px] font-black text-rose-600 tabular-nums mt-0.5">
+                            <span class="inline-flex items-center gap-0.5 text-[10px] font-black text-[#9f1239] tabular-nums mt-0.5">
                                 ${ICONS.heartSmall} <span>${streakVal}</span>
                             </span>
                         </div>
                         <div class="story-ring shrink-0">
-                            <div class="size-9 rounded-full bg-white flex items-center justify-center font-mono text-xs font-black text-slate-900">
+                            <div class="size-9 rounded-full bg-[#f5efe6] flex items-center justify-center font-mono text-xs font-black text-slate-900">
                                 ${handle.charAt(0)}
                             </div>
                         </div>
@@ -1012,7 +1012,7 @@
 
             const ordered = getOrderedFriendsList();
             if (ordered.length === 0) {
-                container.innerHTML = `<p class="text-[11px] text-slate-400 py-2 w-full text-center">أضف رمز مستلم أدناه</p>`;
+                container.innerHTML = `<p class="text-[11px] text-stone-500 py-2 w-full text-center">أضف رمز مستلم أدناه</p>`;
                 return;
             }
 
@@ -1027,16 +1027,16 @@
                 btn.className = "flex flex-col items-center gap-1 shrink-0 transition active:scale-90 group";
                 btn.innerHTML = `
                     <div class="relative">
-                        <div class="story-ring ${isSelected ? 'story-ring-selected' : 'opacity-75'}">
-                            <div class="size-12 rounded-full ${isSelected ? 'bg-rose-500 text-white' : 'bg-white text-slate-900'} flex items-center justify-center font-mono text-base font-black transition">
+                        <div class="story-ring ${isSelected ? 'story-ring-selected' : 'opacity-80'}">
+                            <div class="size-12 rounded-full ${isSelected ? 'bg-[#9f1239] text-white' : 'bg-[#f5efe6] text-slate-900'} flex items-center justify-center font-mono text-base font-black transition">
                                 ${handle.charAt(0)}
                             </div>
                         </div>
-                        <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white border border-rose-200 text-rose-600 text-[9px] font-black px-1.5 py-0.2 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap tabular-nums">
+                        <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] text-[9px] font-black px-1.5 py-0.2 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap tabular-nums">
                             ${ICONS.heartSmall} <span>${streakVal}</span>
                         </span>
                     </div>
-                    <span class="font-mono text-[10px] ${isSelected ? 'font-black text-rose-600' : 'font-bold text-slate-600'} uppercase max-w-[60px] truncate mt-0.5">${handle}</span>
+                    <span class="font-mono text-[10px] ${isSelected ? 'font-black text-[#9f1239]' : 'font-bold text-slate-700'} uppercase max-w-[60px] truncate mt-0.5">${handle}</span>
                 `;
                 container.appendChild(btn);
             });
@@ -1085,7 +1085,7 @@
                     heartPath.setAttribute('stroke-width', '1.35');
                 }
             } else {
-                btn.className = "grid size-8 place-items-center rounded-full bg-[#fdf9f5] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90 shrink-0";
+                btn.className = "grid size-8 place-items-center rounded-full bg-[#efe7dc] text-slate-600 border border-[#dfd3c3] hover:border-[#b91c3c] transition-all active:scale-90 shrink-0";
                 if (heartPath) {
                     heartPath.setAttribute('stroke', 'none');
                     heartPath.setAttribute('stroke-width', '0');
@@ -1114,20 +1114,20 @@
             if (navigator.vibrate) navigator.vibrate(12);
         }
 
-        // ================= UNIFIED CENTERED TOAST NOTIFICATION =================
+        // ================= UNIFIED CENTERED TOAST NOTIFICATION (BEIGE THEME) =================
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             if (!container) return;
 
             const isError = type === 'error';
             const toast = document.createElement('div');
-            toast.className = `toast-enter w-full flex items-center justify-between gap-2.5 px-4 py-3 rounded-2xl bg-white/95 backdrop-blur-md shadow-xl shadow-rose-200/50 border ${
-                isError ? 'border-rose-300' : 'border-rose-100'
+            toast.className = `toast-enter w-full flex items-center justify-between gap-2.5 px-4 py-3 rounded-2xl bg-[#f5efe6]/95 backdrop-blur-md shadow-xl shadow-stone-900/10 border ${
+                isError ? 'border-[#9f1239]' : 'border-[#dfd3c3]'
             } text-xs font-bold text-slate-800 mb-2`;
 
             const badgeHTML = isError
-                ? `<span class="size-6 rounded-full bg-rose-500 text-white font-black flex items-center justify-center shrink-0 shadow-2xs">!</span>`
-                : `<span class="size-6 rounded-full bg-gradient-to-tr from-rose-500 to-pink-400 text-white flex items-center justify-center shrink-0 shadow-2xs">${ICONS.check}</span>`;
+                ? `<span class="size-6 rounded-full bg-[#9f1239] text-white font-black flex items-center justify-center shrink-0 shadow-2xs">!</span>`
+                : `<span class="size-6 rounded-full bg-gradient-to-tr from-[#881337] to-[#be123c] text-white flex items-center justify-center shrink-0 shadow-2xs">${ICONS.check}</span>`;
 
             toast.innerHTML = `
                 ${badgeHTML}
@@ -1306,8 +1306,8 @@
                 profile: document.getElementById('navProfileBtn')
             };
 
-            const activeBtnClass = "relative grid size-8 sm:size-9 place-items-center rounded-full bg-rose-500 text-white shadow-sm shadow-rose-200 transition-all active:scale-90";
-            const inactiveBtnClass = "relative grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 text-slate-600 hover:text-rose-500 border border-rose-100 shadow-2xs transition-all active:scale-90";
+            const activeBtnClass = "relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#9f1239] text-white shadow-sm shadow-rose-900/20 transition-all active:scale-90";
+            const inactiveBtnClass = "relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90";
 
             Object.keys(views).forEach(key => {
                 if (key === viewName) {
@@ -1412,7 +1412,7 @@
                     document.getElementById('searchFriendInput').value = code;
                     performFriendLookup(code, false);
                 };
-                btn.className = "font-mono text-xs font-bold text-slate-700 bg-[#fdf9f5] hover:bg-rose-100 border border-rose-100 px-3 py-1 rounded-full transition active:scale-95";
+                btn.className = "font-mono text-xs font-bold text-slate-700 bg-[#efe7dc] hover:bg-[#e5dacb] border border-[#dfd3c3] px-3 py-1 rounded-full transition active:scale-95";
                 btn.textContent = code;
                 list.appendChild(btn);
             });
@@ -1525,7 +1525,7 @@
         }
 
         function triggerFloatingHearts(count = 16) {
-            const colors = ['#f43f5e', '#fb7185', '#e11d48', '#ec4899'];
+            const colors = ['#9f1239', '#be123c', '#881337', '#b91c3c'];
             for (let i = 0; i < count; i++) {
                 setTimeout(() => {
                     const heart = document.createElement('span');
@@ -1825,7 +1825,7 @@
             
             btn.innerHTML = `${ICONS.share} <span>مشاركة الرابط</span>`;
             btn.onclick = shareMyLink;
-            btn.className = "w-full bg-gradient-to-l from-rose-600 to-pink-500 hover:brightness-105 text-white font-bold py-3.5 rounded-2xl text-xs shadow-lg shadow-rose-500/20 transition active:scale-[0.98] inline-flex items-center justify-center gap-1.5";
+            btn.className = "w-full bg-gradient-to-l from-[#881337] to-[#be123c] hover:brightness-105 text-white font-bold py-3.5 rounded-2xl text-xs shadow-lg shadow-rose-900/20 transition active:scale-[0.98] inline-flex items-center justify-center gap-1.5";
         }
 
         function getMyShareableLink() { return window.location.origin + window.location.pathname + '?u=' + userHandle; }
@@ -1852,15 +1852,15 @@
             const sentBtn = document.getElementById('tabSentBtn');
 
             if (tab === 'incoming') {
-                incomingBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-white text-slate-900 shadow-2xs inline-flex items-center justify-center gap-1.5";
-                sentBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition text-slate-500 hover:text-slate-800 inline-flex items-center justify-center gap-1.5";
+                incomingBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
+                sentBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5";
                 if (unreadPulsesCount > 0) {
                     unreadPulsesCount = 0;
                     updateBellBadgeState();
                 }
             } else {
-                sentBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-white text-slate-900 shadow-2xs inline-flex items-center justify-center gap-1.5";
-                incomingBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition text-slate-500 hover:text-slate-800 inline-flex items-center justify-center gap-1.5";
+                sentBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
+                incomingBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5";
             }
             renderPulsesList();
         }
@@ -2011,8 +2011,8 @@
 
             if (currentData.length === 0) {
                 list.innerHTML = `
-                    <div class="rounded-2xl border border-dashed border-rose-200/80 bg-[#fdf9f5] py-7 px-4 text-center">
-                        <p id="authNotice" class="text-xs text-slate-400 font-medium">لا توجد نبضات</p>
+                    <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#efe7dc] py-7 px-4 text-center">
+                        <p id="authNotice" class="text-xs text-stone-500 font-medium">لا توجد نبضات</p>
                     </div>
                 `;
                 return;
@@ -2026,20 +2026,20 @@
 
                 const currentStreakVal = activeStreaksCache[targetOrSender] || 0;
                 const streakBadge = currentStreakVal > 0 && !isAnonSender
-                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] bg-rose-50 border border-rose-100 text-rose-600 font-black px-2 py-0.5 rounded-full tabular-nums">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
+                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] font-black px-2 py-0.5 rounded-full tabular-nums">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
                     : '';
 
                 const directionLabel = isIncoming ? 'من' : 'إلى';
                 const avatarHTML = isAnonSender
-                    ? `<div class="size-10 rounded-full bg-slate-100 border border-slate-200/80 flex items-center justify-center shrink-0">${ICONS.incognitoIcon}</div>`
+                    ? `<div class="size-10 rounded-full bg-[#f5efe6] border border-[#dfd3c3] flex items-center justify-center shrink-0">${ICONS.incognitoIcon}</div>`
                     : `<div class="story-ring shrink-0">
-                           <div class="size-9 rounded-full bg-white flex items-center justify-center font-mono text-xs font-black text-slate-900">
+                           <div class="size-9 rounded-full bg-[#f5efe6] flex items-center justify-center font-mono text-xs font-black text-slate-900">
                                ${targetOrSender.charAt(0)}
                            </div>
                        </div>`;
 
                 const noteBlockHTML = item.note
-                    ? `<div class="mt-2 rounded-xl bg-[#fdf9f5] border border-rose-100/80 px-3 py-2 text-xs text-slate-700 leading-relaxed break-words">
+                    ? `<div class="mt-2 rounded-xl bg-[#f5efe6] border border-[#dfd3c3] px-3 py-2 text-xs text-slate-700 leading-relaxed break-words">
                            ${item.note}
                        </div>`
                     : '';
@@ -2061,7 +2061,7 @@
                 };
                 pulseCard.innerHTML = `
                     <div class="flex items-center justify-between gap-2.5">
-                        <span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-black text-rose-600 bg-rose-50 border border-rose-100 shrink-0 tabular-nums">
+                        <span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-black text-[#9f1239] bg-[#f5efe6] border border-[#dfd3c3] shrink-0 tabular-nums">
                             ${ICONS.heartSmall}
                             <span>${item.score}%</span>
                         </span>
@@ -2071,9 +2071,9 @@
                                 <div class="flex items-center justify-end gap-1.5">
                                     ${streakBadge}
                                     <span class="font-mono text-xs font-black text-slate-900 uppercase truncate">${isIncoming ? item.sender : item.target}</span>
-                                    <span class="text-[10px] font-bold text-slate-400">${directionLabel}</span>
+                                    <span class="text-[10px] font-bold text-stone-500">${directionLabel}</span>
                                 </div>
-                                <p class="text-[9px] text-slate-400 font-medium mt-0.5 tabular-nums tracking-tight">${exactDateTime}</p>
+                                <p class="text-[9px] text-stone-500 font-medium mt-0.5 tabular-nums tracking-tight">${exactDateTime}</p>
                             </div>
                             ${avatarHTML}
                         </div>
