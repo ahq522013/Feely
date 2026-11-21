@@ -101,8 +101,8 @@
 
         /* Uniform Avatar Circle for Pulse Cards (same size & border thickness everywhere) */
         .pulse-avatar-circle {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             border-radius: 9999px;
             background: #f5efe6;
             border: 1.5px solid #dfd3c3;
@@ -115,8 +115,8 @@
 
         /* Uniform Action Circle Button (reply, delete, menu trigger) */
         .pulse-action-circle {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             border-radius: 9999px;
             background: #f5efe6;
             border: 1.5px solid #dfd3c3;
@@ -124,6 +124,23 @@
             place-items: center;
             flex-shrink: 0;
             transition: all 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Straddling Action Strip (half on current pulse card, half over the card below) */
+        .pulse-straddle-bar {
+            position: absolute;
+            bottom: 0;
+            right: 12px;
+            transform: translateY(50%);
+            z-index: 30;
+            background: #fbf8f5;
+            border: 1.5px solid #dfd3c3;
+            border-radius: 9999px;
+            padding: 2px 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 6px 14px -6px rgba(159, 18, 57, 0.16);
         }
 
         /* Heart Score Tooltip */
@@ -516,7 +533,7 @@
                     </button>
                 </div>
 
-                <div id="pulsesList" class="smooth-scroll-list space-y-2 max-h-60 overflow-y-auto px-0.5 py-0.5">
+                <div id="pulsesList" class="smooth-scroll-list space-y-3 max-h-60 overflow-y-auto px-0.5 pt-0.5 pb-4">
                     <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#fbf8f5] py-6 px-4 text-center">
                         <p id="authNotice" class="text-[10px] text-stone-500 font-medium">لا توجد نبضات</p>
                     </div>
@@ -887,7 +904,7 @@
             replyDoneIcon: '<svg class="w-3 h-3 text-[#9f1239] inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
             pin: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>',
             trashMini: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
-            dotsMenu: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>',
+            dotsMenu: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>',
             defaultUserSvg: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
             defaultHeartSvg: '<svg class="w-8 h-8 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'
         };
@@ -941,7 +958,6 @@
         }
 
         function setQuickReplyIconState(cardKey, mode) {
-            // mode: 'sending' | 'done' | null
             if (quickReplyIconStates[cardKey] && quickReplyIconStates[cardKey]._timer) {
                 clearTimeout(quickReplyIconStates[cardKey]._timer);
             }
@@ -1133,7 +1149,7 @@
         }
 
         // ================= ACCURATE HEART AREA FILL WITH TOOLTIP =================
-        function buildAccurateHeartFill(score, uid, sizeClass = 'w-4 h-4') {
+        function buildAccurateHeartFill(score, uid, sizeClass = 'w-6 h-6') {
             const clamped = Math.max(0, Math.min(100, Number(score) || 0));
             const heartPath = "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z";
             const heartBottom = 21.35;
@@ -1146,7 +1162,7 @@
             return `
                 <div onclick="showHeartScoreTip(this, event)"
                      title="${clamped}%"
-                     class="heart-tooltip-host shrink-0 cursor-pointer select-none p-1">
+                     class="heart-tooltip-host shrink-0 cursor-pointer select-none p-0.5">
                     <span class="heart-score-tip tabular-nums">${clamped}%</span>
                     <svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
                         <defs>
@@ -1455,7 +1471,7 @@
             updateSheetSenderBadge();
 
             if (scoreHeartHost) {
-                scoreHeartHost.innerHTML = buildAccurateHeartFill(score, `sheet_${Date.now()}`, 'w-5 h-5');
+                scoreHeartHost.innerHTML = buildAccurateHeartFill(score, `sheet_${Date.now()}`, 'w-6 h-6');
             }
             if (noteInput) {
                 noteInput.value = '';
@@ -2654,7 +2670,7 @@
             }
         }
 
-        // ================= RTL SOCIAL PULSES LIST WITH BOTTOM-RIGHT MENU & REPLY ICON =================
+        // ================= RTL SOCIAL PULSES LIST WITH STRADDLING MENU & LARGE HEART =================
         function renderPulsesList() {
             const list = document.getElementById('pulsesList');
             list.innerHTML = '';
@@ -2685,7 +2701,7 @@
 
                 const currentStreakVal = activeStreaksCache[targetOrSender] || 0;
                 const streakBadge = currentStreakVal > 0 && !isAnonSender
-                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] font-black px-1.5 py-0.5 rounded-full tabular-nums">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
+                    ? `<span class="inline-flex items-center gap-0.5 text-[9.5px] bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] font-black px-1.5 py-0.5 rounded-full tabular-nums">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
                     : '';
 
                 const directionLabel = isIncoming ? 'من' : 'إلى';
@@ -2696,7 +2712,7 @@
 
                 const avatarHTML = isAnonSender
                     ? `<div class="pulse-avatar-circle">${ICONS.incognitoIcon}</div>`
-                    : `<div class="pulse-avatar-circle font-mono text-[10.5px] font-black text-stone-700">
+                    : `<div class="pulse-avatar-circle font-mono text-[10px] font-black text-stone-700">
                            ${avatarUrl ? `<img src="${avatarUrl}" alt="${targetOrSender}" class="w-full h-full object-cover">` : targetOrSender.charAt(0)}
                        </div>`;
 
@@ -2719,8 +2735,8 @@
                     </button>
                 `;
 
-                const actionBarHTML = isMenuOpen
-                    ? `<div onclick="event.stopPropagation()" class="status-pill-fade flex items-center gap-1 bg-[#f5efe6] border border-[#dfd3c3] rounded-full px-1.5 py-0.5 shadow-2xs">
+                const straddleBarHTML = isMenuOpen
+                    ? `<div onclick="event.stopPropagation()" class="pulse-straddle-bar status-pill-fade">
                            ${replyBtnInBar}
                            ${deleteBtnInBar}
                        </div>`
@@ -2730,17 +2746,17 @@
                 let replyStatusIconHTML = '';
                 if (replyStateObj) {
                     const iconSvg = replyStateObj.mode === 'sending' ? ICONS.replyRefreshIcon : ICONS.replyDoneIcon;
-                    replyStatusIconHTML = `<div class="status-pill-fade flex items-center justify-center pt-0.5">${iconSvg}</div>`;
+                    replyStatusIconHTML = `<div class="status-pill-fade flex items-center justify-center leading-none">${iconSvg}</div>`;
                 }
 
                 const noteBlockHTML = item.note
-                    ? `<div class="mt-1.5 rounded-xl bg-[#ffffff] border border-[#e7ddd0] px-2.5 py-1 text-[10px] text-stone-600 leading-snug break-words">
+                    ? `<div class="mt-1 rounded-xl bg-[#ffffff] border border-[#e7ddd0] px-2 py-0.5 text-[10px] text-stone-600 leading-snug break-words">
                            ${item.note}
                        </div>`
                     : '';
 
                 const pulseCard = document.createElement('div');
-                pulseCard.className = `pulse-item-card p-3 text-right cursor-pointer active:scale-[0.99] ${isFresh ? 'pulse-fresh-arrive' : ''}`;
+                pulseCard.className = `pulse-item-card relative px-2.5 py-2 text-right cursor-pointer active:scale-[0.99] ${isFresh ? 'pulse-fresh-arrive' : ''}`;
                 pulseCard.onclick = () => {
                     if (openActionMenuKey) {
                         openActionMenuKey = null;
@@ -2769,17 +2785,16 @@
                                     <span class="font-mono text-[10px] font-black text-stone-700 uppercase truncate">${isIncoming ? item.sender : item.target}</span>
                                     ${streakBadge}
                                 </div>
-                                <p class="text-[10px] text-stone-500 font-medium mt-0.5 tabular-nums tracking-tight">${exactDateTime}</p>
+                                <p class="text-[9.5px] text-stone-500 font-medium tabular-nums tracking-tight">${exactDateTime}</p>
                             </div>
                         </div>
 
                         <div class="shrink-0">
-                            ${buildAccurateHeartFill(item.score, cardKey)}
+                            ${buildAccurateHeartFill(item.score, cardKey, 'w-6 h-6')}
                         </div>
                     </div>
                     ${noteBlockHTML}
-                    <div class="mt-2 flex items-start justify-end gap-1.5">
-                        ${actionBarHTML}
+                    <div class="mt-1 flex items-center justify-between gap-2">
                         <div class="flex flex-col items-center shrink-0">
                             <button type="button"
                                     onclick="togglePulseActionMenu(event, '${cardKey}')"
@@ -2789,7 +2804,9 @@
                             </button>
                             ${replyStatusIconHTML}
                         </div>
+                        <div class="flex-1"></div>
                     </div>
+                    ${straddleBarHTML}
                 `;
                 list.appendChild(pulseCard);
             });
