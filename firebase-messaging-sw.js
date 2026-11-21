@@ -15,11 +15,32 @@ const messaging = firebase.messaging();
 
 // استقبال الإشعار عندما يكون التطبيق في الخلفية أو مغلقاً
 messaging.onBackgroundMessage((payload) => {
-  const notificationTitle = payload.notification.title || 'نبضة حب جديدة 💖';
+  const notif = (payload && payload.notification) || {};
+  const dataObj = (payload && payload.data) || {};
+
+  const notificationTitle = notif.title || dataObj.title || 'نبضة حب جديدة 💖';
   const notificationOptions = {
-    body: payload.notification.body || 'وصلتك نبضة جديدة في Feely!',
-    icon: 'https://cdn-icons-png.flaticon.com/512/2589/2589175.png'
+    body: notif.body || dataObj.body || 'وصلتك نبضة جديدة في Feely!',
+    icon: notif.icon || 'https://cdn-icons-png.flaticon.com/512/2589/2589175.png',
+    data: { url: './?pulse=incoming' }
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  return self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = (event.notification.data && event.notification.data.url) || './?pulse=incoming';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if ('focus' in client) {
+          if ('navigate' in client) client.navigate(targetUrl);
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) return clients.openWindow(targetUrl);
+    })
+  );
 });
