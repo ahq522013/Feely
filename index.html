@@ -148,6 +148,15 @@
             animation: toastCenterDrop 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
+        /* Small Mini Pill next to Incognito Button */
+        @keyframes miniPillPop {
+            0% { opacity: 0; transform: translateX(6px) scale(0.94); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        .mini-pill-pop {
+            animation: miniPillPop 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -328,17 +337,24 @@
 
             <!-- بطاقة إرسال النبضة -->
             <section class="glass-card p-5 sm:p-6 space-y-4 relative">
-                <!-- أيقونة التصفح الخفي (مجهول) صغيرة بدون كتابة -->
-                <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="التصفح الخفي"
-                        class="absolute top-4 right-4 z-10 grid size-8 place-items-center rounded-full bg-[#fdf9f5] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 11h18"/>
-                        <path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/>
-                        <circle cx="7.5" cy="16.5" r="2.5"/>
-                        <circle cx="16.5" cy="16.5" r="2.5"/>
-                        <path d="M10 16.5h4"/>
-                    </svg>
-                </button>
+                <!-- أيقونة التصفح الخفي وبوكس تنبيه صغير متناسق بجانبها -->
+                <div class="absolute top-4 right-4 z-10 flex items-center gap-1.5">
+                    <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="التصفح الخفي"
+                            class="grid size-8 place-items-center rounded-full bg-[#fdf9f5] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90 shrink-0">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 11h18"/>
+                            <path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/>
+                            <circle cx="7.5" cy="16.5" r="2.5"/>
+                            <circle cx="16.5" cy="16.5" r="2.5"/>
+                            <path d="M10 16.5h4"/>
+                        </svg>
+                    </button>
+
+                    <!-- بوكس صغير جداً بجانب الزر متناسق مع الثيم -->
+                    <div id="anonMiniPill" class="hidden mini-pill-pop px-2.5 py-1 rounded-full bg-[#fdf9f5] border border-rose-200/80 shadow-2xs">
+                        <span id="anonMiniPillText" class="text-[10px] font-bold text-rose-600 leading-none">تفعيل وضع التخفي</span>
+                    </div>
+                </div>
 
                 <div class="text-center space-y-2.5 pt-2 relative">
                     <!-- زر القلب الدائري مع إطار الشحن الدائري حوله -->
@@ -354,38 +370,38 @@
                             <svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 100 100">
                                 <defs>
                                     <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop id="ringStop1" offset="0%" stop-color="#fb7185"/>
-                                        <stop id="ringStop2" offset="50%" stop-color="#f43f5e"/>
-                                        <stop id="ringStop3" offset="100%" stop-color="#e11d48"/>
+                                        <stop offset="0%" stop-color="#fb7185"/>
+                                        <stop offset="50%" stop-color="#f43f5e"/>
+                                        <stop offset="100%" stop-color="#e11d48"/>
                                     </linearGradient>
                                 </defs>
-                                <circle id="ringTrackCircle" cx="50" cy="50" r="45" fill="none" stroke="#ffe4e6" stroke-width="5.5"/>
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#ffe4e6" stroke-width="5.5"/>
                                 <circle id="circularChargeRing" cx="50" cy="50" r="45" fill="none"
                                         stroke="url(#ringGrad)" stroke-width="5.5" stroke-linecap="round"
                                         stroke-dasharray="282.74" stroke-dashoffset="282.74"/>
                             </svg>
 
-                            <!-- القلب مع تدرج لوني متبدل في وضع التخفي وشارة كاب ونظارة التخفي -->
+                            <!-- القلب بلونه الأصلي المتدرج مع كاب ونظارة على مقاس القلب -->
                             <div id="dynamicHeartWrapper" style="transform: scale(0.68);" class="relative z-10 inline-flex items-center justify-center transition-transform duration-75 pointer-events-none">
                                 <svg class="w-12 h-12 drop-shadow-sm" viewBox="0 0 24 24">
                                     <defs>
                                         <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop id="heartStop1" offset="0%" stop-color="#fb7185"/>
-                                            <stop id="heartStop2" offset="100%" stop-color="#e11d48"/>
+                                            <stop offset="0%" stop-color="#fb7185"/>
+                                            <stop offset="100%" stop-color="#e11d48"/>
                                         </linearGradient>
                                     </defs>
                                     <path fill="url(#heartGrad)" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                                 </svg>
 
-                                <!-- كاب ونظارة التخفي فوق القلب عند تفعيل وضع التخفي -->
-                                <svg id="heartDisguiseOverlay" class="hidden absolute -top-2.5 inset-x-0 mx-auto w-8 h-6 text-slate-900 drop-shadow-xs" viewBox="0 0 28 20" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <!-- كاب التخفي -->
-                                    <path d="M5 7.5C5.5 4.2 8.8 2.5 14 2.5C19.2 2.5 22.5 4.2 23 7.5" stroke="#1e293b" stroke-width="2.2" fill="#be185d"/>
-                                    <path d="M3 8H25" stroke="#1e293b" stroke-width="2.2"/>
-                                    <!-- نظارة التخفي -->
-                                    <circle cx="9.5" cy="12.5" r="3" fill="#0f172a" stroke="#ffffff" stroke-width="1.3"/>
-                                    <circle cx="18.5" cy="12.5" r="3" fill="#0f172a" stroke="#ffffff" stroke-width="1.3"/>
-                                    <path d="M12.5 12.5H15.5" stroke="#0f172a" stroke-width="1.6"/>
+                                <!-- كاب ونظارة التخفي بمقاس القلب مباشرة -->
+                                <svg id="heartDisguiseOverlay" class="hidden absolute inset-0 w-12 h-12 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <!-- كاب التخفي على أعلى القلب -->
+                                    <path d="M5.5 7.2C6 4.6 8.6 3.2 12 3.2C15.4 3.2 18 4.6 18.5 7.2" fill="#be123c" stroke="#1e293b" stroke-width="1.5"/>
+                                    <path d="M4 7.5H20" stroke="#1e293b" stroke-width="1.6"/>
+                                    <!-- نظارة التخفي على منتصف القلب -->
+                                    <rect x="6.2" y="10.2" width="4.5" height="3" rx="1" fill="#0f172a" stroke="#ffffff" stroke-width="0.9"/>
+                                    <rect x="13.3" y="10.2" width="4.5" height="3" rx="1" fill="#0f172a" stroke="#ffffff" stroke-width="0.9"/>
+                                    <line x1="10.7" y1="11.6" x2="13.3" y2="11.6" stroke="#0f172a" stroke-width="1.2"/>
                                 </svg>
                             </div>
                         </button>
@@ -393,7 +409,7 @@
                         <!-- عداد شفاف حديث يظهر فقط عند الضغط واستمراره ويختفي عند التوقف -->
                         <div id="transparentChargeCounter"
                              class="opacity-0 scale-90 pointer-events-none transition-all duration-200 mt-2 px-4 py-1 rounded-full bg-white/55 backdrop-blur-md border border-rose-200/60 shadow-xs inline-flex items-center gap-1.5">
-                            <span id="counterDot" class="size-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                            <span class="size-1.5 rounded-full bg-rose-500 animate-pulse"></span>
                             <span id="rangeDisplay" class="text-sm font-black text-rose-600/90 tabular-nums tracking-tight">0%</span>
                         </div>
                     </div>
@@ -644,6 +660,7 @@
         let chargeStepTimer = null;
         let isChargingHeart = false;
         let isAnonymousMode = false;
+        let anonMiniPillTimer = null;
 
         let currentUser = null;
         let userHandle = localStorage.getItem('feely_user_handle') || null;
@@ -786,62 +803,38 @@
             if (navigator.vibrate) navigator.vibrate(10);
         }
 
-        // ================= INCOGNITO / ANONYMOUS TOGGLE + HEART DISGUISE & COLOR SHIFT =================
+        // ================= INCOGNITO TOGGLE + MINI PILL AT BUTTON =================
         function applyDisguiseHeartAppearance() {
             const btn = document.getElementById('anonymousToggleBtn');
             const disguiseOverlay = document.getElementById('heartDisguiseOverlay');
-            const heartStop1 = document.getElementById('heartStop1');
-            const heartStop2 = document.getElementById('heartStop2');
-            const ringStop1 = document.getElementById('ringStop1');
-            const ringStop2 = document.getElementById('ringStop2');
-            const ringStop3 = document.getElementById('ringStop3');
-            const ringTrack = document.getElementById('ringTrackCircle');
-            const rangeDisplay = document.getElementById('rangeDisplay');
-            const counterDot = document.getElementById('counterDot');
 
             if (isAnonymousMode) {
-                btn.className = "absolute top-4 right-4 z-10 grid size-8 place-items-center rounded-full bg-slate-900 text-white border border-slate-800 shadow-xs transition-all active:scale-90";
+                btn.className = "grid size-8 place-items-center rounded-full bg-slate-900 text-white border border-slate-800 shadow-xs transition-all active:scale-90 shrink-0";
                 if (disguiseOverlay) disguiseOverlay.classList.remove('hidden');
-
-                // درجة لونية مختلفة قليلاً لوضع التخفي (وردي بنفسجي/توتي غني)
-                if (heartStop1) heartStop1.setAttribute('stop-color', '#f472b6');
-                if (heartStop2) heartStop2.setAttribute('stop-color', '#be185d');
-                if (ringStop1) ringStop1.setAttribute('stop-color', '#f472b6');
-                if (ringStop2) ringStop2.setAttribute('stop-color', '#db2777');
-                if (ringStop3) ringStop3.setAttribute('stop-color', '#9d174d');
-                if (ringTrack) ringTrack.setAttribute('stroke', '#fce7f3');
-
-                if (rangeDisplay) {
-                    rangeDisplay.className = "text-sm font-black text-pink-700/90 tabular-nums tracking-tight";
-                }
-                if (counterDot) {
-                    counterDot.className = "size-1.5 rounded-full bg-pink-600 animate-pulse";
-                }
             } else {
-                btn.className = "absolute top-4 right-4 z-10 grid size-8 place-items-center rounded-full bg-[#fdf9f5] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90";
+                btn.className = "grid size-8 place-items-center rounded-full bg-[#fdf9f5] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90 shrink-0";
                 if (disguiseOverlay) disguiseOverlay.classList.add('hidden');
-
-                // الدرجة اللونية الأساسية للقلب والحلقة
-                if (heartStop1) heartStop1.setAttribute('stop-color', '#fb7185');
-                if (heartStop2) heartStop2.setAttribute('stop-color', '#e11d48');
-                if (ringStop1) ringStop1.setAttribute('stop-color', '#fb7185');
-                if (ringStop2) ringStop2.setAttribute('stop-color', '#f43f5e');
-                if (ringStop3) ringStop3.setAttribute('stop-color', '#e11d48');
-                if (ringTrack) ringTrack.setAttribute('stroke', '#ffe4e6');
-
-                if (rangeDisplay) {
-                    rangeDisplay.className = "text-sm font-black text-rose-600/90 tabular-nums tracking-tight";
-                }
-                if (counterDot) {
-                    counterDot.className = "size-1.5 rounded-full bg-rose-500 animate-pulse";
-                }
             }
+        }
+
+        function showAnonMiniPill(text) {
+            const pill = document.getElementById('anonMiniPill');
+            const pillText = document.getElementById('anonMiniPillText');
+            if (!pill || !pillText) return;
+
+            clearTimeout(anonMiniPillTimer);
+            pillText.textContent = text;
+            pill.classList.remove('hidden');
+
+            anonMiniPillTimer = setTimeout(() => {
+                pill.classList.add('hidden');
+            }, 1800);
         }
 
         function toggleAnonymousMode() {
             isAnonymousMode = !isAnonymousMode;
             applyDisguiseHeartAppearance();
-            showToast(isAnonymousMode ? "وضع التخفي" : "تم إلغاء التخفي");
+            showAnonMiniPill(isAnonymousMode ? "تفعيل وضع التخفي" : "إلغاء وضع التخفي");
             if (navigator.vibrate) navigator.vibrate(12);
         }
 
@@ -915,7 +908,7 @@
             currentLoveValue = clamped;
             document.getElementById('rangeDisplay').textContent = clamped + '%';
 
-            // تكبير القلب بشكل أكبر وأوضح مع زيادة النسبة من 0% إلى 100%
+            // تكبير القلب مع الكاب والنظارة معاً بسلاسة من 0% إلى 100%
             const wrapper = document.getElementById('dynamicHeartWrapper');
             if (wrapper) {
                 const scale = 0.68 + (clamped / 100) * 0.74;
@@ -1232,9 +1225,7 @@
         }
 
         function triggerFloatingHearts(count = 16) {
-            const colors = isAnonymousMode
-                ? ['#f472b6', '#ec4899', '#db2777', '#be185d']
-                : ['#f43f5e', '#fb7185', '#e11d48', '#ec4899'];
+            const colors = ['#f43f5e', '#fb7185', '#e11d48', '#ec4899'];
             for (let i = 0; i < count; i++) {
                 setTimeout(() => {
                     const heart = document.createElement('span');
