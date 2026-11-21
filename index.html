@@ -318,8 +318,8 @@
                 </span>
             </button>
 
-            <!-- زر نغمة النبض -->
-            <button id="soundToggleBtn" onclick="toggleSoundEffect()" title="الصوت" 
+            <!-- زر نغمة النبض للمستقبل -->
+            <button id="soundToggleBtn" onclick="toggleSoundEffect()" title="صوت النبض للمستقبل" 
                     class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] transition border border-[#dfd3c3] shadow-2xs active:scale-90">
                 <span id="soundIcon" class="flex items-center justify-center"></span>
             </button>
@@ -1068,12 +1068,7 @@
             if (unreadPulsesCount > 0) {
                 unreadPulsesCount = 0;
                 updateBellBadgeState();
-                switchMainView('home');
-                switchPulseTab('incoming');
-                const feedSection = document.getElementById('pulsesFeedSection');
-                if (feedSection) {
-                    feedSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
+                focusIncomingPulsesWithCue(true);
             } else {
                 showToast('لا توجد إشعارات جديدة');
             }
@@ -1360,7 +1355,7 @@
             });
         }
 
-        // ================= DIRECT QUICK REPLY ON INCOMING PULSE (SAME SCORE, NO MODAL) =================
+        // ================= DIRECT QUICK REPLY ON INCOMING PULSE (NO SOUND FOR SENDER) =================
         function quickReplyIncomingPulse(e, senderHandle, score, cardKey) {
             if (e) e.stopPropagation();
             const cleanTarget = (senderHandle || '').trim().toUpperCase();
@@ -1502,7 +1497,7 @@
             renderRecentSearches();
         });
 
-        // Resume queued pulse sound after first user gesture if browser blocked autoplay
+        // Resume queued incoming pulse sound after first user gesture if browser blocked autoplay
         ['pointerdown', 'keydown'].forEach(evtName => {
             window.addEventListener(evtName, () => {
                 if (pendingSoundOnFirstGesture && isSoundEnabled) {
@@ -1836,7 +1831,7 @@
             renderFriendsManagePage();
         }
 
-        // ================= INTERACTIVE EFFECTS =================
+        // ================= INTERACTIVE EFFECTS (RECEIVER-ONLY HEARTBEAT SOUND) =================
         function updateSoundUI() {
             const icon = document.getElementById('soundIcon');
             if (icon) icon.innerHTML = isSoundEnabled ? ICONS.soundOn : ICONS.soundOff;
@@ -1846,9 +1841,6 @@
             isSoundEnabled = !isSoundEnabled;
             localStorage.setItem('feely_sound_enabled', isSoundEnabled);
             updateSoundUI();
-            if (isSoundEnabled) {
-                playHeartbeatSound();
-            }
         }
 
         function playHeartbeatSound() {
@@ -2173,7 +2165,6 @@
                 initPushNotifications(userHandle);
                 renderFriendsManagePage();
                 triggerFloatingHearts(14);
-                playHeartbeatSound();
                 showToast(`تم تفعيل (${handle})`);
             }).catch(err => {
                 if (err.code === 'PERMISSION_DENIED') {
@@ -2275,7 +2266,6 @@
                     if (sentCount > 0) {
                         const heartsCount = Math.max(4, Math.round(Number(score) / 5));
                         triggerFloatingHearts(heartsCount);
-                        playHeartbeatSound();
                         if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
                     }
                     if (typeof options.onComplete === 'function') {
@@ -2373,7 +2363,7 @@
         function initPushNotifications(handle) {
             if ("Notification" in window && messaging && Notification.permission === 'granted' && 'serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/firebase-messaging-sw.js').then((registration) => {
-                    return messaging.getToken({ serviceWorkerRegistration: registration, vapidKey: 'BPkYkURSeV4Z0mzKfGfXjmC_eUWS25t6XjQDN9bsfS6gD2eebQiK-tIvWQSRIxEPSBHIyo26cz_50Xq0fvO8hEM' });
+                    return messaging.getToken({ serviceWorkerRegistration: registration, vapidKey: 'BD8T3W-78T3W-EXAMPLE-VAPID-KEY' });
                 }).then((currentToken) => {
                     if (currentToken) db.ref('fcmTokens/' + handle).set(currentToken);
                 }).catch(err => console.log('ملاحظة: يتطلب HTTPS والمفتاح الصحيح.', err));
