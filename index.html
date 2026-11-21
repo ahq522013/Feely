@@ -33,7 +33,7 @@
 
         /* Pure Beige Cards over White Background */
         .glass-card {
-            background: #fbf8f5;
+            background: #f5efe6;
             border-radius: 30px;
             box-shadow: 0 10px 26px -14px rgba(159, 18, 57, 0.12), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
             border: 1px solid #e7ddd0;
@@ -92,7 +92,7 @@
         }
 
         .story-ring-selected {
-            box-shadow: 0 0 0 2.5px #fbf8f5, 0 0 0 4.5px #9f1239;
+            box-shadow: 0 0 0 2.5px #f5efe6, 0 0 0 4.5px #9f1239;
             transform: scale(1.04);
         }
 
@@ -203,7 +203,7 @@
         <div id="authStatusContainer" class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
             <!-- أيقونة حفظ الحساب / خروج -->
             <button id="openAuthModalBtn" onclick="openAuthModal()" title="حفظ الحساب"
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#fbf8f5] hover:bg-[#efe7dc] text-slate-700 border border-[#dfd3c3] transition shadow-2xs active:scale-95">
+                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] hover:bg-[#efe7dc] text-slate-700 border border-[#dfd3c3] transition shadow-2xs active:scale-95">
                 <svg class="w-4 h-4 text-[#9f1239]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
                 </svg>
@@ -225,7 +225,7 @@
 
             <!-- زر صفحة أصدقاء النبض المستقلة -->
             <button type="button" id="navFriendsBtn" onclick="switchMainView('friends')" title="أصدقاء النبض"
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#fbf8f5] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
+                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
@@ -233,7 +233,7 @@
 
             <!-- زر عدسة البحث -->
             <button type="button" id="navSearchBtn" onclick="switchMainView('search')" title="بحث"
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#fbf8f5] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
+                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                 </svg>
@@ -241,28 +241,28 @@
 
             <!-- زر البروفايل الشخصي -->
             <button type="button" id="navProfileBtn" onclick="switchMainView('profile')" title="ملفي"
-                    class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#fbf8f5] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
+                    class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                 </svg>
-                <span id="profileAlertDot" class="hidden absolute right-1.5 top-1.5 size-2 rounded-full bg-[#9f1239] ring-2 ring-[#fbf8f5]"></span>
+                <span id="profileAlertDot" class="hidden absolute right-1.5 top-1.5 size-2 rounded-full bg-[#9f1239] ring-2 ring-[#f5efe6]"></span>
             </button>
 
             <!-- أيقونة الإشعارات -->
             <button id="notificationBellBtn" onclick="handleBellClick()" title="الإشعارات" 
-                    class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#fbf8f5] text-slate-600 hover:text-[#9f1239] transition border border-[#dfd3c3] shadow-2xs active:scale-90">
+                    class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] transition border border-[#dfd3c3] shadow-2xs active:scale-90">
                 <svg id="bellSvgIcon" class="w-4 h-4 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
                 </svg>
                 <span id="bellBadge" class="hidden absolute right-1.5 top-1.5 flex size-2.5">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full size-2.5 bg-[#9f1239] ring-2 ring-[#fbf8f5]"></span>
+                    <span class="relative inline-flex rounded-full size-2.5 bg-[#9f1239] ring-2 ring-[#f5efe6]"></span>
                 </span>
             </button>
 
             <!-- زر نغمة النبض -->
             <button id="soundToggleBtn" onclick="toggleSoundEffect()" title="الصوت" 
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#fbf8f5] text-slate-600 hover:text-[#9f1239] transition border border-[#dfd3c3] shadow-2xs active:scale-90">
+                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] transition border border-[#dfd3c3] shadow-2xs active:scale-90">
                 <span id="soundIcon" class="flex items-center justify-center"></span>
             </button>
         </div>
@@ -315,7 +315,7 @@
                 </div>
 
                 <div class="flex items-center justify-between gap-2 bg-[#efe7dc] rounded-2xl px-3.5 py-3 border border-[#dfd3c3]">
-                    <span class="inline-flex items-center gap-1.5 text-xs font-black text-[#9f1239] bg-[#fbf8f5] border border-[#dfd3c3] px-3 py-1.5 rounded-full shrink-0 tabular-nums" id="friendHeartsReceivedBadge">
+                    <span class="inline-flex items-center gap-1.5 text-xs font-black text-[#9f1239] bg-[#f5efe6] border border-[#dfd3c3] px-3 py-1.5 rounded-full shrink-0 tabular-nums" id="friendHeartsReceivedBadge">
                         <svg class="w-3.5 h-3.5 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                         <span>0</span>
                     </span>
@@ -323,7 +323,7 @@
                     <div class="flex items-center gap-2 min-w-0">
                         <span id="friendProfileHandle" class="font-mono text-xl font-black tracking-[0.22em] text-slate-900 uppercase truncate">---</span>
                         <button type="button" onclick="copyFriendLink()" title="نسخ"
-                                class="p-1.5 text-slate-600 hover:text-[#9f1239] hover:bg-[#fbf8f5] rounded-xl transition active:scale-90 shrink-0">
+                                class="p-1.5 text-slate-600 hover:text-[#9f1239] hover:bg-[#f5efe6] rounded-xl transition active:scale-90 shrink-0">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                             </svg>
@@ -400,7 +400,7 @@
             <!-- صندوق النبضات -->
             <section id="pulsesFeedSection" class="glass-card p-4 sm:p-5 space-y-3.5">
                 <div class="bg-[#efe7dc] p-1 rounded-2xl flex gap-1 border border-[#dfd3c3]">
-                    <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-[#fbf8f5] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5">
+                    <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5">
                         <svg class="w-3.5 h-3.5 text-[#9f1239]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
                         </svg>
@@ -440,7 +440,7 @@
                 <!-- إضافة رمز صديق جديد -->
                 <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
                     <button type="button" onclick="confirmAddRecipient()" title="إضافة"
-                            class="size-7 rounded-xl bg-[#fbf8f5] hover:bg-[#9f1239] text-[#9f1239] hover:text-white border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
+                            class="size-7 rounded-xl bg-[#f5efe6] hover:bg-[#9f1239] text-[#9f1239] hover:text-white border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                         </svg>
@@ -465,7 +465,7 @@
             <section class="glass-card p-5 sm:p-6 space-y-4">
                 <form onsubmit="executeFriendSearch(event)" class="space-y-2.5">
                     <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
-                        <button type="submit" class="size-7 rounded-xl bg-[#fbf8f5] hover:bg-[#9f1239] text-[#9f1239] hover:text-white border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
+                        <button type="submit" class="size-7 rounded-xl bg-[#f5efe6] hover:bg-[#9f1239] text-[#9f1239] hover:text-white border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                             </svg>
@@ -494,10 +494,10 @@
                         <div id="searchResultHandle" class="font-mono text-2xl font-black tracking-[0.25em] text-slate-900 uppercase break-all">---</div>
                         
                         <div class="flex flex-wrap items-center justify-center gap-2">
-                            <span id="searchResultHearts" class="inline-flex items-center gap-1.5 text-xs font-black text-[#9f1239] bg-[#fbf8f5] border border-[#dfd3c3] px-3.5 py-1.5 rounded-full tabular-nums">
+                            <span id="searchResultHearts" class="inline-flex items-center gap-1.5 text-xs font-black text-[#9f1239] bg-[#f5efe6] border border-[#dfd3c3] px-3.5 py-1.5 rounded-full tabular-nums">
                                 0
                             </span>
-                            <span id="searchResultStreak" class="inline-flex items-center gap-1 text-xs font-bold text-slate-700 bg-[#fbf8f5] border border-[#dfd3c3] px-3 py-1.5 rounded-full tabular-nums">
+                            <span id="searchResultStreak" class="inline-flex items-center gap-1 text-xs font-bold text-slate-700 bg-[#f5efe6] border border-[#dfd3c3] px-3 py-1.5 rounded-full tabular-nums">
                                 0
                             </span>
                         </div>
@@ -507,7 +507,7 @@
                                 <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                                 <span>إرسال</span>
                             </button>
-                            <button type="button" id="searchCopyLinkBtn" class="p-3 bg-[#fbf8f5] hover:bg-[#e5dacb] text-slate-700 hover:text-[#9f1239] rounded-2xl border border-[#dfd3c3] transition active:scale-95 shrink-0">
+                            <button type="button" id="searchCopyLinkBtn" class="p-3 bg-[#f5efe6] hover:bg-[#e5dacb] text-slate-700 hover:text-[#9f1239] rounded-2xl border border-[#dfd3c3] transition active:scale-95 shrink-0">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                                 </svg>
@@ -525,14 +525,14 @@
             <section class="glass-card p-5 sm:p-6 relative overflow-hidden space-y-4">
                 <div class="bg-[#efe7dc] rounded-3xl p-5 border border-[#dfd3c3] shadow-xs text-center space-y-3.5">
                     <div class="story-ring w-18 h-18 inline-block mx-auto shadow-md">
-                        <div class="w-16 h-16 rounded-full bg-[#fbf8f5] flex items-center justify-center text-[#9f1239]">
+                        <div class="w-16 h-16 rounded-full bg-[#f5efe6] flex items-center justify-center text-[#9f1239]">
                             <svg class="w-8 h-8 fill-[#9f1239]" viewBox="0 0 24 24">
                                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                             </svg>
                         </div>
                     </div>
 
-                    <div class="white-compact-box bg-[#fbf8f5] flex items-center justify-center gap-1.5 px-2 py-1.5 shadow-2xs">
+                    <div class="white-compact-box bg-[#f5efe6] flex items-center justify-center gap-1.5 px-2 py-1.5 shadow-2xs">
                         <button type="button" id="copyBtn" onclick="copyMyLink()"
                                 class="size-7 rounded-xl bg-[#efe7dc] hover:bg-[#e5dacb] text-[#9f1239] border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -545,7 +545,7 @@
                     </div>
 
                     <div class="flex items-center justify-center pt-1">
-                        <span class="inline-flex items-center gap-1.5 text-sm font-black text-[#9f1239] bg-[#fbf8f5] border border-[#dfd3c3] px-4 py-1.5 rounded-full tabular-nums" id="totalHeartsReceivedBadge">
+                        <span class="inline-flex items-center gap-1.5 text-sm font-black text-[#9f1239] bg-[#f5efe6] border border-[#dfd3c3] px-4 py-1.5 rounded-full tabular-nums" id="totalHeartsReceivedBadge">
                             <svg class="w-4 h-4 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                             <span>0</span>
                         </span>
@@ -568,7 +568,7 @@
 
     <!-- نافذة اختيار الأصدقاء والرسالة القصيرة بعد فك الضغط عن القلب (بيج صافي) -->
     <div id="sendPulseSheetModal" class="hidden fixed inset-0 bg-slate-900/45 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-        <div class="sheet-pop-in bg-[#fbf8f5] rounded-3xl max-w-sm w-full p-5 space-y-3.5 border border-[#dfd3c3] shadow-2xl relative text-right">
+        <div class="sheet-pop-in bg-[#f5efe6] rounded-3xl max-w-sm w-full p-5 space-y-3.5 border border-[#dfd3c3] shadow-2xl relative text-right">
             <div class="flex items-center justify-between">
                 <button type="button" onclick="closeSendPulseSheet()" class="grid size-7 place-items-center rounded-full text-slate-600 hover:text-slate-900 bg-[#efe7dc] border border-[#dfd3c3] transition active:scale-90">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
@@ -587,7 +587,7 @@
             <!-- إضافة مستلم سريع داخل النافذة إذا لم يكن موجوداً -->
             <div class="white-compact-box bg-[#efe7dc] flex items-center gap-1.5 px-2 py-1 shadow-2xs">
                 <button type="button" onclick="addQuickFriendInSheet()" title="إضافة"
-                        class="size-6 rounded-lg bg-[#fbf8f5] hover:bg-[#9f1239] text-[#9f1239] hover:text-white border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
+                        class="size-6 rounded-lg bg-[#f5efe6] hover:bg-[#9f1239] text-[#9f1239] hover:text-white border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
                     <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
@@ -601,7 +601,7 @@
             <div class="relative">
                 <div class="white-compact-box bg-[#efe7dc] flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
                     <button type="button" id="sheetEmojiToggleBtn" onclick="toggleSheetEmojiPicker()"
-                            class="size-7 rounded-xl bg-[#fbf8f5] hover:bg-[#e5dacb] text-[#9f1239] border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
+                            class="size-7 rounded-xl bg-[#f5efe6] hover:bg-[#e5dacb] text-[#9f1239] border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
                         </svg>
@@ -621,18 +621,18 @@
                 </div>
 
                 <div id="sheetEmojiPickerPopover" class="hidden mt-1.5 p-2 rounded-2xl bg-[#efe7dc] border border-[#dfd3c3] shadow-lg grid grid-cols-6 gap-1 text-center">
-                    <button type="button" onclick="insertEmojiToNote('🫶🏻')" class="text-lg hover:bg-[#fbf8f5] rounded-xl hover:scale-115 active:scale-90 transition py-1">🫶🏻</button>
-                    <button type="button" onclick="insertEmojiToNote('🥹')" class="text-lg hover:bg-[#fbf8f5] rounded-xl hover:scale-115 active:scale-90 transition py-1">🥹</button>
-                    <button type="button" onclick="insertEmojiToNote('🫂')" class="text-lg hover:bg-[#fbf8f5] rounded-xl hover:scale-115 active:scale-90 transition py-1">🫂</button>
-                    <button type="button" onclick="insertEmojiToNote('💓')" class="text-lg hover:bg-[#fbf8f5] rounded-xl hover:scale-115 active:scale-90 transition py-1">💓</button>
-                    <button type="button" onclick="insertEmojiToNote('🫠')" class="text-lg hover:bg-[#fbf8f5] rounded-xl hover:scale-115 active:scale-90 transition py-1">🫠</button>
-                    <button type="button" onclick="insertEmojiToNote('💌')" class="text-lg hover:bg-[#fbf8f5] rounded-xl hover:scale-115 active:scale-90 transition py-1">💌</button>
-                    <button type="button" onclick="insertEmojiToNote('🌷')" class="text-lg hover:bg-[#fbf8f5] rounded-xl hover:scale-115 active:scale-90 transition py-1">🌷</button>
-                    <button type="button" onclick="insertEmojiToNote('🦋')" class="text-lg hover:bg-[#fbf8f5] rounded-xl hover:scale-115 active:scale-90 transition py-1">🦋</button>
-                    <button type="button" onclick="insertEmojiToNote('✨')" class="text-lg hover:bg-[#fbf8f5] rounded-xl hover:scale-115 active:scale-90 transition py-1">✨</button>
-                    <button type="button" onclick="insertEmojiToNote('🔥')" class="text-lg hover:bg-[#fbf8f5] rounded-xl hover:scale-115 active:scale-90 transition py-1">🔥</button>
-                    <button type="button" onclick="insertEmojiToNote('🤍')" class="text-lg hover:bg-[#fbf8f5] rounded-xl hover:scale-115 active:scale-90 transition py-1">🤍</button>
-                    <button type="button" onclick="insertEmojiToNote('💫')" class="text-lg hover:bg-[#fbf8f5] rounded-xl hover:scale-115 active:scale-90 transition py-1">💫</button>
+                    <button type="button" onclick="insertEmojiToNote('🫶🏻')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🫶🏻</button>
+                    <button type="button" onclick="insertEmojiToNote('🥹')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🥹</button>
+                    <button type="button" onclick="insertEmojiToNote('🫂')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🫂</button>
+                    <button type="button" onclick="insertEmojiToNote('💓')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">💓</button>
+                    <button type="button" onclick="insertEmojiToNote('🫠')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🫠</button>
+                    <button type="button" onclick="insertEmojiToNote('💌')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">💌</button>
+                    <button type="button" onclick="insertEmojiToNote('🌷')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🌷</button>
+                    <button type="button" onclick="insertEmojiToNote('🦋')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🦋</button>
+                    <button type="button" onclick="insertEmojiToNote('✨')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">✨</button>
+                    <button type="button" onclick="insertEmojiToNote('🔥')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🔥</button>
+                    <button type="button" onclick="insertEmojiToNote('🤍')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">🤍</button>
+                    <button type="button" onclick="insertEmojiToNote('💫')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">💫</button>
                 </div>
             </div>
         </div>
@@ -645,7 +645,7 @@
 
     <!-- Auth Modal (بيج صافي) -->
     <div id="authModal" class="hidden fixed inset-0 bg-slate-900/45 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-        <div class="bg-[#fbf8f5] rounded-3xl max-w-sm w-full p-5 sm:p-6 space-y-4 border border-[#dfd3c3] shadow-2xl relative text-right">
+        <div class="bg-[#f5efe6] rounded-3xl max-w-sm w-full p-5 sm:p-6 space-y-4 border border-[#dfd3c3] shadow-2xl relative text-right">
             <button onclick="closeAuthModal()" class="absolute top-4 left-4 p-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-[#efe7dc] transition">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -772,11 +772,11 @@
             if (unreadPulsesCount > 0) {
                 bellBadge.classList.remove('hidden');
                 bellBtn.classList.add('text-[#9f1239]', 'border-[#b91c3c]', 'bg-[#efe7dc]');
-                bellBtn.classList.remove('text-slate-600', 'bg-[#fbf8f5]');
+                bellBtn.classList.remove('text-slate-600', 'bg-[#f5efe6]');
             } else {
                 bellBadge.classList.add('hidden');
                 bellBtn.classList.remove('text-[#9f1239]', 'border-[#b91c3c]', 'bg-[#efe7dc]');
-                bellBtn.classList.add('text-slate-600', 'bg-[#fbf8f5]');
+                bellBtn.classList.add('text-slate-600', 'bg-[#f5efe6]');
             }
         }
 
@@ -897,7 +897,7 @@
                 row.innerHTML = `
                     <div class="flex items-center gap-1.5 shrink-0">
                         <button type="button" onclick="removeFriendFromManage(event, '${handle}')" title="حذف"
-                                class="grid size-7 place-items-center rounded-full bg-[#fbf8f5] hover:bg-[#9f1239] text-slate-600 hover:text-white border border-[#dfd3c3] transition active:scale-90">
+                                class="grid size-7 place-items-center rounded-full bg-[#f5efe6] hover:bg-[#9f1239] text-slate-600 hover:text-white border border-[#dfd3c3] transition active:scale-90">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                             </svg>
@@ -915,7 +915,7 @@
                             </span>
                         </div>
                         <div class="story-ring shrink-0">
-                            <div class="size-9 rounded-full bg-[#fbf8f5] flex items-center justify-center font-mono text-xs font-black text-slate-900">
+                            <div class="size-9 rounded-full bg-[#f5efe6] flex items-center justify-center font-mono text-xs font-black text-slate-900">
                                 ${handle.charAt(0)}
                             </div>
                         </div>
@@ -1028,11 +1028,11 @@
                 btn.innerHTML = `
                     <div class="relative">
                         <div class="story-ring ${isSelected ? 'story-ring-selected' : 'opacity-80'}">
-                            <div class="size-12 rounded-full ${isSelected ? 'bg-[#9f1239] text-white' : 'bg-[#fbf8f5] text-slate-900'} flex items-center justify-center font-mono text-base font-black transition">
+                            <div class="size-12 rounded-full ${isSelected ? 'bg-[#9f1239] text-white' : 'bg-[#f5efe6] text-slate-900'} flex items-center justify-center font-mono text-base font-black transition">
                                 ${handle.charAt(0)}
                             </div>
                         </div>
-                        <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-[#fbf8f5] border border-[#dfd3c3] text-[#9f1239] text-[9px] font-black px-1.5 py-0.2 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap tabular-nums">
+                        <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] text-[9px] font-black px-1.5 py-0.2 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap tabular-nums">
                             ${ICONS.heartSmall} <span>${streakVal}</span>
                         </span>
                     </div>
@@ -1121,7 +1121,7 @@
 
             const isError = type === 'error';
             const toast = document.createElement('div');
-            toast.className = `toast-enter w-full flex items-center justify-between gap-2.5 px-4 py-3 rounded-2xl bg-[#fbf8f5]/95 backdrop-blur-md shadow-xl shadow-stone-900/10 border ${
+            toast.className = `toast-enter w-full flex items-center justify-between gap-2.5 px-4 py-3 rounded-2xl bg-[#f5efe6]/95 backdrop-blur-md shadow-xl shadow-stone-900/10 border ${
                 isError ? 'border-[#9f1239]' : 'border-[#dfd3c3]'
             } text-xs font-bold text-slate-800 mb-2`;
 
@@ -1307,7 +1307,7 @@
             };
 
             const activeBtnClass = "relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#9f1239] text-white shadow-sm shadow-rose-900/20 transition-all active:scale-90";
-            const inactiveBtnClass = "relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#fbf8f5] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90";
+            const inactiveBtnClass = "relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90";
 
             Object.keys(views).forEach(key => {
                 if (key === viewName) {
@@ -1852,14 +1852,14 @@
             const sentBtn = document.getElementById('tabSentBtn');
 
             if (tab === 'incoming') {
-                incomingBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-[#fbf8f5] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
+                incomingBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
                 sentBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5";
                 if (unreadPulsesCount > 0) {
                     unreadPulsesCount = 0;
                     updateBellBadgeState();
                 }
             } else {
-                sentBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-[#fbf8f5] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
+                sentBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-slate-900 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5";
                 incomingBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition text-stone-600 hover:text-slate-900 inline-flex items-center justify-center gap-1.5";
             }
             renderPulsesList();
@@ -2026,20 +2026,20 @@
 
                 const currentStreakVal = activeStreaksCache[targetOrSender] || 0;
                 const streakBadge = currentStreakVal > 0 && !isAnonSender
-                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] bg-[#fbf8f5] border border-[#dfd3c3] text-[#9f1239] font-black px-2 py-0.5 rounded-full tabular-nums">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
+                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] font-black px-2 py-0.5 rounded-full tabular-nums">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
                     : '';
 
                 const directionLabel = isIncoming ? 'من' : 'إلى';
                 const avatarHTML = isAnonSender
-                    ? `<div class="size-10 rounded-full bg-[#fbf8f5] border border-[#dfd3c3] flex items-center justify-center shrink-0">${ICONS.incognitoIcon}</div>`
+                    ? `<div class="size-10 rounded-full bg-[#f5efe6] border border-[#dfd3c3] flex items-center justify-center shrink-0">${ICONS.incognitoIcon}</div>`
                     : `<div class="story-ring shrink-0">
-                           <div class="size-9 rounded-full bg-[#fbf8f5] flex items-center justify-center font-mono text-xs font-black text-slate-900">
+                           <div class="size-9 rounded-full bg-[#f5efe6] flex items-center justify-center font-mono text-xs font-black text-slate-900">
                                ${targetOrSender.charAt(0)}
                            </div>
                        </div>`;
 
                 const noteBlockHTML = item.note
-                    ? `<div class="mt-2 rounded-xl bg-[#fbf8f5] border border-[#dfd3c3] px-3 py-2 text-xs text-slate-700 leading-relaxed break-words">
+                    ? `<div class="mt-2 rounded-xl bg-[#f5efe6] border border-[#dfd3c3] px-3 py-2 text-xs text-slate-700 leading-relaxed break-words">
                            ${item.note}
                        </div>`
                     : '';
@@ -2061,7 +2061,7 @@
                 };
                 pulseCard.innerHTML = `
                     <div class="flex items-center justify-between gap-2.5">
-                        <span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-black text-[#9f1239] bg-[#fbf8f5] border border-[#dfd3c3] shrink-0 tabular-nums">
+                        <span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-black text-[#9f1239] bg-[#f5efe6] border border-[#dfd3c3] shrink-0 tabular-nums">
                             ${ICONS.heartSmall}
                             <span>${item.score}%</span>
                         </span>
