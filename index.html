@@ -83,7 +83,7 @@
             color: #8c8275;
         }
 
-        /* Story Avatar Ring (Deep Crimson Tone for Selector) */
+        /* Story Avatar Ring (Deep Crimson Tone for Profile/Manage) */
         .story-ring {
             background: linear-gradient(135deg, #b91c3c 0%, #881337 100%);
             padding: 2.5px;
@@ -91,19 +91,45 @@
             transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        .story-ring-selected {
-            box-shadow: 0 0 0 2.5px #f5efe6, 0 0 0 4.5px #9f1239;
-            transform: scale(1.04);
-        }
-
-        /* Neutral Avatar Ring for Pulse Cards (Matching Anonymous Style) */
+        /* Neutral Avatar Ring for Pulse Cards */
         .pulse-neutral-ring {
             background: #dfd3c3;
             padding: 2px;
             border-radius: 9999px;
         }
 
-        /* Social Pulse Item Cards (Unified Appearance) */
+        /* Heart Score Tooltip */
+        .heart-tooltip-host {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .heart-score-tip {
+            position: absolute;
+            bottom: calc(100% + 5px);
+            left: 50%;
+            transform: translateX(-50%) translateY(3px) scale(0.92);
+            opacity: 0;
+            pointer-events: none;
+            background: rgba(15, 23, 42, 0.88);
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1;
+            padding: 3px 6px;
+            border-radius: 9999px;
+            white-space: nowrap;
+            z-index: 60;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+        }
+        .heart-tooltip-host:hover .heart-score-tip,
+        .heart-tooltip-host.tip-visible .heart-score-tip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+
+        /* Social Pulse Item Cards */
         .pulse-item-card {
             background: #fbf8f5;
             border: 1.5px solid #dfd3c3;
@@ -404,7 +430,7 @@
                 </div>
             </section>
 
-            <!-- صندوق النبضات المحدّث: القلب على اليسار، التفاصيل على اليمين، خط 10 وأفتح قليلاً -->
+            <!-- صندوق النبضات -->
             <section id="pulsesFeedSection" class="glass-card p-4 sm:p-5 space-y-3">
                 <div class="bg-[#fbf8f5] p-1 rounded-2xl flex gap-1 border border-[#dfd3c3]">
                     <button id="tabIncomingBtn" onclick="switchPulseTab('incoming')" class="flex-1 py-2 rounded-xl text-xs font-extrabold transition bg-[#f5efe6] text-stone-700 border border-[#dfd3c3] shadow-2xs inline-flex items-center justify-center gap-1.5">
@@ -569,37 +595,26 @@
 
     <!-- نافذة اختيار الأصدقاء والرسالة القصيرة بعد فك الضغط عن القلب -->
     <div id="sendPulseSheetModal" class="hidden fixed inset-0 bg-slate-900/45 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-        <div class="sheet-pop-in bg-[#f5efe6] rounded-3xl max-w-sm w-full p-5 space-y-3.5 border border-[#dfd3c3] shadow-2xl relative text-right">
+        <div class="sheet-pop-in bg-[#f5efe6] rounded-3xl max-w-sm w-full p-5 space-y-3 border border-[#dfd3c3] shadow-2xl relative text-right">
+            <!-- الشريط العلوي للنافذة: إغلاق يمين، قلب مفرغ يمتلئ بالنسبة يسار مع تلميح النسبة -->
             <div class="flex items-center justify-between">
                 <button type="button" onclick="closeSendPulseSheet()" class="grid size-7 place-items-center rounded-full text-slate-600 hover:text-slate-900 bg-[#fbf8f5] border border-[#dfd3c3] transition active:scale-90">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
                 </button>
-                <span id="sheetPulseScoreBadge" class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-black text-[#9f1239] bg-[#fbf8f5] border border-[#dfd3c3] tabular-nums">
-                    <span>0%</span>
-                </span>
+                <div id="sheetPulseScoreHeart"></div>
             </div>
 
-            <!-- قائمة الأصدقاء (تبدأ بآخر الأصدقاء المرسَل لهم) -->
-            <div id="sheetFriendsContainer" class="flex gap-3 overflow-x-auto pb-1.5 pt-1 px-1 hide-scrollbar"></div>
-
-            <!-- إضافة مستلم سريع داخل النافذة إذا لم يكن موجوداً -->
-            <div class="white-compact-box bg-[#fbf8f5] flex items-center gap-1.5 px-2 py-1 shadow-2xs">
-                <button type="button" onclick="addQuickFriendInSheet()" title="إضافة"
-                        class="size-6 rounded-lg bg-[#f5efe6] hover:bg-[#9f1239] text-[#9f1239] hover:text-white border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
-                    <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                    </svg>
-                </button>
-                <input type="text" id="sheetQuickTargetInput" placeholder="رمز مستلم آخر" autocapitalize="characters" autocomplete="off"
-                       onkeydown="if(event.key==='Enter'){event.preventDefault(); addQuickFriendInSheet();}"
-                       class="w-full bg-transparent text-right unified-field-text tracking-wider outline-none uppercase pr-1">
+            <!-- عنوان وقائمة الأصدقاء -->
+            <div class="space-y-1.5">
+                <p class="text-[11px] font-bold text-stone-600 px-0.5">اختر صديق:</p>
+                <div id="sheetFriendsContainer" class="flex gap-2.5 overflow-x-auto pb-1.5 pt-0.5 px-0.5 hide-scrollbar"></div>
             </div>
 
-            <!-- بوكس إضافة رسالة قصيرة + زر الإرسال -->
+            <!-- بوكس إضافة رسالة قصيرة (سطر واحد يتمدد تلقائياً عند النزول لسطر جديد) -->
             <div class="relative">
-                <div class="white-compact-box bg-[#fbf8f5] flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
+                <div class="white-compact-box bg-[#fbf8f5] flex items-end gap-1.5 px-2 py-1.5 shadow-2xs">
                     <button type="button" id="sheetEmojiToggleBtn" onclick="toggleSheetEmojiPicker()"
                             class="size-7 rounded-xl bg-[#f5efe6] hover:bg-[#e5dacb] text-[#9f1239] border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
@@ -607,17 +622,9 @@
                         </svg>
                     </button>
 
-                    <input type="text" id="loveNote" maxlength="100" placeholder="أضف رسالة قصيرة"
-                           onkeydown="if(event.key==='Enter'){event.preventDefault(); submitSheetPulse();}"
-                           class="w-full bg-transparent text-right unified-field-text outline-none pr-1">
-
-                    <!-- أيقونة الإرسال -->
-                    <button type="button" id="sheetSendBtn" onclick="submitSheetPulse()" title="إرسال"
-                            class="size-8 rounded-xl bg-gradient-to-tr from-[#881337] to-[#be123c] text-white flex items-center justify-center shrink-0 shadow-sm transition-all active:scale-90">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                        </svg>
-                    </button>
+                    <textarea id="loveNote" rows="1" maxlength="140" placeholder="أضف رسالة قصيرة"
+                              oninput="autoGrowLoveNote(this)"
+                              class="w-full bg-transparent text-right unified-field-text outline-none pr-1 py-1 resize-none overflow-hidden leading-snug max-h-24"></textarea>
                 </div>
 
                 <div id="sheetEmojiPickerPopover" class="hidden mt-1.5 p-2 rounded-2xl bg-[#fbf8f5] border border-[#dfd3c3] shadow-lg grid grid-cols-6 gap-1 text-center">
@@ -635,6 +642,15 @@
                     <button type="button" onclick="insertEmojiToNote('💫')" class="text-lg hover:bg-[#f5efe6] rounded-xl hover:scale-115 active:scale-90 transition py-1">💫</button>
                 </div>
             </div>
+
+            <!-- زر إرسال شامل للأصدقاء المحددين والرسالة -->
+            <button type="button" id="sheetSendBtn" onclick="submitSheetPulse()"
+                    class="w-full py-2.5 rounded-2xl bg-gradient-to-l from-[#881337] to-[#be123c] hover:brightness-105 text-white text-xs font-extrabold shadow-md shadow-rose-900/15 transition active:scale-[0.98] inline-flex items-center justify-center gap-1.5">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+                <span>إرسال النبضة</span>
+            </button>
         </div>
     </div>
 
@@ -740,11 +756,23 @@
         let isFirstPulseLoad = true;
         let activeStreaksCache = {};
 
-        // ================= ACCURATE HEART AREA FILL (FROM BOTTOM y=21.35 TO TOP y=3) =================
-        function buildAccurateHeartFill(score, uid) {
+        // ================= SHOW SCORE TOOLTIP ON MOBILE TAP OR DESKTOP HOVER =================
+        function showHeartScoreTip(el, e) {
+            if (e) e.stopPropagation();
+            document.querySelectorAll('.heart-tooltip-host.tip-visible').forEach(node => {
+                if (node !== el) node.classList.remove('tip-visible');
+            });
+            el.classList.add('tip-visible');
+            clearTimeout(el._tipTimer);
+            el._tipTimer = setTimeout(() => {
+                el.classList.remove('tip-visible');
+            }, 1400);
+        }
+
+        // ================= ACCURATE HEART AREA FILL WITH TOOLTIP =================
+        function buildAccurateHeartFill(score, uid, sizeClass = 'w-4 h-4') {
             const clamped = Math.max(0, Math.min(100, Number(score) || 0));
             const heartPath = "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z";
-            // المساحة الرأسية الحقيقية للقلب تبدأ من قاعه عند y=21.35 وتصعد إلى قمته عند y=3 (المسافة = 18.35)
             const heartBottom = 21.35;
             const heartSpan = 18.35;
             const fillRatio = clamped / 100;
@@ -753,18 +781,28 @@
             const clipId = `heartAreaClip_${uid}`;
 
             return `
-                <div class="inline-flex items-center justify-center shrink-0">
-                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                <div onclick="showHeartScoreTip(this, event)"
+                     title="${clamped}%"
+                     class="heart-tooltip-host shrink-0 cursor-pointer select-none p-1">
+                    <span class="heart-score-tip tabular-nums">${clamped}%</span>
+                    <svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
                         <defs>
                             <clipPath id="${clipId}">
                                 <rect x="2" y="${filledTopY}" width="20" height="${filledHeight}" />
                             </clipPath>
                         </defs>
-                        <path d="${heartPath}" fill="none" stroke="#9f1239" stroke-width="1.8" stroke-linejoin="round" />
+                        <path d="${heartPath}" fill="none" stroke="#9f1239" stroke-width="1.85" stroke-linejoin="round" />
                         <path d="${heartPath}" fill="#9f1239" clip-path="url(#${clipId})" />
                     </svg>
                 </div>
             `;
+        }
+
+        // ================= AUTO-GROW SINGLE LINE TEXTAREA =================
+        function autoGrowLoveNote(el) {
+            if (!el) return;
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 96) + 'px';
         }
 
         // ================= ORDERED FRIENDS LIST (RECENTLY SENT FIRST) =================
@@ -956,14 +994,17 @@
         function openSendPulseSheet(score) {
             pendingPulseScore = score;
             const modal = document.getElementById('sendPulseSheetModal');
-            const badge = document.getElementById('sheetPulseScoreBadge');
+            const scoreHeartHost = document.getElementById('sheetPulseScoreHeart');
             const noteInput = document.getElementById('loveNote');
-            const quickInput = document.getElementById('sheetQuickTargetInput');
             const emojiPopover = document.getElementById('sheetEmojiPickerPopover');
 
-            if (badge) badge.innerHTML = `${ICONS.heartSmall} <span>${score}%</span>`;
-            if (noteInput) noteInput.value = '';
-            if (quickInput) quickInput.value = '';
+            if (scoreHeartHost) {
+                scoreHeartHost.innerHTML = buildAccurateHeartFill(score, `sheet_${Date.now()}`, 'w-5 h-5');
+            }
+            if (noteInput) {
+                noteInput.value = '';
+                noteInput.style.height = 'auto';
+            }
             if (emojiPopover) emojiPopover.classList.add('hidden');
 
             const ordered = getOrderedFriendsList();
@@ -1002,44 +1043,13 @@
             renderSheetFriendsList();
         }
 
-        function addQuickFriendInSheet() {
-            const input = document.getElementById('sheetQuickTargetInput');
-            if (!input) return;
-            const code = input.value.trim().toUpperCase();
-            if (!code) return;
-
-            db.ref('handles/' + code).once('value', snapshot => {
-                if (!snapshot.exists()) {
-                    return showToast(`(${code}) غير موجود`, 'error');
-                }
-
-                if (hiddenFriends.includes(code)) {
-                    hiddenFriends = hiddenFriends.filter(f => f !== code);
-                    localStorage.setItem('feely_hidden_friends', JSON.stringify(hiddenFriends));
-                }
-
-                if (!pinnedFriends.includes(code)) {
-                    pinnedFriends.unshift(code);
-                    localStorage.setItem('feely_pinned_friends', JSON.stringify(pinnedFriends));
-                }
-
-                if (!selectedRecipientsInSheet.includes(code)) {
-                    selectedRecipientsInSheet.unshift(code);
-                }
-
-                input.value = '';
-                renderSheetFriendsList();
-                renderFriendsManagePage();
-            });
-        }
-
         function renderSheetFriendsList() {
             const container = document.getElementById('sheetFriendsContainer');
             if (!container) return;
 
             const ordered = getOrderedFriendsList();
             if (ordered.length === 0) {
-                container.innerHTML = `<p class="text-[11px] text-stone-500 py-2 w-full text-center">أضف رمز مستلم أدناه</p>`;
+                container.innerHTML = `<p class="text-[11px] text-stone-500 py-2 w-full text-center">لا يوجد أصدقاء مضافون</p>`;
                 return;
             }
 
@@ -1054,16 +1064,14 @@
                 btn.className = "flex flex-col items-center gap-1 shrink-0 transition active:scale-90 group";
                 btn.innerHTML = `
                     <div class="relative">
-                        <div class="story-ring ${isSelected ? 'story-ring-selected' : 'opacity-80'}">
-                            <div class="size-12 rounded-full ${isSelected ? 'bg-[#9f1239] text-white' : 'bg-[#f5efe6] text-slate-900'} flex items-center justify-center font-mono text-base font-black transition">
-                                ${handle.charAt(0)}
-                            </div>
+                        <div class="size-9 rounded-full border-2 ${isSelected ? 'border-[#9f1239] bg-[#FBF8F5] text-[#9f1239]' : 'border-[#dfd3c3] bg-[#f5efe6] text-stone-700'} flex items-center justify-center font-mono text-xs font-black transition-colors">
+                            ${handle.charAt(0)}
                         </div>
-                        <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] text-[9px] font-black px-1.5 py-0.2 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap tabular-nums">
+                        <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] text-[8.5px] font-black px-1 py-0 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap tabular-nums">
                             ${ICONS.heartSmall} <span>${streakVal}</span>
                         </span>
                     </div>
-                    <span class="font-mono text-[10px] ${isSelected ? 'font-black text-[#9f1239]' : 'font-bold text-slate-700'} uppercase max-w-[60px] truncate mt-0.5">${handle}</span>
+                    <span class="font-mono text-[9.5px] ${isSelected ? 'font-black text-[#9f1239]' : 'font-bold text-stone-600'} uppercase max-w-[54px] truncate mt-0.5">${handle}</span>
                 `;
                 container.appendChild(btn);
             });
@@ -1078,19 +1086,15 @@
         function insertEmojiToNote(emoji) {
             const noteInput = document.getElementById('loveNote');
             if (!noteInput) return;
-            noteInput.value = (noteInput.value + emoji).slice(0, 100);
+            noteInput.value = (noteInput.value + emoji).slice(0, 140);
+            autoGrowLoveNote(noteInput);
             noteInput.focus();
             if (navigator.vibrate) navigator.vibrate(10);
         }
 
         function submitSheetPulse() {
             const note = (document.getElementById('loveNote')?.value || '').trim();
-            const quickCode = (document.getElementById('sheetQuickTargetInput')?.value || '').trim().toUpperCase();
-
-            let targetsToSend = [...selectedRecipientsInSheet];
-            if (quickCode && !targetsToSend.includes(quickCode)) {
-                targetsToSend.push(quickCode);
-            }
+            const targetsToSend = [...selectedRecipientsInSheet];
 
             if (targetsToSend.length === 0) {
                 return showToast('اختر صديقاً', 'error');
@@ -2029,7 +2033,7 @@
             }
         }
 
-        // ================= RTL SOCIAL PULSES LIST (DETAILS RIGHT, HEART LEFT, 10PX SOFT TEXT) =================
+        // ================= RTL SOCIAL PULSES LIST =================
         function renderPulsesList() {
             const list = document.getElementById('pulsesList');
             list.innerHTML = '';
@@ -2086,7 +2090,6 @@
                         }
                     }
                 };
-                // في RTL: العنصر الأول يظهر على اليمين (المرسل وتفاصيله) والعنصر الثاني يظهر على اليسار (القلب)
                 pulseCard.innerHTML = `
                     <div class="flex items-center justify-between gap-2.5">
                         <div class="flex items-center gap-2 min-w-0">
