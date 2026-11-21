@@ -139,6 +139,15 @@
             animation: statusFadeIn 0.2s ease forwards;
         }
 
+        /* Fresh Incoming Pulse Highlight */
+        @keyframes freshPulseGlow {
+            0% { border-color: #9f1239; box-shadow: 0 0 0 3px rgba(159, 18, 57, 0.14); }
+            100% { border-color: #dfd3c3; box-shadow: 0 4px 12px -6px rgba(159, 18, 57, 0.08); }
+        }
+        .pulse-fresh-arrive {
+            animation: freshPulseGlow 1.6s ease-out forwards;
+        }
+
         /* Social Pulse Item Cards */
         .pulse-item-card {
             background: #fbf8f5;
@@ -778,7 +787,7 @@
                 short_name: "Feely",
                 lang: "ar",
                 dir: "rtl",
-                start_url: "./",
+                start_url: "./?pulse=incoming",
                 display: "standalone",
                 background_color: "#FBF8F5",
                 theme_color: "#FBF8F5",
@@ -840,6 +849,8 @@
         let liveSearchTimer = null;
         let isSendingPulse = false;
         let unreadPulsesCount = 0;
+        let pendingSoundOnFirstGesture = false;
+        let highlightedIncomingKey = null;
         let quickReplyStates = {};
         let friendsSortMode = localStorage.getItem('feely_friends_sort') || 'recent';
         
@@ -1447,11 +1458,35 @@
             }, 3000);
         }
 
+        function focusIncomingPulsesWithCue(playSound = true) {
+            switchMainView('home');
+            switchPulseTab('incoming');
+            if (incomingPulses.length > 0 && incomingPulses[0]._fbKey) {
+                highlightedIncomingKey = incomingPulses[0]._fbKey;
+                renderPulsesList();
+                setTimeout(() => {
+                    highlightedIncomingKey = null;
+                }, 1700);
+            }
+            const feedSection = document.getElementById('pulsesFeedSection');
+            if (feedSection) {
+                feedSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            triggerFloatingHearts(14);
+            if (playSound) {
+                playHeartbeatSound();
+            }
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const userParam = urlParams.get('u');
+            const pulseParam = urlParams.get('pulse');
             if (userParam) {
                 openFriendProfile(userParam.toUpperCase());
+            } else if (pulseParam === 'incoming') {
+                switchMainView('home');
+                switchPulseTab('incoming');
             }
 
             if (!userHandle) {
@@ -1465,6 +1500,25 @@
             renderPulsesList();
             renderFriendsManagePage();
             renderRecentSearches();
+        });
+
+        // Resume queued pulse sound after first user gesture if browser blocked autoplay
+        ['pointerdown', 'keydown'].forEach(evtName => {
+            window.addEventListener(evtName, () => {
+                if (pendingSoundOnFirstGesture && isSoundEnabled) {
+                    pendingSoundOnFirstGesture = false;
+                    playHeartbeatSound();
+                }
+            }, { passive: true });
+        });
+
+        // Play heartbeat sound and highlight latest incoming pulse when returning to the app
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && unreadPulsesCount > 0) {
+                unreadPulsesCount = 0;
+                updateBellBadgeState();
+                focusIncomingPulsesWithCue(true);
+            }
         });
 
         // ================= FINGER-FOLLOWING TRANSPARENT COUNTER & GLOBAL HOLD =================
@@ -1803,26 +1857,41 @@
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
                 const ctx = new AudioCtx();
 
-                const beat = (delay, freq, duration) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
-                    osc.frequency.exponentialRampToValueAtTime(35, ctx.currentTime + delay + duration);
+                if (ctx.state === 'suspended') {
+                    ctx.resume().then(() => {
+                        runHeartbeatBeats(ctx);
+                    }).catch(() => {
+                        pendingSoundOnFirstGesture = true;
+                    });
+                    return;
+                }
 
-                    gain.gain.setValueAtTime(0.001, ctx.currentTime + delay);
-                    gain.gain.exponentialRampToValueAtTime(0.32, ctx.currentTime + delay + 0.03);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+                runHeartbeatBeats(ctx);
+            } catch (e) {
+                pendingSoundOnFirstGesture = true;
+            }
+        }
 
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start(ctx.currentTime + delay);
-                    osc.stop(ctx.currentTime + delay + duration + 0.02);
-                };
+        function runHeartbeatBeats(ctx) {
+            const beat = (delay, freq, duration) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+                osc.frequency.exponentialRampToValueAtTime(35, ctx.currentTime + delay + duration);
 
-                beat(0, 125, 0.16);
-                beat(0.20, 105, 0.22);
-            } catch (e) {}
+                gain.gain.setValueAtTime(0.001, ctx.currentTime + delay);
+                gain.gain.exponentialRampToValueAtTime(0.32, ctx.currentTime + delay + 0.03);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(ctx.currentTime + delay);
+                osc.stop(ctx.currentTime + delay + duration + 0.02);
+            };
+
+            beat(0, 125, 0.16);
+            beat(0.20, 105, 0.22);
         }
 
         function triggerFloatingHearts(count = 16) {
@@ -2271,12 +2340,17 @@
                     });
                     if (!isFirstPulseLoad && incomingPulses.length > previousCount) {
                         const newAdditions = incomingPulses.length - previousCount;
-                        unreadPulsesCount += newAdditions;
-                        updateBellBadgeState();
+                        const newestItem = incomingPulses[0];
+                        highlightedIncomingKey = newestItem?._fbKey || null;
 
-                        showLocalNotification(incomingPulses[0]);
-                        triggerFloatingHearts(20);
-                        playHeartbeatSound();
+                        if (document.visibilityState === 'visible') {
+                            triggerFloatingHearts(20);
+                            playHeartbeatSound();
+                        } else {
+                            unreadPulsesCount += newAdditions;
+                            updateBellBadgeState();
+                            showLocalNotification(newestItem);
+                        }
                     }
                 }
                 isFirstPulseLoad = false;
@@ -2337,6 +2411,7 @@
                 const targetOrSender = isIncoming ? (item.senderHandle || item.sender) : item.target;
                 const isAnonSender = targetOrSender === 'مجهول';
                 const cardKey = `${activeTab}_${idx}_${item.timestamp || 0}`;
+                const isFresh = isIncoming && highlightedIncomingKey && item._fbKey === highlightedIncomingKey;
 
                 const currentStreakVal = activeStreaksCache[targetOrSender] || 0;
                 const streakBadge = currentStreakVal > 0 && !isAnonSender
@@ -2383,7 +2458,7 @@
                     : '';
 
                 const pulseCard = document.createElement('div');
-                pulseCard.className = "pulse-item-card p-3 text-right cursor-pointer active:scale-[0.99]";
+                pulseCard.className = `pulse-item-card p-3 text-right cursor-pointer active:scale-[0.99] ${isFresh ? 'pulse-fresh-arrive' : ''}`;
                 pulseCard.onclick = () => {
                     if (!isAnonSender) {
                         setDefaultRecipient(targetOrSender);
