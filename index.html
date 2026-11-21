@@ -181,6 +181,32 @@
             transform: scale(1.05);
         }
 
+        /* Sequential Charge Number Pulse: starts ~80% deep crimson, grows & drifts away while fading */
+        @keyframes chargeNumberDriftFade {
+            0% {
+                opacity: 0.8;
+                transform: translate(-50%, -68px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -106px) scale(1.48);
+            }
+        }
+        .charge-number-pop {
+            position: fixed;
+            z-index: 9998;
+            pointer-events: none;
+            user-select: none;
+            color: #9f1239;
+            font-size: 1.35rem;
+            font-weight: 900;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 2px 10px rgba(251, 248, 245, 0.92);
+            animation: chargeNumberDriftFade 0.44s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            will-change: transform, opacity;
+        }
+
         /* Floating Hearts Animation */
         @keyframes floatHeartUp {
             0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; }
@@ -245,13 +271,8 @@
 </head>
 <body class="text-slate-800 min-h-[100dvh] flex flex-col justify-between antialiased selection:bg-rose-900/15 selection:text-rose-900">
 
-    <!-- عداد شفاف ~50% يظهر فوق مكان ضغط الإصبع أثناء الشحن ويختفي عند الإفلات -->
-    <div id="fingerChargeCounter"
-         style="left: 0px; top: 0px; transform: translate(-50%, -145%) scale(0.88);"
-         class="fixed z-[9998] opacity-0 pointer-events-none transition-opacity duration-150 px-3.5 py-1 rounded-full bg-slate-900/50 backdrop-blur-sm border border-white/25 shadow-md flex items-center gap-1.5">
-        <span class="size-1.5 rounded-full bg-rose-400"></span>
-        <span id="rangeDisplay" class="text-xs font-black text-white/95 tabular-nums tracking-tight">0%</span>
-    </div>
+    <!-- حاوية الأرقام المتحركة المتتابعة أثناء الشحن بدون خلفية -->
+    <div id="chargeNumbersStage" class="fixed inset-0 pointer-events-none z-[9998]"></div>
 
     <!-- حاوية الإشعارات الموحدة في منتصف الشاشة -->
     <div id="toastContainer" style="top: calc(1rem + var(--safe-top));" class="fixed inset-x-0 mx-auto z-[9999] pointer-events-none px-4 flex flex-col items-center justify-center w-full max-w-sm"></div>
@@ -836,6 +857,7 @@
         let chargeDelayTimer = null;
         let chargeStepTimer = null;
         let isChargingHeart = false;
+        let activePointerCoords = { x: 0, y: 0 };
         let isAnonymousMode = false;
         let anonMiniPillTimer = null;
 
@@ -1516,32 +1538,34 @@
             }
         });
 
-        // ================= FINGER-FOLLOWING TRANSPARENT COUNTER & GLOBAL HOLD =================
-        function positionFingerCounter(clientX, clientY) {
-            const counter = document.getElementById('fingerChargeCounter');
-            if (!counter) return;
-            counter.style.left = clientX + 'px';
-            counter.style.top = clientY + 'px';
-        }
+        // ================= SEQUENTIAL CRIMSON CHARGE NUMBERS (NO BOX, NO DOT) =================
+        function spawnChargeNumberPulse(val) {
+            const stage = document.getElementById('chargeNumbersStage');
+            const orb = document.getElementById('mainHeartOrb');
+            if (!stage) return;
 
-        function setFingerCounterVisible(visible) {
-            const counter = document.getElementById('fingerChargeCounter');
-            if (!counter) return;
-            if (visible) {
-                counter.classList.remove('opacity-0');
-                counter.classList.add('opacity-100');
-                counter.style.transform = 'translate(-50%, -155%) scale(1)';
-            } else {
-                counter.classList.remove('opacity-100');
-                counter.classList.add('opacity-0');
-                counter.style.transform = 'translate(-50%, -145%) scale(0.88)';
+            let x = activePointerCoords.x;
+            let y = activePointerCoords.y;
+
+            if ((!x && !y) && orb) {
+                const rect = orb.getBoundingClientRect();
+                x = rect.left + rect.width / 2;
+                y = rect.top + rect.height / 2;
             }
+
+            const numEl = document.createElement('span');
+            numEl.className = 'charge-number-pop';
+            numEl.style.left = x + 'px';
+            numEl.style.top = y + 'px';
+            numEl.textContent = val + '%';
+
+            stage.appendChild(numEl);
+            setTimeout(() => numEl.remove(), 460);
         }
 
-        function updateLoveMeterUI(val) {
+        function updateLoveMeterUI(val, emitPulse = false) {
             const clamped = Math.max(0, Math.min(100, Math.round(val)));
             currentLoveValue = clamped;
-            document.getElementById('rangeDisplay').textContent = clamped + '%';
 
             const svg = document.getElementById('dynamicHeartSvg');
             if (svg) {
@@ -1554,11 +1578,15 @@
                 const offset = RING_CIRCUMFERENCE * (1 - clamped / 100);
                 ring.style.strokeDashoffset = offset.toFixed(2);
             }
+
+            if (emitPulse && isChargingHeart) {
+                spawnChargeNumberPulse(clamped);
+            }
         }
 
         function handleGlobalPointerMove(e) {
             if (!isChargingHeart) return;
-            positionFingerCounter(e.clientX, e.clientY);
+            activePointerCoords = { x: e.clientX, y: e.clientY };
         }
 
         function handleGlobalPointerUp() {
@@ -1584,14 +1612,17 @@
 
             isChargingHeart = true;
             const orb = document.getElementById('mainHeartOrb');
-            if (orb) orb.classList.add('heart-charging');
+            if (orb) {
+                orb.classList.add('heart-charging');
+                const rect = orb.getBoundingClientRect();
+                activePointerCoords = {
+                    x: typeof e.clientX === 'number' && e.clientX > 0 ? e.clientX : rect.left + rect.width / 2,
+                    y: typeof e.clientY === 'number' && e.clientY > 0 ? e.clientY : rect.top + rect.height / 2
+                };
+            }
 
             let val = 0;
-            updateLoveMeterUI(val);
-            if (typeof e.clientX === 'number' && typeof e.clientY === 'number') {
-                positionFingerCounter(e.clientX, e.clientY);
-            }
-            setFingerCounterVisible(true);
+            updateLoveMeterUI(val, false);
             attachGlobalChargeListeners();
             if (navigator.vibrate) navigator.vibrate(12);
 
@@ -1601,19 +1632,19 @@
                 const tick = () => {
                     if (!isChargingHeart || val >= 100) return;
                     val += 1;
-                    updateLoveMeterUI(val);
+                    updateLoveMeterUI(val, true);
 
                     if ([25, 50, 75, 100].includes(val) && navigator.vibrate) {
                         navigator.vibrate(val === 100 ? [30, 40, 30] : 15);
                     }
 
                     const progress = val / 100;
-                    const nextDelay = Math.max(8, Math.round(40 * Math.pow(1 - progress, 1.45)));
+                    const nextDelay = Math.max(38, Math.round(78 * Math.pow(1 - progress, 0.85)));
                     chargeStepTimer = setTimeout(tick, nextDelay);
                 };
 
                 tick();
-            }, 220);
+            }, 140);
         }
 
         function finishHeartChargeAndOpenSheet() {
@@ -1628,12 +1659,11 @@
 
             const orb = document.getElementById('mainHeartOrb');
             if (orb) orb.classList.remove('heart-charging');
-            setFingerCounterVisible(false);
 
             const selectedScore = currentLoveValue;
             setTimeout(() => {
-                if (!isChargingHeart) updateLoveMeterUI(0);
-            }, 250);
+                if (!isChargingHeart) updateLoveMeterUI(0, false);
+            }, 220);
 
             openSendPulseSheet(selectedScore);
         }
