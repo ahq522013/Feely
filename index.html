@@ -339,7 +339,7 @@
             <section class="glass-card p-5 sm:p-6 space-y-4 relative">
                 <!-- أيقونة التصفح الخفي وبوكس تنبيه صغير متناسق بجانبها -->
                 <div class="absolute top-4 right-4 z-10 flex items-center gap-1.5">
-                    <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="التصفح الخفي"
+                    <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="وضع المجهول"
                             class="grid size-8 place-items-center rounded-full bg-[#fdf9f5] text-slate-500 border border-rose-100 hover:border-rose-200 transition-all active:scale-90 shrink-0">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 11h18"/>
@@ -834,7 +834,7 @@
         function toggleAnonymousMode() {
             isAnonymousMode = !isAnonymousMode;
             applyDisguiseHeartAppearance();
-            showAnonMiniPill(isAnonymousMode ? "تفعيل وضع التخفي" : "إلغاء وضع التخفي");
+            showAnonMiniPill(isAnonymousMode ? "تفعيل وضع المجهول" : "إلغاء وضع المجهول");
             if (navigator.vibrate) navigator.vibrate(12);
         }
 
