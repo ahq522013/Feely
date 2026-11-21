@@ -163,6 +163,14 @@
             animation: miniPillPop 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
+        @keyframes sheetPopIn {
+            0% { opacity: 0; transform: translateY(16px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .sheet-pop-in {
+            animation: sheetPopIn 0.24s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -188,9 +196,9 @@
     </div>
 
     <!-- حاوية الإشعارات الموحدة في منتصف الشاشة -->
-    <div id="toastContainer" style="top: calc(1rem + var(--safe-top));" class="fixed inset-x-0 mx-auto z-50 pointer-events-none px-4 flex flex-col items-center justify-center w-full max-w-sm"></div>
+    <div id="toastContainer" style="top: calc(1rem + var(--safe-top));" class="fixed inset-x-0 mx-auto z-[9999] pointer-events-none px-4 flex flex-col items-center justify-center w-full max-w-sm"></div>
 
-    <!-- Header العلوي الموحد -->
+    <!-- Header العلوي الموحد (يضم النبض، الأصدقاء، البحث، ملفي، الإشعارات، الصوت، وحفظ الحساب) -->
     <header class="w-full max-w-md mx-auto px-3.5 sm:px-5 pt-4 sm:pt-6 flex justify-between items-center gap-1.5">
         <div id="authStatusContainer" class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
             <!-- أيقونة حفظ الحساب / خروج -->
@@ -212,6 +220,14 @@
                     class="grid size-8 sm:size-9 place-items-center rounded-full bg-rose-500 text-white shadow-sm shadow-rose-200 transition-all active:scale-90">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </button>
+
+            <!-- زر صفحة أصدقاء النبض المستقلة -->
+            <button type="button" id="navFriendsBtn" onclick="switchMainView('friends')" title="أصدقاء النبض"
+                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-white/95 text-slate-600 hover:text-rose-500 border border-rose-100 shadow-2xs transition-all active:scale-90">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
             </button>
 
@@ -284,39 +300,6 @@
                 </div>
             </div>
 
-            <!-- بوكس أصدقاء النبض المحسّن -->
-            <section id="recentContactsSection" class="glass-card p-4 space-y-3">
-                <div class="flex items-center justify-between px-1">
-                    <div class="flex items-center gap-1.5">
-                        <span id="targetStreakIndicator" class="hidden inline-flex items-center gap-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200/70 px-2 py-0.5 rounded-full tabular-nums">
-                            <svg class="w-2.5 h-2.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                            <span>0</span>
-                        </span>
-                    </div>
-                    <h3 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-                        <span>أصدقاء النبض</span>
-                        <span class="inline-block size-1.5 rounded-full bg-rose-500"></span>
-                    </h3>
-                </div>
-
-                <!-- دوائر الأصدقاء (حرف واحد داخل الدائرة + الرمز الكامل أسفلها) -->
-                <div id="recentContactsList" class="hidden flex gap-3.5 overflow-x-auto pb-1.5 pt-2 px-1.5 hide-scrollbar"></div>
-
-                <!-- بوكس إضافة رمز المستلم -->
-                <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
-                    <button type="button" onclick="confirmAddRecipient()" title="إضافة"
-                            class="size-7 rounded-xl bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-200/80 flex items-center justify-center shrink-0 transition-all active:scale-90">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                        </svg>
-                    </button>
-                    <input type="text" id="targetIdInput" placeholder="أضف رمز المستلم" autocapitalize="characters" autocomplete="off"
-                           oninput="onTargetInputChange(this.value)"
-                           onkeydown="if(event.key==='Enter'){event.preventDefault(); confirmAddRecipient();}"
-                           class="w-full bg-transparent text-right unified-field-text tracking-wider outline-none uppercase pr-1">
-                </div>
-            </section>
-
             <!-- بطاقة صفحة الصديق (عند فتح رابط مباشر ?u=...) -->
             <section id="friendProfileCard" class="hidden glass-card p-4 sm:p-5 relative overflow-hidden space-y-3 border-2 border-rose-300 bg-gradient-to-b from-[#fff2f4] to-white">
                 <div class="flex items-center justify-between">
@@ -349,8 +332,8 @@
                 </div>
             </section>
 
-            <!-- بطاقة إرسال النبضة -->
-            <section class="glass-card p-5 sm:p-6 space-y-4 relative">
+            <!-- بطاقة إرسال النبضة (بدون حقل الرسالة القصيرة وبدون بوكس أصدقاء النبض) -->
+            <section class="glass-card p-5 sm:p-6 space-y-3 relative">
                 <!-- أيقونة التصفح الخفي وبوكس تنبيه صغير متناسق بجانبها -->
                 <div class="absolute top-4 right-4 z-10 flex items-center gap-1.5">
                     <button type="button" id="anonymousToggleBtn" onclick="toggleAnonymousMode()" title="التصفح الخفي"
@@ -364,7 +347,6 @@
                         </svg>
                     </button>
 
-                    <!-- بوكس صغير جداً بجانب الزر متناسق مع الثيم -->
                     <div id="anonMiniPill" class="hidden mini-pill-pop px-2.5 py-1 rounded-full bg-[#fdf9f5] border border-rose-200/80 shadow-2xs">
                         <span id="anonMiniPillText" class="text-[10px] font-bold text-rose-600 leading-none">تفعيل وضع التخفي</span>
                     </div>
@@ -413,36 +395,6 @@
                     <!-- النص الإرشادي بخط صغير رصاصي تحت القلب -->
                     <p class="text-[11px] font-medium text-slate-400 pt-0.5">اضغط باستمرار لإرسال نبضة الحب</p>
                 </div>
-
-                <!-- بوكس إضافة رسالة -->
-                <div class="relative">
-                    <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
-                        <button type="button" id="emojiPickerToggleBtn" onclick="toggleEmojiPicker()"
-                                class="size-7 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 border border-rose-200/70 flex items-center justify-center shrink-0 transition-all active:scale-90">
-                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
-                            </svg>
-                        </button>
-
-                        <input type="text" id="loveNote" maxlength="100" placeholder="أضف رسالة قصيرة"
-                               class="w-full bg-transparent text-right unified-field-text outline-none pr-1">
-                    </div>
-
-                    <div id="emojiPickerPopover" class="hidden mt-1.5 p-2 rounded-2xl bg-white border border-rose-200 shadow-lg grid grid-cols-6 gap-1 text-center">
-                        <button type="button" onclick="insertEmojiToNote('🫶🏻')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫶🏻</button>
-                        <button type="button" onclick="insertEmojiToNote('🥹')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🥹</button>
-                        <button type="button" onclick="insertEmojiToNote('🫂')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫂</button>
-                        <button type="button" onclick="insertEmojiToNote('💓')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">💓</button>
-                        <button type="button" onclick="insertEmojiToNote('🫠')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫠</button>
-                        <button type="button" onclick="insertEmojiToNote('💌')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">💌</button>
-                        <button type="button" onclick="insertEmojiToNote('🌷')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🌷</button>
-                        <button type="button" onclick="insertEmojiToNote('🦋')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🦋</button>
-                        <button type="button" onclick="insertEmojiToNote('✨')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">✨</button>
-                        <button type="button" onclick="insertEmojiToNote('🔥')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🔥</button>
-                        <button type="button" onclick="insertEmojiToNote('🤍')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🤍</button>
-                        <button type="button" onclick="insertEmojiToNote('💫')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">💫</button>
-                    </div>
-                </div>
             </section>
 
             <!-- صندوق النبضات -->
@@ -471,7 +423,44 @@
             </section>
         </div>
 
-        <!-- ==================== VIEW 2: SEARCH ==================== -->
+        <!-- ==================== VIEW 2: FRIENDS MANAGEMENT PAGE ==================== -->
+        <div id="viewFriends" class="hidden space-y-4">
+            <section class="glass-card p-5 sm:p-6 space-y-4">
+                <div class="flex items-center justify-between px-1">
+                    <span id="targetStreakIndicator" class="hidden inline-flex items-center gap-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200/70 px-2.5 py-0.5 rounded-full tabular-nums">
+                        <svg class="w-2.5 h-2.5 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        <span>0</span>
+                    </span>
+                    <h2 class="text-sm font-black text-slate-900 flex items-center gap-1.5">
+                        <span>أصدقاء النبض</span>
+                        <span class="inline-block size-1.5 rounded-full bg-rose-500"></span>
+                    </h2>
+                </div>
+
+                <!-- إضافة رمز صديق جديد -->
+                <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
+                    <button type="button" onclick="confirmAddRecipient()" title="إضافة"
+                            class="size-7 rounded-xl bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-200/80 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                    </button>
+                    <input type="text" id="targetIdInput" placeholder="أضف رمز صديق" autocapitalize="characters" autocomplete="off"
+                           oninput="onTargetInputChange(this.value)"
+                           onkeydown="if(event.key==='Enter'){event.preventDefault(); confirmAddRecipient();}"
+                           class="w-full bg-transparent text-right unified-field-text tracking-wider outline-none uppercase pr-1">
+                </div>
+
+                <!-- قائمة الأصدقاء للإدارة والحذف والاختيار الافتراضي -->
+                <div id="friendsManageList" class="space-y-2 max-h-96 overflow-y-auto px-0.5 py-0.5">
+                    <div class="rounded-2xl border border-dashed border-rose-200/80 bg-[#fdf9f5] py-7 px-4 text-center">
+                        <p class="text-xs text-slate-400 font-medium">لا يوجد أصدقاء</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==================== VIEW 3: SEARCH ==================== -->
         <div id="viewSearch" class="hidden space-y-4">
             <section class="glass-card p-5 sm:p-6 space-y-4">
                 <form onsubmit="executeFriendSearch(event)" class="space-y-2.5">
@@ -531,7 +520,7 @@
             </section>
         </div>
 
-        <!-- ==================== VIEW 3: PROFILE ==================== -->
+        <!-- ==================== VIEW 4: PROFILE ==================== -->
         <div id="viewProfile" class="hidden space-y-4">
             <section class="glass-card p-5 sm:p-6 relative overflow-hidden space-y-4 border-2 border-rose-100">
                 <div class="bg-gradient-to-b from-[#fff1f3] via-white to-[#fff8f9] rounded-3xl p-5 border border-rose-200/70 shadow-xs text-center space-y-3.5">
@@ -576,6 +565,78 @@
         </div>
 
     </main>
+
+    <!-- نافذة اختيار الأصدقاء والرسالة القصيرة بعد فك الضغط عن القلب -->
+    <div id="sendPulseSheetModal" class="hidden fixed inset-0 bg-slate-900/45 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="sheet-pop-in bg-white rounded-3xl max-w-sm w-full p-5 space-y-3.5 border border-rose-100 shadow-2xl relative text-right">
+            <div class="flex items-center justify-between">
+                <button type="button" onclick="closeSendPulseSheet()" class="grid size-7 place-items-center rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition active:scale-90">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+                <span id="sheetPulseScoreBadge" class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-black text-rose-600 bg-rose-50 border border-rose-100 tabular-nums">
+                    <svg class="w-3 h-3 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    <span>0%</span>
+                </span>
+            </div>
+
+            <!-- قائمة الأصدقاء (تبدأ بآخر الأصدقاء المرسَل لهم) -->
+            <div id="sheetFriendsContainer" class="flex gap-3 overflow-x-auto pb-1.5 pt-1 px-1 hide-scrollbar"></div>
+
+            <!-- إضافة مستلم سريع داخل النافذة إذا لم يكن موجوداً -->
+            <div class="white-compact-box flex items-center gap-1.5 px-2 py-1 shadow-2xs">
+                <button type="button" onclick="addQuickFriendInSheet()" title="إضافة"
+                        class="size-6 rounded-lg bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-200/80 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                    <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                </button>
+                <input type="text" id="sheetQuickTargetInput" placeholder="رمز مستلم آخر" autocapitalize="characters" autocomplete="off"
+                       onkeydown="if(event.key==='Enter'){event.preventDefault(); addQuickFriendInSheet();}"
+                       class="w-full bg-transparent text-right unified-field-text tracking-wider outline-none uppercase pr-1">
+            </div>
+
+            <!-- بوكس إضافة رسالة قصيرة + زر الإرسال -->
+            <div class="relative">
+                <div class="white-compact-box flex items-center gap-1.5 px-2 py-1.5 shadow-2xs">
+                    <button type="button" id="sheetEmojiToggleBtn" onclick="toggleSheetEmojiPicker()"
+                            class="size-7 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 border border-rose-200/70 flex items-center justify-center shrink-0 transition-all active:scale-90">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+                        </svg>
+                    </button>
+
+                    <input type="text" id="loveNote" maxlength="100" placeholder="أضف رسالة قصيرة"
+                           onkeydown="if(event.key==='Enter'){event.preventDefault(); submitSheetPulse();}"
+                           class="w-full bg-transparent text-right unified-field-text outline-none pr-1">
+
+                    <!-- أيقونة الإرسال -->
+                    <button type="button" id="sheetSendBtn" onclick="submitSheetPulse()" title="إرسال"
+                            class="size-8 rounded-xl bg-gradient-to-tr from-rose-600 to-pink-500 text-white flex items-center justify-center shrink-0 shadow-sm shadow-rose-200 transition-all active:scale-90">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div id="sheetEmojiPickerPopover" class="hidden mt-1.5 p-2 rounded-2xl bg-white border border-rose-200 shadow-lg grid grid-cols-6 gap-1 text-center">
+                    <button type="button" onclick="insertEmojiToNote('🫶🏻')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫶🏻</button>
+                    <button type="button" onclick="insertEmojiToNote('🥹')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🥹</button>
+                    <button type="button" onclick="insertEmojiToNote('🫂')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫂</button>
+                    <button type="button" onclick="insertEmojiToNote('💓')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">💓</button>
+                    <button type="button" onclick="insertEmojiToNote('🫠')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🫠</button>
+                    <button type="button" onclick="insertEmojiToNote('💌')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">💌</button>
+                    <button type="button" onclick="insertEmojiToNote('🌷')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🌷</button>
+                    <button type="button" onclick="insertEmojiToNote('🦋')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🦋</button>
+                    <button type="button" onclick="insertEmojiToNote('✨')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">✨</button>
+                    <button type="button" onclick="insertEmojiToNote('🔥')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🔥</button>
+                    <button type="button" onclick="insertEmojiToNote('🤍')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">🤍</button>
+                    <button type="button" onclick="insertEmojiToNote('💫')" class="text-lg hover:bg-rose-50 rounded-xl hover:scale-115 active:scale-90 transition py-1">💫</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="mt-2 text-center text-[11px] text-slate-400 py-3">
@@ -652,6 +713,8 @@
         const RING_CIRCUMFERENCE = 2 * Math.PI * 45;
 
         let currentLoveValue = 0;
+        let pendingPulseScore = 0;
+        let selectedRecipientsInSheet = [];
         let chargeDelayTimer = null;
         let chargeStepTimer = null;
         let isChargingHeart = false;
@@ -676,6 +739,14 @@
         let recentSearches = JSON.parse(localStorage.getItem('feely_recent_searches') || '[]');
         let isFirstPulseLoad = true;
         let activeStreaksCache = {};
+
+        // ================= ORDERED FRIENDS LIST (RECENTLY SENT FIRST) =================
+        function getOrderedFriendsList() {
+            const sentTargets = sentPulses.map(p => (p.target || '').toUpperCase()).filter(Boolean);
+            const pinnedUpper = pinnedFriends.map(h => h.toUpperCase());
+            const combined = [...new Set([...sentTargets, ...pinnedUpper])];
+            return combined.filter(h => !hiddenFriends.includes(h));
+        }
 
         // ================= FORMAT EXACT DATE & TIME =================
         function formatExactDateTime(ts) {
@@ -732,13 +803,13 @@
             }
         }
 
-        // ================= ADD / REMOVE RECIPIENT LOGIC =================
+        // ================= ADD / REMOVE FRIENDS IN DEDICATED PAGE =================
         function confirmAddRecipient() {
             const input = document.getElementById('targetIdInput');
             const code = input.value.trim().toUpperCase();
             if (!code) {
                 input.focus();
-                return showToast('أضف رمز المستلم', 'error');
+                return showToast('أضف رمز صديق', 'error');
             }
 
             db.ref('handles/' + code).once('value', snapshot => {
@@ -755,14 +826,16 @@
                     pinnedFriends.unshift(code);
                     localStorage.setItem('feely_pinned_friends', JSON.stringify(pinnedFriends));
                 }
-                renderRecentContactsBar();
+
+                input.value = '';
+                renderFriendsManagePage();
                 checkTargetStreak(code);
                 if (navigator.vibrate) navigator.vibrate(15);
                 showToast(`تمت إضافة (${code})`);
             });
         }
 
-        function removeFriendFromBar(e, handle) {
+        function removeFriendFromManage(e, handle) {
             e.stopPropagation();
             const clean = handle.trim().toUpperCase();
 
@@ -777,16 +850,200 @@
             const targetInput = document.getElementById('targetIdInput');
             if (targetInput && targetInput.value.trim().toUpperCase() === clean) {
                 targetInput.value = '';
-                onTargetInputChange('');
             }
 
-            renderRecentContactsBar();
+            renderFriendsManagePage();
             if (navigator.vibrate) navigator.vibrate(12);
         }
 
-        // ================= EMOJI PICKER LOGIC =================
-        function toggleEmojiPicker() {
-            const popover = document.getElementById('emojiPickerPopover');
+        function setDefaultRecipient(handle) {
+            const clean = handle.trim().toUpperCase();
+            const input = document.getElementById('targetIdInput');
+            if (input) input.value = clean;
+            pinnedFriends = [clean, ...pinnedFriends.filter(f => f !== clean)];
+            localStorage.setItem('feely_pinned_friends', JSON.stringify(pinnedFriends));
+            checkTargetStreak(clean);
+            renderFriendsManagePage();
+            if (navigator.vibrate) navigator.vibrate(10);
+            showToast(`تم تحديد (${clean})`);
+        }
+
+        function renderFriendsManagePage() {
+            const list = document.getElementById('friendsManageList');
+            if (!list) return;
+
+            const friends = getOrderedFriendsList();
+            const defaultTarget = (document.getElementById('targetIdInput')?.value || '').trim().toUpperCase() || friends[0] || '';
+
+            if (friends.length === 0) {
+                list.innerHTML = `
+                    <div class="rounded-2xl border border-dashed border-rose-200/80 bg-[#fdf9f5] py-7 px-4 text-center">
+                        <p class="text-xs text-slate-400 font-medium">لا يوجد أصدقاء</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = '';
+            friends.forEach(handle => {
+                const isDefault = defaultTarget === handle;
+                const streakVal = activeStreaksCache[handle] !== undefined ? activeStreaksCache[handle] : 0;
+
+                const row = document.createElement('div');
+                row.className = `flex items-center justify-between gap-2.5 rounded-2xl p-3 border transition cursor-pointer active:scale-[0.99] ${
+                    isDefault ? 'bg-rose-50/70 border-rose-300' : 'bg-white border-rose-100 hover:border-rose-200'
+                }`;
+                row.onclick = () => setDefaultRecipient(handle);
+                row.innerHTML = `
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button type="button" onclick="removeFriendFromManage(event, '${handle}')" title="حذف"
+                                class="grid size-7 place-items-center rounded-full bg-slate-100 hover:bg-rose-500 text-slate-500 hover:text-white transition active:scale-90">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="text-right min-w-0">
+                            <div class="flex items-center justify-end gap-1.5">
+                                <span class="font-mono text-xs font-black text-slate-900 uppercase truncate">${handle}</span>
+                                ${isDefault ? `<span class="size-2 rounded-full bg-rose-500"></span>` : ''}
+                            </div>
+                            <span class="inline-flex items-center gap-0.5 text-[10px] font-black text-rose-600 tabular-nums mt-0.5">
+                                ${ICONS.heartSmall} <span>${streakVal}</span>
+                            </span>
+                        </div>
+                        <div class="story-ring shrink-0">
+                            <div class="size-9 rounded-full bg-white flex items-center justify-center font-mono text-xs font-black text-slate-900">
+                                ${handle.charAt(0)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        // ================= PULSE RECIPIENT & NOTE SHEET MODAL =================
+        function openSendPulseSheet(score) {
+            pendingPulseScore = score;
+            const modal = document.getElementById('sendPulseSheetModal');
+            const badge = document.getElementById('sheetPulseScoreBadge');
+            const noteInput = document.getElementById('loveNote');
+            const quickInput = document.getElementById('sheetQuickTargetInput');
+            const emojiPopover = document.getElementById('sheetEmojiPickerPopover');
+
+            if (badge) badge.innerHTML = `${ICONS.heartSmall} <span>${score}%</span>`;
+            if (noteInput) noteInput.value = '';
+            if (quickInput) quickInput.value = '';
+            if (emojiPopover) emojiPopover.classList.add('hidden');
+
+            const ordered = getOrderedFriendsList();
+            const prefilled = (document.getElementById('targetIdInput')?.value || '').trim().toUpperCase();
+
+            if (prefilled && ordered.includes(prefilled)) {
+                selectedRecipientsInSheet = [prefilled];
+            } else if (ordered.length > 0) {
+                selectedRecipientsInSheet = [ordered[0]];
+            } else {
+                selectedRecipientsInSheet = [];
+            }
+
+            renderSheetFriendsList();
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                if (noteInput) noteInput.focus();
+            }, 120);
+        }
+
+        function closeSendPulseSheet() {
+            const modal = document.getElementById('sendPulseSheetModal');
+            if (modal) modal.classList.add('hidden');
+            const emojiPopover = document.getElementById('sheetEmojiPickerPopover');
+            if (emojiPopover) emojiPopover.classList.add('hidden');
+        }
+
+        function toggleSheetFriendSelection(handle) {
+            const clean = handle.trim().toUpperCase();
+            if (selectedRecipientsInSheet.includes(clean)) {
+                selectedRecipientsInSheet = selectedRecipientsInSheet.filter(h => h !== clean);
+            } else {
+                selectedRecipientsInSheet.push(clean);
+            }
+            if (navigator.vibrate) navigator.vibrate(10);
+            renderSheetFriendsList();
+        }
+
+        function addQuickFriendInSheet() {
+            const input = document.getElementById('sheetQuickTargetInput');
+            if (!input) return;
+            const code = input.value.trim().toUpperCase();
+            if (!code) return;
+
+            db.ref('handles/' + code).once('value', snapshot => {
+                if (!snapshot.exists()) {
+                    return showToast(`(${code}) غير موجود`, 'error');
+                }
+
+                if (hiddenFriends.includes(code)) {
+                    hiddenFriends = hiddenFriends.filter(f => f !== code);
+                    localStorage.setItem('feely_hidden_friends', JSON.stringify(hiddenFriends));
+                }
+
+                if (!pinnedFriends.includes(code)) {
+                    pinnedFriends.unshift(code);
+                    localStorage.setItem('feely_pinned_friends', JSON.stringify(pinnedFriends));
+                }
+
+                if (!selectedRecipientsInSheet.includes(code)) {
+                    selectedRecipientsInSheet.unshift(code);
+                }
+
+                input.value = '';
+                renderSheetFriendsList();
+                renderFriendsManagePage();
+            });
+        }
+
+        function renderSheetFriendsList() {
+            const container = document.getElementById('sheetFriendsContainer');
+            if (!container) return;
+
+            const ordered = getOrderedFriendsList();
+            if (ordered.length === 0) {
+                container.innerHTML = `<p class="text-[11px] text-slate-400 py-2 w-full text-center">أضف رمز مستلم أدناه</p>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            ordered.forEach(handle => {
+                const isSelected = selectedRecipientsInSheet.includes(handle);
+                const streakVal = activeStreaksCache[handle] !== undefined ? activeStreaksCache[handle] : 0;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => toggleSheetFriendSelection(handle);
+                btn.className = "flex flex-col items-center gap-1 shrink-0 transition active:scale-90 group";
+                btn.innerHTML = `
+                    <div class="relative">
+                        <div class="story-ring ${isSelected ? 'story-ring-selected' : 'opacity-75'}">
+                            <div class="size-12 rounded-full ${isSelected ? 'bg-rose-500 text-white' : 'bg-white text-slate-900'} flex items-center justify-center font-mono text-base font-black transition">
+                                ${handle.charAt(0)}
+                            </div>
+                        </div>
+                        <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white border border-rose-200 text-rose-600 text-[9px] font-black px-1.5 py-0.2 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap tabular-nums">
+                            ${ICONS.heartSmall} <span>${streakVal}</span>
+                        </span>
+                    </div>
+                    <span class="font-mono text-[10px] ${isSelected ? 'font-black text-rose-600' : 'font-bold text-slate-600'} uppercase max-w-[60px] truncate mt-0.5">${handle}</span>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        function toggleSheetEmojiPicker() {
+            const popover = document.getElementById('sheetEmojiPickerPopover');
             if (!popover) return;
             popover.classList.toggle('hidden');
         }
@@ -797,6 +1054,23 @@
             noteInput.value = (noteInput.value + emoji).slice(0, 100);
             noteInput.focus();
             if (navigator.vibrate) navigator.vibrate(10);
+        }
+
+        function submitSheetPulse() {
+            const note = (document.getElementById('loveNote')?.value || '').trim();
+            const quickCode = (document.getElementById('sheetQuickTargetInput')?.value || '').trim().toUpperCase();
+
+            let targetsToSend = [...selectedRecipientsInSheet];
+            if (quickCode && !targetsToSend.includes(quickCode)) {
+                targetsToSend.push(quickCode);
+            }
+
+            if (targetsToSend.length === 0) {
+                return showToast('اختر صديقاً', 'error');
+            }
+
+            closeSendPulseSheet();
+            sendPulseToMultipleTargets(targetsToSend, pendingPulseScore, note);
         }
 
         // ================= INCOGNITO TOGGLE + HEART BLACK BORDER =================
@@ -888,7 +1162,7 @@
             updateLoveMeterUI(0);
             updateBellBadgeState();
             renderPulsesList();
-            renderRecentContactsBar();
+            renderFriendsManagePage();
             renderRecentSearches();
         });
 
@@ -919,14 +1193,12 @@
             currentLoveValue = clamped;
             document.getElementById('rangeDisplay').textContent = clamped + '%';
 
-            // تكبير القلب بسلاسة من 0% إلى 100%
             const svg = document.getElementById('dynamicHeartSvg');
             if (svg) {
                 const scale = 0.68 + (clamped / 100) * 0.74;
                 svg.style.transform = `scale(${scale.toFixed(3)})`;
             }
 
-            // تحديث حلقة الشحن الدائرية
             const ring = document.getElementById('circularChargeRing');
             if (ring) {
                 const offset = RING_CIRCUMFERENCE * (1 - clamped / 100);
@@ -941,7 +1213,7 @@
 
         function handleGlobalPointerUp() {
             if (!isChargingHeart) return;
-            finishAndSendHeartCharge();
+            finishHeartChargeAndOpenSheet();
         }
 
         function attachGlobalChargeListeners() {
@@ -994,7 +1266,7 @@
             }, 220);
         }
 
-        function finishAndSendHeartCharge() {
+        function finishHeartChargeAndOpenSheet() {
             if (!isChargingHeart) return;
 
             clearTimeout(chargeDelayTimer);
@@ -1009,11 +1281,11 @@
             setFingerCounterVisible(false);
 
             const selectedScore = currentLoveValue;
-            sendLovePulseWithScore(selectedScore);
-
             setTimeout(() => {
                 if (!isChargingHeart) updateLoveMeterUI(0);
-            }, 400);
+            }, 250);
+
+            openSendPulseSheet(selectedScore);
         }
 
         // ================= TOP HEADER NAVIGATION =================
@@ -1022,12 +1294,14 @@
 
             const views = {
                 home: document.getElementById('viewHome'),
+                friends: document.getElementById('viewFriends'),
                 search: document.getElementById('viewSearch'),
                 profile: document.getElementById('viewProfile')
             };
 
             const buttons = {
                 home: document.getElementById('navHomeBtn'),
+                friends: document.getElementById('navFriendsBtn'),
                 search: document.getElementById('navSearchBtn'),
                 profile: document.getElementById('navProfileBtn')
             };
@@ -1047,7 +1321,9 @@
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            if (viewName === 'search') {
+            if (viewName === 'friends') {
+                renderFriendsManagePage();
+            } else if (viewName === 'search') {
                 setTimeout(() => document.getElementById('searchFriendInput').focus(), 150);
             }
         }
@@ -1105,7 +1381,7 @@
                 });
 
                 document.getElementById('searchSendPulseBtn').onclick = () => {
-                    selectContactRecipient(rawCode);
+                    setDefaultRecipient(rawCode);
                     switchMainView('home');
                 };
 
@@ -1167,7 +1443,7 @@
                 document.getElementById('friendProfileCard').classList.remove('hidden');
 
                 const targetInput = document.getElementById('targetIdInput');
-                targetInput.value = cleanHandle;
+                if (targetInput) targetInput.value = cleanHandle;
 
                 friendStatsListenerRef = db.ref('stats/' + cleanHandle + '/receivedCount');
                 friendStatsListenerRef.on('value', countSnap => {
@@ -1202,7 +1478,7 @@
         function onTargetInputChange(val) {
             const clean = val.trim().toUpperCase();
             checkTargetStreak(clean);
-            renderRecentContactsBar();
+            renderFriendsManagePage();
         }
 
         // ================= INTERACTIVE EFFECTS =================
@@ -1294,7 +1570,7 @@
                         setHandleLockedState(userHandle);
                         listenForIncomingPulses(userHandle);
                         initPushNotifications(userHandle);
-                        renderRecentContactsBar();
+                        renderFriendsManagePage();
                     } else if (userHandle) {
                         db.ref('handles/' + userHandle).once('value', hSnap => {
                             if (hSnap.exists() && hSnap.val() === user.uid) {
@@ -1302,7 +1578,7 @@
                                 setHandleLockedState(userHandle);
                                 listenForIncomingPulses(userHandle);
                                 initPushNotifications(userHandle);
-                                renderRecentContactsBar();
+                                renderFriendsManagePage();
                             } else {
                                 localStorage.removeItem('feely_user_handle');
                                 userHandle = null;
@@ -1424,6 +1700,7 @@
             const trimmedTarget = target.trim().toUpperCase();
             const badge = document.getElementById('targetStreakIndicator');
             
+            if (!badge) return;
             if (trimmedTarget.length < 1 || !userHandle || !currentUser) {
                 badge.classList.add('hidden');
                 if (callback) callback(0);
@@ -1480,76 +1757,8 @@
                         document.getElementById('friendProfileStreakText').innerHTML = `${ICONS.heartFill} <span>${newStreak}</span>`;
                     }
                     renderPulsesList();
-                    renderRecentContactsBar();
+                    renderFriendsManagePage();
                 });
-            });
-        }
-
-        // ================= IMPROVED RECENT CONTACTS BAR =================
-        function selectContactRecipient(handle) {
-            const clean = handle.toUpperCase();
-            const input = document.getElementById('targetIdInput');
-            input.value = clean;
-            onTargetInputChange(clean);
-            if (navigator.vibrate) navigator.vibrate(10);
-        }
-
-        function renderRecentContactsBar() {
-            const list = document.getElementById('recentContactsList');
-            if (!list) return;
-
-            const currentSelected = (document.getElementById('targetIdInput')?.value || '').trim().toUpperCase();
-            const sentTargets = sentPulses.map(p => p.target).filter(Boolean);
-            const uniqueRecipients = [...new Set([...pinnedFriends, ...sentTargets])].filter(
-                h => !hiddenFriends.includes(h.toUpperCase())
-            );
-
-            if (uniqueRecipients.length === 0) {
-                list.classList.add('hidden');
-                return;
-            }
-
-            list.classList.remove('hidden');
-            list.innerHTML = '';
-
-            uniqueRecipients.forEach(handle => {
-                const cleanHandle = handle.toUpperCase();
-                const isSelected = currentSelected === cleanHandle;
-                const streakVal = activeStreaksCache[cleanHandle] !== undefined ? activeStreaksCache[cleanHandle] : 0;
-                const initialChar = cleanHandle.charAt(0);
-                
-                const wrapper = document.createElement('div');
-                wrapper.className = "relative flex flex-col items-center gap-1 shrink-0 transition-all duration-200 group";
-                wrapper.innerHTML = `
-                    <button type="button" onclick="removeFriendFromBar(event, '${cleanHandle}')"
-                            class="absolute -top-1 -left-1 z-10 size-4 rounded-full bg-slate-200 hover:bg-rose-500 text-slate-600 hover:text-white border border-white shadow-2xs flex items-center justify-center transition-colors active:scale-90">
-                        <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                    </button>
-
-                    <button type="button" onclick="selectContactRecipient('${cleanHandle}')" class="flex flex-col items-center gap-1 transition active:scale-90">
-                        <div class="relative">
-                            <div class="story-ring ${isSelected ? 'story-ring-selected' : ''}">
-                                <div class="size-12 rounded-full ${isSelected ? 'bg-rose-50 text-rose-600' : 'bg-white text-slate-900 group-hover:bg-rose-50'} flex items-center justify-center font-mono text-base font-black transition">
-                                    ${initialChar}
-                                </div>
-                            </div>
-                            <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white border border-rose-200 text-rose-600 text-[9px] font-black px-1.5 py-0.2 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap tabular-nums">
-                                ${ICONS.heartSmall} <span>${streakVal}</span>
-                            </span>
-                        </div>
-                        <span class="font-mono text-[10px] ${isSelected ? 'font-black text-rose-600' : 'font-bold text-slate-700'} uppercase max-w-[60px] truncate mt-0.5">${cleanHandle}</span>
-                    </button>
-                `;
-                list.appendChild(wrapper);
-
-                if (userHandle && activeStreaksCache[cleanHandle] === undefined) {
-                    checkTargetStreak(cleanHandle, (val) => {
-                        const pillSpan = wrapper.querySelector('.streak-pill span');
-                        if (pillSpan) pillSpan.textContent = val;
-                    });
-                }
             });
         }
 
@@ -1589,7 +1798,7 @@
                 setHandleLockedState(userHandle);
                 listenForIncomingPulses(userHandle);
                 initPushNotifications(userHandle);
-                renderRecentContactsBar();
+                renderFriendsManagePage();
                 triggerFloatingHearts(14);
                 playHeartbeatSound();
                 showToast(`تم تفعيل (${handle})`);
@@ -1663,74 +1872,80 @@
             return { name: userHandle, handle: userHandle };
         }
 
-        function executePulseSend(targetHandle, score, note) {
+        function sendPulseToMultipleTargets(targetHandles, score, note) {
             if (isSendingPulse) return;
             if (!currentUser) return showToast('جاري الاتصال...', 'error');
-            const cleanTarget = targetHandle.trim().toUpperCase();
 
-            if (!cleanTarget || cleanTarget.length < 1) {
-                const targetInput = document.getElementById('targetIdInput');
-                if (targetInput) targetInput.focus();
-                return showToast('أضف رمز المستلم', 'error');
-            }
+            const cleanTargets = [...new Set(targetHandles.map(h => h.trim().toUpperCase()).filter(Boolean))];
+            if (cleanTargets.length === 0) return showToast('اختر صديقاً', 'error');
 
             const senderIdentity = getEffectiveSenderIdentity();
-
             isSendingPulse = true;
-            db.ref('handles/' + cleanTarget).once('value', snapshot => {
-                if (!snapshot.exists()) {
+
+            let sentCount = 0;
+            let failedTargets = [];
+
+            const processNext = (index) => {
+                if (index >= cleanTargets.length) {
                     isSendingPulse = false;
-                    return showToast(`(${cleanTarget}) غير موجود`, 'error');
+                    localStorage.setItem('feely_sent_pulses', JSON.stringify(sentPulses));
+                    renderFriendsManagePage();
+                    if (activeTab === 'sent') renderPulsesList();
+
+                    if (sentCount > 0) {
+                        const heartsCount = Math.max(4, Math.round(Number(score) / 5));
+                        triggerFloatingHearts(heartsCount);
+                        playHeartbeatSound();
+                        if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
+                        showToast(`تم الإرسال (${score}%)`);
+                    }
+                    if (failedTargets.length > 0 && sentCount === 0) {
+                        showToast(`(${failedTargets.join(', ')}) غير موجود`, 'error');
+                    }
+                    return;
                 }
 
-                const pulseData = { 
-                    target: cleanTarget, 
-                    sender: senderIdentity.name, 
-                    senderHandle: senderIdentity.handle,
-                    score: score, 
-                    note: note, 
-                    timestamp: Date.now() 
-                };
-
-                db.ref('pulses/' + cleanTarget).push(pulseData).then(() => {
-                    isSendingPulse = false;
-                    db.ref('stats/' + cleanTarget + '/receivedCount').transaction(curr => (curr || 0) + 1);
-
-                    if (hiddenFriends.includes(cleanTarget)) {
-                        hiddenFriends = hiddenFriends.filter(f => f !== cleanTarget);
-                        localStorage.setItem('feely_hidden_friends', JSON.stringify(hiddenFriends));
+                const target = cleanTargets[index];
+                db.ref('handles/' + target).once('value', snapshot => {
+                    if (!snapshot.exists()) {
+                        failedTargets.push(target);
+                        processNext(index + 1);
+                        return;
                     }
 
-                    sentPulses.unshift(pulseData);
-                    localStorage.setItem('feely_sent_pulses', JSON.stringify(sentPulses));
-                    
-                    if (userHandle) {
-                        recordTargetStreakInCloud(userHandle, cleanTarget);
-                    }
+                    const pulseData = {
+                        target: target,
+                        sender: senderIdentity.name,
+                        senderHandle: senderIdentity.handle,
+                        score: score,
+                        note: note,
+                        timestamp: Date.now()
+                    };
 
-                    const heartsCount = Math.max(4, Math.round(Number(score) / 5));
-                    triggerFloatingHearts(heartsCount);
-                    playHeartbeatSound();
-                    if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
+                    db.ref('pulses/' + target).push(pulseData).then(() => {
+                        sentCount += 1;
+                        db.ref('stats/' + target + '/receivedCount').transaction(curr => (curr || 0) + 1);
 
-                    renderRecentContactsBar();
-                    document.getElementById('loveNote').value = '';
-                    const popover = document.getElementById('emojiPickerPopover');
-                    if (popover) popover.classList.add('hidden');
-                    showToast(`تم الإرسال (${score}%)`);
-                    if (activeTab === 'sent') renderPulsesList();
-                }).catch(err => {
-                    isSendingPulse = false;
-                    showToast(err.message, 'error');
+                        if (hiddenFriends.includes(target)) {
+                            hiddenFriends = hiddenFriends.filter(f => f !== target);
+                            localStorage.setItem('feely_hidden_friends', JSON.stringify(hiddenFriends));
+                        }
+
+                        sentPulses.unshift(pulseData);
+
+                        if (userHandle) {
+                            recordTargetStreakInCloud(userHandle, target);
+                        }
+
+                        processNext(index + 1);
+                    }).catch(() => {
+                        failedTargets.push(target);
+                        processNext(index + 1);
+                    });
                 });
-            });
-        }
+            };
 
-        function sendLovePulseWithScore(score) {
-            const targetHandle = document.getElementById('targetIdInput').value.trim().toUpperCase();
-            const note = document.getElementById('loveNote').value.trim();
-
-            executePulseSend(targetHandle, score, note);
+            processNext(0);
         }
 
         function listenForIncomingPulses(handle) {
@@ -1833,7 +2048,7 @@
                 pulseCard.className = "pulse-item-card p-3.5 text-right cursor-pointer active:scale-[0.99]";
                 pulseCard.onclick = () => {
                     if (!isAnonSender) {
-                        selectContactRecipient(targetOrSender);
+                        setDefaultRecipient(targetOrSender);
                     }
                     if (isIncoming) {
                         triggerFloatingHearts(10);
