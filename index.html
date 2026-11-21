@@ -187,7 +187,7 @@
             user-select: none;
         }
 
-        /* Unified Centered Toast Notification (Used for non-send notices) */
+        /* Unified Centered Toast Notification */
         @keyframes toastCenterDrop {
             0% { transform: translateY(-24px) scale(0.95); opacity: 0; }
             100% { transform: translateY(0) scale(1); opacity: 1; }
@@ -459,18 +459,30 @@
             </section>
         </div>
 
-        <!-- ==================== VIEW 2: FRIENDS MANAGEMENT PAGE ==================== -->
+        <!-- ==================== VIEW 2: FRIENDS MANAGEMENT PAGE (STEP 2) ==================== -->
         <div id="viewFriends" class="hidden space-y-4">
-            <section class="glass-card p-5 sm:p-6 space-y-4">
+            <section class="glass-card p-5 sm:p-6 space-y-3.5">
                 <div class="flex items-center justify-between px-1">
-                    <span id="targetStreakIndicator" class="hidden inline-flex items-center gap-1 text-[10px] font-black text-[#9f1239] bg-[#fbf8f5] border border-[#dfd3c3] px-2.5 py-0.5 rounded-full tabular-nums">
-                        <svg class="w-2.5 h-2.5 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                        <span>0</span>
-                    </span>
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" id="friendsSortToggleBtn" onclick="toggleFriendsSortMode()"
+                                class="px-2.5 py-1 rounded-full bg-[#fbf8f5] hover:bg-[#efe7dc] text-[10px] font-bold text-stone-600 border border-[#dfd3c3] transition active:scale-95">
+                            الترتيب: الأحدث
+                        </button>
+                        <span id="targetStreakIndicator" class="hidden inline-flex items-center gap-1 text-[10px] font-black text-[#9f1239] bg-[#fbf8f5] border border-[#dfd3c3] px-2.5 py-0.5 rounded-full tabular-nums">
+                            <svg class="w-2.5 h-2.5 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            <span>0</span>
+                        </span>
+                    </div>
                     <h2 class="text-sm font-black text-slate-900 flex items-center gap-1.5">
                         <span>أصدقاء النبض</span>
                         <span class="inline-block size-1.5 rounded-full bg-[#9f1239]"></span>
                     </h2>
+                </div>
+
+                <!-- تنبيه ستريك نشط لم يُحدَّث اليوم -->
+                <div id="streakReminderBanner" class="hidden rounded-2xl bg-[#fbf8f5] border border-[#dfd3c3] px-3 py-2 text-[10px] font-bold text-[#9f1239] flex items-center justify-between">
+                    <span id="streakReminderText">لديك ستريك نشط بانتظار نبضة اليوم</span>
+                    <span class="size-2 rounded-full bg-[#9f1239]"></span>
                 </div>
 
                 <!-- إضافة رمز صديق جديد -->
@@ -487,7 +499,17 @@
                            class="w-full bg-transparent text-right unified-field-text tracking-wider outline-none uppercase pr-1">
                 </div>
 
-                <!-- قائمة الأصدقاء للإدارة والحذف والاختيار الافتراضي -->
+                <!-- تصفية سريعة لقائمة الأصدقاء -->
+                <div class="white-compact-box bg-[#ffffff] flex items-center gap-1.5 px-2.5 py-1 shadow-2xs">
+                    <svg class="w-3.5 h-3.5 text-stone-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" id="friendsFilterInput" placeholder="تصفية الأصدقاء بالرمز" autocapitalize="characters" autocomplete="off"
+                           oninput="renderFriendsManagePage()"
+                           class="w-full bg-transparent text-right unified-field-text tracking-wider outline-none uppercase">
+                </div>
+
+                <!-- قائمة الأصدقاء للإدارة والتثبيت والحذف والاختيار الافتراضي -->
                 <div id="friendsManageList" class="space-y-2 max-h-96 overflow-y-auto px-0.5 py-0.5">
                     <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#fbf8f5] py-7 px-4 text-center">
                         <p class="text-xs text-stone-500 font-medium">لا يوجد أصدقاء</p>
@@ -737,7 +759,8 @@
             check: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
             incognitoIcon: '<svg class="w-4 h-4 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/><path d="M10 16.5h4"/></svg>',
             quickReply: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>',
-            miniCheck: '<svg class="w-3 h-3 text-[#9f1239] inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+            miniCheck: '<svg class="w-3 h-3 text-[#9f1239] inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+            pin: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>'
         };
 
         const RING_CIRCUMFERENCE = 2 * Math.PI * 45;
@@ -762,14 +785,17 @@
         let isSendingPulse = false;
         let unreadPulsesCount = 0;
         let quickReplyStates = {};
+        let friendsSortMode = localStorage.getItem('feely_friends_sort') || 'recent';
         
         let incomingPulses = [];
         let sentPulses = JSON.parse(localStorage.getItem('feely_sent_pulses') || '[]');
         let pinnedFriends = JSON.parse(localStorage.getItem('feely_pinned_friends') || '[]');
+        let favoriteFriends = JSON.parse(localStorage.getItem('feely_favorite_friends') || '[]');
         let hiddenFriends = JSON.parse(localStorage.getItem('feely_hidden_friends') || '[]');
         let recentSearches = JSON.parse(localStorage.getItem('feely_recent_searches') || '[]');
         let isFirstPulseLoad = true;
         let activeStreaksCache = {};
+        let streakDatesCache = {};
 
         // ================= SUBTLE SOCIAL DELIVERY STATUS HELPER =================
         function setSheetDeliveryStatus(text, isError = false, autoHideMs = 2200) {
@@ -846,12 +872,62 @@
             el.style.height = Math.min(el.scrollHeight, 96) + 'px';
         }
 
-        // ================= ORDERED FRIENDS LIST (RECENTLY SENT FIRST) =================
+        // ================= ORDERED FRIENDS LIST (PINNED + RECENT OR STREAK) =================
         function getOrderedFriendsList() {
             const sentTargets = sentPulses.map(p => (p.target || '').toUpperCase()).filter(Boolean);
             const pinnedUpper = pinnedFriends.map(h => h.toUpperCase());
-            const combined = [...new Set([...sentTargets, ...pinnedUpper])];
-            return combined.filter(h => !hiddenFriends.includes(h));
+            const combined = [...new Set([...sentTargets, ...pinnedUpper])].filter(h => !hiddenFriends.includes(h));
+
+            const sortedRest = combined.filter(h => !favoriteFriends.includes(h));
+            if (friendsSortMode === 'streak') {
+                sortedRest.sort((a, b) => (activeStreaksCache[b] || 0) - (activeStreaksCache[a] || 0));
+            }
+
+            const favs = favoriteFriends.filter(h => combined.includes(h));
+            return [...favs, ...sortedRest];
+        }
+
+        function toggleFriendsSortMode() {
+            friendsSortMode = friendsSortMode === 'recent' ? 'streak' : 'recent';
+            localStorage.setItem('feely_friends_sort', friendsSortMode);
+            const btn = document.getElementById('friendsSortToggleBtn');
+            if (btn) {
+                btn.textContent = friendsSortMode === 'streak' ? 'الترتيب: الستريك' : 'الترتيب: الأحدث';
+            }
+            renderFriendsManagePage();
+        }
+
+        function togglePinFriend(e, handle) {
+            if (e) e.stopPropagation();
+            const clean = handle.trim().toUpperCase();
+            if (favoriteFriends.includes(clean)) {
+                favoriteFriends = favoriteFriends.filter(f => f !== clean);
+            } else {
+                favoriteFriends.unshift(clean);
+            }
+            localStorage.setItem('feely_favorite_friends', JSON.stringify(favoriteFriends));
+            renderFriendsManagePage();
+            renderSheetFriendsList();
+        }
+
+        function updateStreakReminderBanner(friends) {
+            const banner = document.getElementById('streakReminderBanner');
+            const textEl = document.getElementById('streakReminderText');
+            if (!banner || !textEl) return;
+
+            const todayStr = new Date().toDateString();
+            const pendingStreakFriends = friends.filter(h => {
+                const st = activeStreaksCache[h] || 0;
+                const lastD = streakDatesCache[h] || '';
+                return st > 0 && lastD !== todayStr;
+            });
+
+            if (pendingStreakFriends.length > 0) {
+                textEl.textContent = `ستريك نشط بانتظار اليوم (${pendingStreakFriends.slice(0, 2).join(' · ')})`;
+                banner.classList.remove('hidden');
+            } else {
+                banner.classList.add('hidden');
+            }
         }
 
         // ================= FORMAT EXACT DATE & TIME =================
@@ -946,7 +1022,9 @@
             const clean = handle.trim().toUpperCase();
 
             pinnedFriends = pinnedFriends.filter(f => f !== clean);
+            favoriteFriends = favoriteFriends.filter(f => f !== clean);
             localStorage.setItem('feely_pinned_friends', JSON.stringify(pinnedFriends));
+            localStorage.setItem('feely_favorite_friends', JSON.stringify(favoriteFriends));
 
             if (!hiddenFriends.includes(clean)) {
                 hiddenFriends.push(clean);
@@ -978,13 +1056,23 @@
             const list = document.getElementById('friendsManageList');
             if (!list) return;
 
-            const friends = getOrderedFriendsList();
-            const defaultTarget = (document.getElementById('targetIdInput')?.value || '').trim().toUpperCase() || friends[0] || '';
+            const sortBtn = document.getElementById('friendsSortToggleBtn');
+            if (sortBtn) {
+                sortBtn.textContent = friendsSortMode === 'streak' ? 'الترتيب: الستريك' : 'الترتيب: الأحدث';
+            }
+
+            const allFriends = getOrderedFriendsList();
+            updateStreakReminderBanner(allFriends);
+
+            const filterVal = (document.getElementById('friendsFilterInput')?.value || '').trim().toUpperCase();
+            const friends = filterVal ? allFriends.filter(h => h.includes(filterVal)) : allFriends;
+            const defaultTarget = (document.getElementById('targetIdInput')?.value || '').trim().toUpperCase() || allFriends[0] || '';
+            const todayStr = new Date().toDateString();
 
             if (friends.length === 0) {
                 list.innerHTML = `
                     <div class="rounded-2xl border border-dashed border-[#d8cbb9] bg-[#fbf8f5] py-7 px-4 text-center">
-                        <p class="text-xs text-stone-500 font-medium">لا يوجد أصدقاء</p>
+                        <p class="text-xs text-stone-500 font-medium">${filterVal ? 'لا توجد نتائج مطابقة' : 'لا يوجد أصدقاء'}</p>
                     </div>
                 `;
                 return;
@@ -993,7 +1081,9 @@
             list.innerHTML = '';
             friends.forEach(handle => {
                 const isDefault = defaultTarget === handle;
+                const isPinned = favoriteFriends.includes(handle);
                 const streakVal = activeStreaksCache[handle] !== undefined ? activeStreaksCache[handle] : 0;
+                const needsToday = streakVal > 0 && (streakDatesCache[handle] || '') !== todayStr;
 
                 const row = document.createElement('div');
                 row.className = `flex items-center justify-between gap-2.5 rounded-2xl p-3 border transition cursor-pointer active:scale-[0.99] ${
@@ -1002,6 +1092,12 @@
                 row.onclick = () => setDefaultRecipient(handle);
                 row.innerHTML = `
                     <div class="flex items-center gap-1.5 shrink-0">
+                        <button type="button" onclick="togglePinFriend(event, '${handle}')" title="تثبيت"
+                                class="grid size-7 place-items-center rounded-full border transition active:scale-90 ${
+                                    isPinned ? 'bg-[#9f1239] text-white border-[#9f1239]' : 'bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border-[#dfd3c3]'
+                                }">
+                            ${ICONS.pin}
+                        </button>
                         <button type="button" onclick="removeFriendFromManage(event, '${handle}')" title="حذف"
                                 class="grid size-7 place-items-center rounded-full bg-[#f5efe6] hover:bg-[#9f1239] text-slate-600 hover:text-white border border-[#dfd3c3] transition active:scale-90">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1015,6 +1111,7 @@
                             <div class="flex items-center justify-end gap-1.5">
                                 <span class="font-mono text-xs font-black text-slate-900 uppercase truncate">${handle}</span>
                                 ${isDefault ? `<span class="size-2 rounded-full bg-[#9f1239]"></span>` : ''}
+                                ${needsToday ? `<span class="size-1.5 rounded-full bg-[#be123c]" title="بانتظار اليوم"></span>` : ''}
                             </div>
                             <span class="inline-flex items-center gap-0.5 text-[10px] font-black text-[#9f1239] tabular-nums mt-0.5">
                                 ${ICONS.heartSmall} <span>${streakVal}</span>
@@ -1808,9 +1905,8 @@
             const trimmedTarget = target.trim().toUpperCase();
             const badge = document.getElementById('targetStreakIndicator');
             
-            if (!badge) return;
             if (trimmedTarget.length < 1 || !userHandle || !currentUser) {
-                badge.classList.add('hidden');
+                if (badge) badge.classList.add('hidden');
                 if (callback) callback(0);
                 return;
             }
@@ -1829,8 +1925,11 @@
                 }
 
                 activeStreaksCache[trimmedTarget] = currentStreak;
-                badge.innerHTML = `${ICONS.heartSmall} <span>${currentStreak}</span>`;
-                badge.classList.remove('hidden');
+                streakDatesCache[trimmedTarget] = data.lastDate || "";
+                if (badge && document.getElementById('targetIdInput')?.value.trim().toUpperCase() === trimmedTarget) {
+                    badge.innerHTML = `${ICONS.heartSmall} <span>${currentStreak}</span>`;
+                    badge.classList.remove('hidden');
+                }
                 if (callback) callback(currentStreak);
             });
         }
@@ -1860,6 +1959,7 @@
                     pair: [senderHandle, targetHandle]
                 }).then(() => {
                     activeStreaksCache[targetHandle] = newStreak;
+                    streakDatesCache[targetHandle] = today;
                     checkTargetStreak(targetHandle);
                     if (activeFriendHandle === targetHandle) {
                         document.getElementById('friendProfileStreakText').innerHTML = `${ICONS.heartFill} <span>${newStreak}</span>`;
