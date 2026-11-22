@@ -369,10 +369,11 @@
 
             <!-- زر صفحة أصدقاء النبض المستقلة -->
             <button type="button" id="navFriendsBtn" onclick="switchMainView('friends')" title="أصدقاء النبض"
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
+                    class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
+                <span id="friendsReqDot" class="hidden absolute right-1.5 top-1.5 size-2 rounded-full bg-[#9f1239] ring-2 ring-[#f5efe6]"></span>
             </button>
 
             <!-- زر عدسة البحث -->
@@ -435,6 +436,7 @@
                     <span>0</span>
                 </span>
                 <div class="flex items-center gap-2 min-w-0">
+                    <span id="homeSoulmateChip" class="hidden inline-flex items-center gap-1 text-[10px] font-black text-[#9f1239] bg-[#fbf8f5] border border-[#dfd3c3] px-2 py-0.5 rounded-full shrink-0"></span>
                     <span id="miniHandleDisplay" class="unified-field-text uppercase truncate">فعّل رمزك</span>
                     <div id="miniUserAvatar" class="pulse-avatar-circle text-[#9f1239]">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -452,7 +454,7 @@
                             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                         </svg>
                     </button>
-                    <span id="friendProfileStreakText" class="inline-flex items-center gap-1 text-xs font-black text-[#9f1239] tabular-nums">
+                    <span id="friendProfileStreakText" class="hidden inline-flex items-center gap-1 text-xs font-black text-[#9f1239] tabular-nums">
                         <svg class="w-3.5 h-3.5 fill-[#9f1239]" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                         <span>0</span>
                     </span>
@@ -466,7 +468,10 @@
 
                     <div class="flex items-center gap-2 min-w-0">
                         <div id="friendProfileAvatar" class="pulse-avatar-circle text-[#9f1239] font-mono text-xs font-black">?</div>
-                        <span id="friendProfileHandle" class="font-mono text-xl font-black tracking-[0.22em] text-slate-900 uppercase truncate">---</span>
+                        <div class="min-w-0 text-right">
+                            <span id="friendProfileHandle" class="font-mono text-xl font-black tracking-[0.22em] text-slate-900 uppercase truncate block">---</span>
+                            <span id="friendProfileLinkBadge" class="hidden text-[10px] font-black text-[#9f1239] block truncate"></span>
+                        </div>
                         <button type="button" onclick="copyFriendLink()" title="نسخ"
                                 class="p-1.5 text-slate-600 hover:text-[#9f1239] hover:bg-[#f5efe6] rounded-xl transition active:scale-90 shrink-0">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -582,9 +587,38 @@
                     </h2>
                 </div>
 
-                <!-- تنبيه ستريك نشط لم يُحدَّث اليوم -->
+                <!-- بطاقة الارتباط الرسمي (∞) أو إرسال طلب ارتباط -->
+                <div id="soulmateLinkBox" class="rounded-2xl bg-[#fbf8f5] border border-[#dfd3c3] p-3 space-y-2.5">
+                    <div id="activeSoulmateBanner" class="hidden flex items-center justify-between gap-2">
+                        <button type="button" onclick="unlinkSoulmate()"
+                                class="px-2.5 py-1 rounded-full bg-[#f5efe6] hover:bg-[#e5dacb] text-[10px] font-bold text-[#9f1239] border border-[#dfd3c3] transition active:scale-95 shrink-0">
+                            فك الارتباط
+                        </button>
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <span id="activeSoulmateText" class="text-[11px] font-black text-slate-900 truncate"></span>
+                            <span class="text-xs font-black text-[#9f1239] shrink-0">∞</span>
+                        </div>
+                    </div>
+
+                    <div id="requestSoulmateRow" class="flex items-center gap-1.5">
+                        <button type="button" onclick="sendSoulmateRequest()"
+                                class="px-3 py-1.5 rounded-xl bg-[#f5efe6] hover:bg-[#9f1239] text-[#9f1239] hover:text-white border border-[#dfd3c3] text-[10.5px] font-bold transition active:scale-95 shrink-0 inline-flex items-center gap-1">
+                            <span>طلب ارتباط</span>
+                            <span class="font-black">∞</span>
+                        </button>
+                        <input type="text" id="soulmateTargetInput" placeholder="رمز الشريك للارتباط (∞)" autocapitalize="characters" autocomplete="off"
+                               class="w-full bg-[#f5efe6] border border-[#e7ddd0] rounded-xl px-2.5 py-1.5 text-right unified-field-text tracking-wider outline-none uppercase">
+                    </div>
+
+                    <div id="outgoingSoulmatePending" class="hidden text-[10px] font-bold text-stone-500 text-right"></div>
+
+                    <!-- طلبات الارتباط الواردة -->
+                    <div id="incomingSoulmateRequestsList" class="space-y-1.5"></div>
+                </div>
+
+                <!-- تنبيه ستريك المرتبطين النشط لم يُحدَّث اليوم -->
                 <div id="streakReminderBanner" class="hidden rounded-2xl bg-[#fbf8f5] border border-[#dfd3c3] px-3 py-2 text-[10px] font-bold text-[#9f1239] flex items-center justify-between">
-                    <span id="streakReminderText">لديك ستريك نشط بانتظار نبضة اليوم</span>
+                    <span id="streakReminderText">ستريك الارتباط (∞) بانتظار نبضة اليوم</span>
                     <span class="size-2 rounded-full bg-[#9f1239]"></span>
                 </div>
 
@@ -653,12 +687,13 @@
                             ?
                         </div>
                         <div id="searchResultHandle" class="font-mono text-2xl font-black tracking-[0.25em] text-slate-900 uppercase break-all">---</div>
+                        <div id="searchResultLinkBadge" class="hidden text-xs font-black text-[#9f1239]"></div>
                         
                         <div class="flex flex-wrap items-center justify-center gap-2">
                             <span id="searchResultHearts" class="inline-flex items-center gap-1.5 text-xs font-black text-[#9f1239] bg-[#f5efe6] border border-[#dfd3c3] px-3.5 py-1.5 rounded-full tabular-nums">
                                 0
                             </span>
-                            <span id="searchResultStreak" class="inline-flex items-center gap-1 text-xs font-bold text-slate-700 bg-[#f5efe6] border border-[#dfd3c3] px-3 py-1.5 rounded-full tabular-nums">
+                            <span id="searchResultStreak" class="hidden inline-flex items-center gap-1 text-xs font-bold text-slate-700 bg-[#f5efe6] border border-[#dfd3c3] px-3 py-1.5 rounded-full tabular-nums">
                                 0
                             </span>
                         </div>
@@ -704,6 +739,8 @@
                         <input type="file" id="profileAvatarInput" accept="image/*" class="hidden" onchange="handleAvatarFileChange(event)">
                     </div>
 
+                    <div id="profileSoulmateBadge" class="hidden inline-flex items-center gap-1 text-xs font-black text-[#9f1239] bg-[#f5efe6] border border-[#dfd3c3] px-3.5 py-1 rounded-full mx-auto"></div>
+
                     <div class="white-compact-box bg-[#f5efe6] flex items-center justify-center gap-1.5 px-2 py-1.5 shadow-2xs">
                         <button type="button" id="copyBtn" onclick="copyMyLink()"
                                 class="size-7 rounded-xl bg-[#fbf8f5] hover:bg-[#e5dacb] text-[#9f1239] border border-[#dfd3c3] flex items-center justify-center shrink-0 transition-all active:scale-90">
@@ -724,7 +761,7 @@
                     </div>
                 </div>
 
-                <!-- ضوابط الخصوصية والعدّاد -->
+                <!-- ضوابط الخصوصية والعدّاد والارتباط -->
                 <div class="bg-[#fbf8f5] rounded-2xl p-3.5 border border-[#dfd3c3] space-y-3">
                     <div class="flex items-center justify-between gap-2">
                         <div class="text-right">
@@ -734,6 +771,19 @@
                         <button type="button" id="toggleCounterVisibilityBtn" onclick="toggleCounterVisibilitySetting()"
                                 class="w-11 h-6 rounded-full bg-[#9f1239] p-0.5 transition-colors flex items-center shrink-0">
                             <span id="toggleCounterKnob" class="size-5 rounded-full bg-white shadow-xs transition-transform translate-x-0"></span>
+                        </button>
+                    </div>
+
+                    <div class="border-t border-[#e7ddd0]"></div>
+
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="text-right">
+                            <p class="text-[11px] font-bold text-slate-800">إظهار علامة الارتباط (∞)</p>
+                            <p class="text-[9.5px] text-stone-500">إظهار الارتباط للزوار وعند البحث عن رمزك</p>
+                        </div>
+                        <button type="button" id="toggleLinkBadgeBtn" onclick="toggleLinkBadgeVisibilitySetting()"
+                                class="w-11 h-6 rounded-full bg-[#9f1239] p-0.5 transition-colors flex items-center shrink-0">
+                            <span id="toggleLinkBadgeKnob" class="size-5 rounded-full bg-white shadow-xs transition-transform translate-x-0"></span>
                         </button>
                     </div>
 
@@ -974,7 +1024,13 @@
         let myAvatarData = localStorage.getItem('feely_user_avatar') || null;
         let avatarsCache = JSON.parse(localStorage.getItem('feely_avatars_cache') || '{}');
         let showCounterSetting = localStorage.getItem('feely_show_counter') !== 'false';
+        let showLinkBadgeSetting = localStorage.getItem('feely_show_link_badge') !== 'false';
         let allowAnonymousSetting = localStorage.getItem('feely_allow_anonymous') !== 'false';
+
+        // Soulmate (∞) state
+        let linkedPartnerHandle = localStorage.getItem('feely_linked_partner') || null;
+        let outgoingLinkTarget = null;
+        let incomingLinkRequests = [];
 
         let activeTab = 'incoming';
         let currentMainView = 'home';
@@ -1000,6 +1056,198 @@
         let activeStreaksCache = {};
         let streakDatesCache = {};
 
+        // ================= SOULMATE LINK (∞) & STREAK FOR LINKED ONLY =================
+        function isLinkedWith(handle) {
+            const clean = (handle || '').trim().toUpperCase();
+            return Boolean(linkedPartnerHandle && clean && clean === linkedPartnerHandle);
+        }
+
+        function applySoulmateUI() {
+            const homeChip = document.getElementById('homeSoulmateChip');
+            const profileBadge = document.getElementById('profileSoulmateBadge');
+            const activeBanner = document.getElementById('activeSoulmateBanner');
+            const activeText = document.getElementById('activeSoulmateText');
+            const reqRow = document.getElementById('requestSoulmateRow');
+            const outPending = document.getElementById('outgoingSoulmatePending');
+            const reqList = document.getElementById('incomingSoulmateRequestsList');
+            const reqDot = document.getElementById('friendsReqDot');
+
+            if (reqDot) {
+                reqDot.classList.toggle('hidden', incomingLinkRequests.length === 0);
+            }
+
+            if (linkedPartnerHandle) {
+                if (homeChip) {
+                    homeChip.textContent = `∞ ${linkedPartnerHandle}`;
+                    homeChip.classList.remove('hidden');
+                }
+                if (profileBadge) {
+                    if (showLinkBadgeSetting) {
+                        profileBadge.textContent = `∞ مرتبط بـ ${linkedPartnerHandle}`;
+                        profileBadge.classList.remove('hidden');
+                    } else {
+                        profileBadge.classList.add('hidden');
+                    }
+                }
+                if (activeBanner && activeText) {
+                    activeText.textContent = `مرتبط بـ ${linkedPartnerHandle}`;
+                    activeBanner.classList.remove('hidden');
+                }
+                if (reqRow) reqRow.classList.add('hidden');
+                if (outPending) outPending.classList.add('hidden');
+            } else {
+                if (homeChip) homeChip.classList.add('hidden');
+                if (profileBadge) profileBadge.classList.add('hidden');
+                if (activeBanner) activeBanner.classList.add('hidden');
+                if (reqRow) reqRow.classList.remove('hidden');
+                if (outPending) {
+                    if (outgoingLinkTarget) {
+                        outPending.textContent = `طلب ارتباط مرسل إلى (${outgoingLinkTarget}) بانتظار الموافقة`;
+                        outPending.classList.remove('hidden');
+                    } else {
+                        outPending.classList.add('hidden');
+                    }
+                }
+            }
+
+            if (reqList) {
+                reqList.innerHTML = '';
+                if (!linkedPartnerHandle && incomingLinkRequests.length > 0) {
+                    incomingLinkRequests.forEach(reqHandle => {
+                        const row = document.createElement('div');
+                        row.className = 'flex items-center justify-between gap-2 bg-[#f5efe6] border border-[#dfd3c3] rounded-xl px-2.5 py-2';
+                        row.innerHTML = `
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <button type="button" onclick="acceptSoulmateRequest('${reqHandle}')"
+                                        class="px-2.5 py-1 rounded-lg bg-[#9f1239] text-white text-[10px] font-bold transition active:scale-95">قبول</button>
+                                <button type="button" onclick="declineSoulmateRequest('${reqHandle}')"
+                                        class="px-2 py-1 rounded-lg bg-[#fbf8f5] text-stone-600 border border-[#dfd3c3] text-[10px] font-bold transition active:scale-95">رفض</button>
+                            </div>
+                            <span class="font-mono text-[11px] font-black text-slate-800 uppercase truncate">∞ ${reqHandle}</span>
+                        `;
+                        reqList.appendChild(row);
+                    });
+                }
+            }
+
+            renderFriendsManagePage();
+            renderPulsesList();
+        }
+
+        function listenForSoulmateState(handle) {
+            if (!handle) return;
+            db.ref('links/' + handle).on('value', snap => {
+                const partner = snap.val();
+                linkedPartnerHandle = partner ? String(partner).toUpperCase() : null;
+                if (linkedPartnerHandle) {
+                    localStorage.setItem('feely_linked_partner', linkedPartnerHandle);
+                    outgoingLinkTarget = null;
+                    if (!pinnedFriends.includes(linkedPartnerHandle)) {
+                        pinnedFriends.unshift(linkedPartnerHandle);
+                        localStorage.setItem('feely_pinned_friends', JSON.stringify(pinnedFriends));
+                    }
+                    const targetInput = document.getElementById('targetIdInput');
+                    if (targetInput && !targetInput.value.trim()) {
+                        targetInput.value = linkedPartnerHandle;
+                    }
+                    checkTargetStreak(linkedPartnerHandle);
+                } else {
+                    localStorage.removeItem('feely_linked_partner');
+                }
+                applySoulmateUI();
+            });
+
+            db.ref('linkRequests/' + handle).on('value', snap => {
+                const data = snap.val() || {};
+                incomingLinkRequests = Object.keys(data).filter(k => data[k]).map(k => k.toUpperCase());
+                applySoulmateUI();
+            });
+        }
+
+        function sendSoulmateRequest() {
+            if (!userHandle || !currentUser) {
+                return showToast('فعّل رمزك أولاً', 'error');
+            }
+            if (linkedPartnerHandle) {
+                return showToast(`أنت مرتبط بـ (${linkedPartnerHandle})`, 'error');
+            }
+            const input = document.getElementById('soulmateTargetInput');
+            const target = (input?.value || '').trim().toUpperCase();
+            if (!target) {
+                return showToast('أدخل رمز الشريك', 'error');
+            }
+            if (target === userHandle) {
+                return showToast('لا يمكنك الارتباط برمزك نفسه', 'error');
+            }
+
+            db.ref('handles/' + target).once('value', snap => {
+                if (!snap.exists()) {
+                    return showToast(`(${target}) غير موجود`, 'error');
+                }
+                db.ref('linkRequests/' + target + '/' + userHandle).set({
+                    from: userHandle,
+                    timestamp: Date.now()
+                }).then(() => {
+                    outgoingLinkTarget = target;
+                    if (input) input.value = '';
+                    applySoulmateUI();
+                    showToast(`تم إرسال طلب ارتباط (∞) إلى (${target})`);
+                });
+            });
+        }
+
+        function acceptSoulmateRequest(requesterHandle) {
+            if (!userHandle) return;
+            const cleanReq = requesterHandle.trim().toUpperCase();
+
+            db.ref('links/' + userHandle).set(cleanReq).then(() => {
+                return db.ref('links/' + cleanReq).set(userHandle);
+            }).then(() => {
+                db.ref('linkRequests/' + userHandle + '/' + cleanReq).remove().catch(() => {});
+                db.ref('linkRequests/' + cleanReq + '/' + userHandle).remove().catch(() => {});
+                linkedPartnerHandle = cleanReq;
+                localStorage.setItem('feely_linked_partner', cleanReq);
+                pinnedFriends = [cleanReq, ...pinnedFriends.filter(f => f !== cleanReq)];
+                localStorage.setItem('feely_pinned_friends', JSON.stringify(pinnedFriends));
+                const targetInput = document.getElementById('targetIdInput');
+                if (targetInput) targetInput.value = cleanReq;
+                checkTargetStreak(cleanReq);
+                applySoulmateUI();
+                showToast(`تم الارتباط (∞) مع (${cleanReq})`);
+            });
+        }
+
+        function declineSoulmateRequest(requesterHandle) {
+            if (!userHandle) return;
+            const cleanReq = requesterHandle.trim().toUpperCase();
+            db.ref('linkRequests/' + userHandle + '/' + cleanReq).remove().catch(() => {});
+            incomingLinkRequests = incomingLinkRequests.filter(h => h !== cleanReq);
+            applySoulmateUI();
+        }
+
+        function unlinkSoulmate() {
+            if (!userHandle || !linkedPartnerHandle) return;
+            const partner = linkedPartnerHandle;
+            const pairKey = getFirebasePairKey(userHandle, partner);
+
+            db.ref('links/' + userHandle).remove().catch(() => {});
+            db.ref('links/' + partner).once('value', snap => {
+                if (snap.val() === userHandle) {
+                    db.ref('links/' + partner).remove().catch(() => {});
+                }
+            });
+            if (pairKey) {
+                db.ref('streaks/' + pairKey).remove().catch(() => {});
+            }
+
+            linkedPartnerHandle = null;
+            delete activeStreaksCache[partner];
+            delete streakDatesCache[partner];
+            localStorage.removeItem('feely_linked_partner');
+            applySoulmateUI();
+            showToast(`تم فك الارتباط عن (${partner})`);
+        }
+
         // ================= PROFILE PRIVACY & COUNTER TOGGLES =================
         function applyProfileSettingsUI() {
             const counterBtn = document.getElementById('toggleCounterVisibilityBtn');
@@ -1020,6 +1268,15 @@
                 miniBadge.classList.toggle('invisible', !showCounterSetting);
             }
 
+            const linkBtn = document.getElementById('toggleLinkBadgeBtn');
+            const linkKnob = document.getElementById('toggleLinkBadgeKnob');
+            if (linkBtn && linkKnob) {
+                linkBtn.className = `w-11 h-6 rounded-full p-0.5 transition-colors flex items-center shrink-0 ${
+                    showLinkBadgeSetting ? 'bg-[#9f1239]' : 'bg-[#dfd3c3]'
+                }`;
+                linkKnob.style.transform = showLinkBadgeSetting ? 'translateX(0)' : 'translateX(-20px)';
+            }
+
             const anonBtn = document.getElementById('toggleAllowAnonBtn');
             const anonKnob = document.getElementById('toggleAllowAnonKnob');
             if (anonBtn && anonKnob) {
@@ -1028,12 +1285,15 @@
                 }`;
                 anonKnob.style.transform = allowAnonymousSetting ? 'translateX(0)' : 'translateX(-20px)';
             }
+
+            applySoulmateUI();
         }
 
         function syncUserSettingsToCloud() {
             if (!userHandle) return;
             db.ref('settings/' + userHandle).set({
                 showCounter: showCounterSetting,
+                showLinkBadge: showLinkBadgeSetting,
                 allowAnonymous: allowAnonymousSetting
             }).catch(() => {});
         }
@@ -1041,6 +1301,14 @@
         function toggleCounterVisibilitySetting() {
             showCounterSetting = !showCounterSetting;
             localStorage.setItem('feely_show_counter', String(showCounterSetting));
+            applyProfileSettingsUI();
+            syncUserSettingsToCloud();
+            if (navigator.vibrate) navigator.vibrate(10);
+        }
+
+        function toggleLinkBadgeVisibilitySetting() {
+            showLinkBadgeSetting = !showLinkBadgeSetting;
+            localStorage.setItem('feely_show_link_badge', String(showLinkBadgeSetting));
             applyProfileSettingsUI();
             syncUserSettingsToCloud();
             if (navigator.vibrate) navigator.vibrate(10);
@@ -1269,19 +1537,23 @@
             el.style.height = Math.min(el.scrollHeight, 96) + 'px';
         }
 
-        // ================= ORDERED FRIENDS LIST (PINNED + RECENT OR STREAK) =================
+        // ================= ORDERED FRIENDS LIST (LINKED PARTNER PINNED FIRST) =================
         function getOrderedFriendsList() {
             const sentTargets = sentPulses.map(p => (p.target || '').trim().toUpperCase()).filter(Boolean);
             const pinnedUpper = pinnedFriends.map(h => h.trim().toUpperCase()).filter(Boolean);
-            const combined = [...new Set([...sentTargets, ...pinnedUpper])].filter(h => !hiddenFriends.includes(h));
+            const baseList = linkedPartnerHandle
+                ? [linkedPartnerHandle, ...sentTargets, ...pinnedUpper]
+                : [...sentTargets, ...pinnedUpper];
+            const combined = [...new Set(baseList)].filter(h => !hiddenFriends.includes(h));
 
-            const sortedRest = combined.filter(h => !favoriteFriends.includes(h));
+            const sortedRest = combined.filter(h => !favoriteFriends.includes(h) && h !== linkedPartnerHandle);
             if (friendsSortMode === 'streak') {
                 sortedRest.sort((a, b) => (activeStreaksCache[b] || 0) - (activeStreaksCache[a] || 0));
             }
 
-            const favs = favoriteFriends.filter(h => combined.includes(h));
-            return [...favs, ...sortedRest];
+            const favs = favoriteFriends.filter(h => combined.includes(h) && h !== linkedPartnerHandle);
+            const partnerArr = linkedPartnerHandle && combined.includes(linkedPartnerHandle) ? [linkedPartnerHandle] : [];
+            return [...partnerArr, ...favs, ...sortedRest];
         }
 
         function toggleFriendsSortMode() {
@@ -1314,13 +1586,14 @@
 
             const todayStr = new Date().toDateString();
             const pendingStreakFriends = friends.filter(h => {
+                if (!isLinkedWith(h)) return false;
                 const st = activeStreaksCache[h] || 0;
                 const lastD = streakDatesCache[h] || '';
                 return st > 0 && lastD !== todayStr;
             });
 
             if (pendingStreakFriends.length > 0) {
-                textEl.textContent = `ستريك نشط بانتظار اليوم (${pendingStreakFriends.slice(0, 2).join(' · ')})`;
+                textEl.textContent = `ستريك الارتباط (∞) بانتظار نبضة اليوم (${pendingStreakFriends[0]})`;
                 banner.classList.remove('hidden');
             } else {
                 banner.classList.add('hidden');
@@ -1459,7 +1732,7 @@
 
             const filterVal = (document.getElementById('friendsFilterInput')?.value || '').trim().toUpperCase();
             const friends = filterVal ? allFriends.filter(h => h.includes(filterVal)) : allFriends;
-            const defaultTarget = (document.getElementById('targetIdInput')?.value || '').trim().toUpperCase() || allFriends[0] || '';
+            const defaultTarget = (document.getElementById('targetIdInput')?.value || '').trim().toUpperCase() || linkedPartnerHandle || allFriends[0] || '';
             const todayStr = new Date().toDateString();
 
             if (friends.length === 0) {
@@ -1473,10 +1746,11 @@
 
             list.innerHTML = '';
             friends.forEach(handle => {
+                const linked = isLinkedWith(handle);
                 const isDefault = defaultTarget === handle;
                 const isPinned = favoriteFriends.includes(handle);
-                const streakVal = activeStreaksCache[handle] !== undefined ? activeStreaksCache[handle] : 0;
-                const needsToday = streakVal > 0 && (streakDatesCache[handle] || '') !== todayStr;
+                const streakVal = linked ? (activeStreaksCache[handle] || 0) : 0;
+                const needsToday = linked && streakVal > 0 && (streakDatesCache[handle] || '') !== todayStr;
                 const avatarUrl = getAvatarForHandle(handle);
 
                 if (!avatarUrl) {
@@ -1487,9 +1761,15 @@
                     ? `<img src="${avatarUrl}" alt="${handle}" class="w-full h-full object-cover">`
                     : handle.charAt(0);
 
+                const streakPillHTML = linked
+                    ? `<span class="inline-flex items-center gap-0.5 text-[10px] font-black text-[#9f1239] tabular-nums mt-0.5">
+                           ${ICONS.heartSmall} <span>${streakVal}</span>
+                       </span>`
+                    : '';
+
                 const row = document.createElement('div');
                 row.className = `flex items-center justify-between gap-2.5 rounded-2xl p-3 border transition cursor-pointer active:scale-[0.99] ${
-                    isDefault ? 'bg-[#fbf8f5] border-[#9f1239]' : 'bg-[#fbf8f5] border-[#dfd3c3] hover:border-[#b91c3c]'
+                    linked || isDefault ? 'bg-[#fbf8f5] border-[#9f1239]' : 'bg-[#fbf8f5] border-[#dfd3c3] hover:border-[#b91c3c]'
                 }`;
                 row.onclick = () => setDefaultRecipient(handle);
                 row.innerHTML = `
@@ -1500,24 +1780,24 @@
                                 }">
                             ${ICONS.pin}
                         </button>
+                        ${!linked ? `
                         <button type="button" onclick="removeFriendFromManage(event, '${handle}')" title="حذف"
                                 class="grid size-7 place-items-center rounded-full bg-[#f5efe6] hover:bg-[#9f1239] text-slate-600 hover:text-white border border-[#dfd3c3] transition active:scale-90">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                             </svg>
-                        </button>
+                        </button>` : ''}
                     </div>
 
                     <div class="flex items-center gap-2.5 min-w-0">
                         <div class="text-right min-w-0">
                             <div class="flex items-center justify-end gap-1.5">
                                 <span class="font-mono text-xs font-black text-slate-900 uppercase truncate">${handle}</span>
+                                ${linked ? `<span class="text-[11px] font-black text-[#9f1239]">∞</span>` : ''}
                                 ${isDefault ? `<span class="size-2 rounded-full bg-[#9f1239]"></span>` : ''}
                                 ${needsToday ? `<span class="size-1.5 rounded-full bg-[#be123c]" title="بانتظار اليوم"></span>` : ''}
                             </div>
-                            <span class="inline-flex items-center gap-0.5 text-[10px] font-black text-[#9f1239] tabular-nums mt-0.5">
-                                ${ICONS.heartSmall} <span>${streakVal}</span>
-                            </span>
+                            ${streakPillHTML}
                         </div>
                         <div class="story-ring shrink-0">
                             <div class="size-9 rounded-full bg-[#f5efe6] flex items-center justify-center font-mono text-xs font-black text-slate-900 overflow-hidden">
@@ -1569,7 +1849,9 @@
             const ordered = getOrderedFriendsList();
             const prefilled = (document.getElementById('targetIdInput')?.value || '').trim().toUpperCase();
 
-            if (prefilled && ordered.includes(prefilled)) {
+            if (linkedPartnerHandle && ordered.includes(linkedPartnerHandle) && (!prefilled || prefilled === linkedPartnerHandle)) {
+                selectedRecipientsInSheet = [linkedPartnerHandle];
+            } else if (prefilled && ordered.includes(prefilled)) {
                 selectedRecipientsInSheet = [prefilled];
             } else if (ordered.length > 0) {
                 selectedRecipientsInSheet = [ordered[0]];
@@ -1578,7 +1860,7 @@
             }
 
             ordered.forEach(h => {
-                checkTargetStreak(h, () => renderSheetFriendsList());
+                if (isLinkedWith(h)) checkTargetStreak(h, () => renderSheetFriendsList());
                 fetchHandleAvatarFromCloud(h, () => renderSheetFriendsList());
             });
 
@@ -1617,12 +1899,19 @@
             container.innerHTML = '';
             ordered.forEach(handle => {
                 const isSelected = selectedRecipientsInSheet.includes(handle);
-                const streakVal = activeStreaksCache[handle] !== undefined ? activeStreaksCache[handle] : 0;
+                const linked = isLinkedWith(handle);
+                const streakVal = linked ? (activeStreaksCache[handle] || 0) : 0;
                 const avatarUrl = getAvatarForHandle(handle);
 
                 const circleInner = avatarUrl
                     ? `<img src="${avatarUrl}" alt="${handle}" class="w-full h-full object-cover">`
                     : handle.charAt(0);
+
+                const streakPill = linked
+                    ? `<span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] text-[8.5px] font-black px-1 py-0 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap tabular-nums">
+                           ${ICONS.heartSmall} <span>${streakVal}</span>
+                       </span>`
+                    : '';
 
                 const btn = document.createElement('button');
                 btn.type = 'button';
@@ -1633,11 +1922,9 @@
                         <div class="size-9 rounded-full border-2 ${isSelected ? 'border-[#9f1239] bg-[#FBF8F5] text-[#9f1239]' : 'border-[#dfd3c3] bg-[#f5efe6] text-stone-700'} flex items-center justify-center font-mono text-xs font-black transition-colors overflow-hidden">
                             ${circleInner}
                         </div>
-                        <span class="streak-pill absolute -bottom-1 left-1/2 -translate-x-1/2 bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] text-[8.5px] font-black px-1 py-0 rounded-full shadow-2xs inline-flex items-center gap-0.5 whitespace-nowrap tabular-nums">
-                            ${ICONS.heartSmall} <span>${streakVal}</span>
-                        </span>
+                        ${streakPill}
                     </div>
-                    <span class="font-mono text-[9.5px] ${isSelected ? 'font-black text-[#9f1239]' : 'font-bold text-stone-600'} uppercase max-w-[54px] truncate mt-0.5">${handle}</span>
+                    <span class="font-mono text-[9.5px] ${isSelected ? 'font-black text-[#9f1239]' : 'font-bold text-stone-600'} uppercase max-w-[54px] truncate mt-0.5">${linked ? '∞ ' : ''}${handle}</span>
                 `;
                 container.appendChild(btn);
             });
@@ -2086,10 +2373,13 @@
 
                 resultBox.classList.remove('hidden');
 
-                const heartsBadge = document.getElementById('searchResultHearts');
-                db.ref('settings/' + rawCode + '/showCounter').once('value', settingSnap => {
-                    const isVisible = settingSnap.val() !== false;
-                    if (!isVisible) {
+                db.ref('settings/' + rawCode).once('value', settingSnap => {
+                    const settings = settingSnap.val() || {};
+                    const showCnt = settings.showCounter !== false;
+                    const showLink = settings.showLinkBadge !== false;
+
+                    const heartsBadge = document.getElementById('searchResultHearts');
+                    if (!showCnt) {
                         heartsBadge.classList.add('hidden');
                     } else {
                         heartsBadge.classList.remove('hidden');
@@ -2098,10 +2388,27 @@
                             heartsBadge.innerHTML = `${ICONS.heartFill} <span>${count}</span>`;
                         });
                     }
-                });
 
-                checkTargetStreak(rawCode, (streakVal) => {
-                    document.getElementById('searchResultStreak').innerHTML = `${ICONS.heartSmall} <span>${streakVal}</span>`;
+                    const linkBadgeEl = document.getElementById('searchResultLinkBadge');
+                    const streakEl = document.getElementById('searchResultStreak');
+                    db.ref('links/' + rawCode).once('value', linkSnap => {
+                        const partner = linkSnap.val();
+                        if (partner && showLink) {
+                            linkBadgeEl.textContent = `∞ مرتبط بـ ${String(partner).toUpperCase()}`;
+                            linkBadgeEl.classList.remove('hidden');
+                        } else {
+                            linkBadgeEl.classList.add('hidden');
+                        }
+
+                        if (partner && userHandle && String(partner).toUpperCase() === userHandle) {
+                            checkTargetStreak(rawCode, (streakVal) => {
+                                streakEl.innerHTML = `∞ ${ICONS.heartSmall} <span>${streakVal}</span>`;
+                                streakEl.classList.remove('hidden');
+                            });
+                        } else {
+                            streakEl.classList.add('hidden');
+                        }
+                    });
                 });
 
                 document.getElementById('searchSendPulseBtn').onclick = () => {
@@ -2182,19 +2489,39 @@
                 if (targetInput) targetInput.value = cleanHandle;
 
                 const friendBadge = document.getElementById('friendHeartsReceivedBadge');
-                db.ref('settings/' + cleanHandle + '/showCounter').once('value', settingSnap => {
-                    const isVisible = settingSnap.val() !== false;
+                const friendLinkBadge = document.getElementById('friendProfileLinkBadge');
+                const friendStreakEl = document.getElementById('friendProfileStreakText');
+
+                db.ref('settings/' + cleanHandle).once('value', settingSnap => {
+                    const settings = settingSnap.val() || {};
+                    const isVisible = settings.showCounter !== false;
+                    const showLink = settings.showLinkBadge !== false;
                     friendBadge.classList.toggle('hidden', !isVisible);
+
+                    db.ref('links/' + cleanHandle).once('value', linkSnap => {
+                        const partner = linkSnap.val();
+                        if (partner && showLink) {
+                            friendLinkBadge.textContent = `∞ مرتبط بـ ${String(partner).toUpperCase()}`;
+                            friendLinkBadge.classList.remove('hidden');
+                        } else {
+                            friendLinkBadge.classList.add('hidden');
+                        }
+
+                        if (partner && userHandle && String(partner).toUpperCase() === userHandle) {
+                            checkTargetStreak(cleanHandle, (streakVal) => {
+                                friendStreakEl.innerHTML = `∞ ${ICONS.heartFill} <span>${streakVal}</span>`;
+                                friendStreakEl.classList.remove('hidden');
+                            });
+                        } else {
+                            friendStreakEl.classList.add('hidden');
+                        }
+                    });
                 });
 
                 friendStatsListenerRef = db.ref('stats/' + cleanHandle + '/receivedCount');
                 friendStatsListenerRef.on('value', countSnap => {
                     const totalHearts = countSnap.val() || 0;
                     friendBadge.innerHTML = `${ICONS.heartFill} <span>${totalHearts}</span>`;
-                });
-
-                checkTargetStreak(cleanHandle, (streakVal) => {
-                    document.getElementById('friendProfileStreakText').innerHTML = `${ICONS.heartFill} <span>${streakVal}</span>`;
                 });
 
                 switchMainView('home');
@@ -2219,7 +2546,12 @@
 
         function onTargetInputChange(val) {
             const clean = val.trim().toUpperCase();
-            checkTargetStreak(clean);
+            if (isLinkedWith(clean)) {
+                checkTargetStreak(clean);
+            } else {
+                const badge = document.getElementById('targetStreakIndicator');
+                if (badge) badge.classList.add('hidden');
+            }
             renderFriendsManagePage();
         }
 
@@ -2331,6 +2663,7 @@
                             db.ref('avatars/' + userHandle).set(myAvatarData).catch(() => {});
                         }
                         syncUserSettingsToCloud();
+                        listenForSoulmateState(userHandle);
                         refreshAllAvatarsUI();
                         setHandleLockedState(userHandle);
                         listenForIncomingPulses(userHandle);
@@ -2345,6 +2678,7 @@
                                     db.ref('avatars/' + userHandle).set(myAvatarData).catch(() => {});
                                 }
                                 syncUserSettingsToCloud();
+                                listenForSoulmateState(userHandle);
                                 refreshAllAvatarsUI();
                                 setHandleLockedState(userHandle);
                                 listenForIncomingPulses(userHandle);
@@ -2455,11 +2789,12 @@
         function logout() { 
             auth.signOut().then(() => {
                 localStorage.removeItem('feely_user_handle');
+                localStorage.removeItem('feely_linked_partner');
                 location.reload();
             }); 
         }
 
-        // ================= FIREBASE CLOUD STREAK LOGIC =================
+        // ================= FIREBASE CLOUD STREAK LOGIC (LINKED PARTNERS ONLY) =================
         function getFirebasePairKey(handle1, handle2) {
             if (!handle1 || !handle2) return null;
             const h1 = handle1.trim().toUpperCase();
@@ -2470,9 +2805,11 @@
         function checkTargetStreak(target, callback) {
             const trimmedTarget = target.trim().toUpperCase();
             const badge = document.getElementById('targetStreakIndicator');
-            
-            if (trimmedTarget.length < 1 || !userHandle || !currentUser) {
-                if (badge) badge.classList.add('hidden');
+
+            if (!isLinkedWith(trimmedTarget) || trimmedTarget.length < 1 || !userHandle || !currentUser) {
+                if (badge && document.getElementById('targetIdInput')?.value.trim().toUpperCase() === trimmedTarget) {
+                    badge.classList.add('hidden');
+                }
                 if (callback) callback(0);
                 return;
             }
@@ -2492,8 +2829,8 @@
 
                 activeStreaksCache[trimmedTarget] = currentStreak;
                 streakDatesCache[trimmedTarget] = data.lastDate || "";
-                if (badge && document.getElementById('targetIdInput')?.value.trim().toUpperCase() === trimmedTarget) {
-                    badge.innerHTML = `${ICONS.heartSmall} <span>${currentStreak}</span>`;
+                if (badge && isLinkedWith(trimmedTarget) && document.getElementById('targetIdInput')?.value.trim().toUpperCase() === trimmedTarget) {
+                    badge.innerHTML = `∞ ${ICONS.heartSmall} <span>${currentStreak}</span>`;
                     badge.classList.remove('hidden');
                 }
                 if (callback) callback(currentStreak);
@@ -2501,6 +2838,7 @@
         }
 
         function recordTargetStreakInCloud(senderHandle, targetHandle) {
+            if (!isLinkedWith(targetHandle)) return;
             const pairKey = getFirebasePairKey(senderHandle, targetHandle);
             if (!pairKey) return;
 
@@ -2528,7 +2866,7 @@
                     streakDatesCache[targetHandle] = today;
                     checkTargetStreak(targetHandle);
                     if (activeFriendHandle === targetHandle) {
-                        document.getElementById('friendProfileStreakText').innerHTML = `${ICONS.heartFill} <span>${newStreak}</span>`;
+                        document.getElementById('friendProfileStreakText').innerHTML = `∞ ${ICONS.heartFill} <span>${newStreak}</span>`;
                     }
                     renderPulsesList();
                     renderFriendsManagePage();
@@ -2569,6 +2907,7 @@
                 db.ref('users/' + currentUser.uid + '/handle').set(handle);
                 db.ref('stats/' + handle + '/receivedCount').transaction(curr => curr || 0);
                 syncUserSettingsToCloud();
+                listenForSoulmateState(handle);
                 if (myAvatarData) {
                     cacheAvatarForHandle(handle, myAvatarData);
                     db.ref('avatars/' + handle).set(myAvatarData).catch(() => {});
@@ -2729,7 +3068,7 @@
 
                             sentPulses.unshift(pulseData);
 
-                            if (userHandle && !isAnonSend) {
+                            if (userHandle && !isAnonSend && isLinkedWith(target)) {
                                 recordTargetStreakInCloud(userHandle, target);
                             }
 
@@ -2832,17 +3171,22 @@
                 const isIncoming = activeTab === 'incoming';
                 const targetOrSender = isIncoming ? (item.senderHandle || item.sender) : item.target;
                 const isAnonSender = targetOrSender === 'مجهول';
+                const linked = !isAnonSender && isLinkedWith(targetOrSender);
                 const cardKey = `${activeTab}_${idx}_${item.timestamp || 0}`;
                 const isFresh = isIncoming && highlightedIncomingKey && item._fbKey === highlightedIncomingKey;
                 const isMenuOpen = openActionMenuKey === cardKey;
 
-                if (!isAnonSender && targetOrSender) {
+                if (linked) {
                     checkTargetStreak(targetOrSender);
                 }
 
-                const currentStreakVal = activeStreaksCache[targetOrSender] || 0;
-                const streakBadge = currentStreakVal > 0 && !isAnonSender
-                    ? `<span class="inline-flex items-center gap-0.5 text-[9.5px] bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] font-black px-1.5 py-0.5 rounded-full tabular-nums">${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
+                const currentStreakVal = linked ? (activeStreaksCache[targetOrSender] || 0) : 0;
+                const streakBadge = linked && currentStreakVal > 0
+                    ? `<span class="inline-flex items-center gap-0.5 text-[9.5px] bg-[#f5efe6] border border-[#dfd3c3] text-[#9f1239] font-black px-1.5 py-0.5 rounded-full tabular-nums">∞ ${ICONS.heartSmall} <span>${currentStreakVal}</span></span>` 
+                    : '';
+
+                const linkTag = linked
+                    ? `<span class="text-[10px] font-black text-[#9f1239]">∞</span>`
                     : '';
 
                 const directionLabel = isIncoming ? 'من' : 'إلى';
@@ -2906,6 +3250,7 @@
                                 <div class="flex items-center gap-1.5 flex-wrap">
                                     <span class="text-[10px] font-bold text-stone-500">${directionLabel}</span>
                                     <span class="font-mono text-[10px] font-black text-stone-700 uppercase truncate">${isIncoming ? item.sender : item.target}</span>
+                                    ${linkTag}
                                     ${streakBadge}
                                 </div>
                                 <p class="text-[9.5px] text-stone-500 font-medium tabular-nums tracking-tight">${exactDateTime}</p>
