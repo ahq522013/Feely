@@ -16,6 +16,7 @@
         :root {
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --bottom-bar-height: 62px;
         }
 
         html, body {
@@ -29,7 +30,20 @@
 
         body {
             padding-top: var(--safe-top);
-            padding-bottom: calc(1.75rem + var(--safe-bottom));
+            padding-bottom: calc(var(--bottom-bar-height) + var(--safe-bottom) + 1rem);
+        }
+
+        /* Fixed Non-Floating Bottom Navigation Bar */
+        .fixed-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: #f5efe6;
+            border-top: 1.5px solid #dfd3c3;
+            padding-bottom: var(--safe-bottom);
+            z-index: 35;
         }
 
         /* Pure Beige Cards */
@@ -342,73 +356,16 @@
     <!-- حاوية الإشعارات الموحدة في منتصف الشاشة -->
     <div id="toastContainer" style="top: calc(1rem + var(--safe-top));" class="fixed inset-x-0 mx-auto z-[9999] pointer-events-none px-4 flex flex-col items-center justify-center w-full max-w-sm"></div>
 
-    <!-- Header العلوي الموحد -->
-    <header class="w-full max-w-md mx-auto px-3.5 sm:px-5 pt-4 sm:pt-6 flex justify-between items-center gap-1.5">
-        <div id="authStatusContainer" class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
-            <!-- أيقونة حفظ الحساب / خروج -->
-            <button id="openAuthModalBtn" onclick="openAuthModal()" title="حفظ الحساب"
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] hover:bg-[#fbf8f5] text-slate-700 border border-[#dfd3c3] transition shadow-2xs active:scale-95">
-                <svg class="w-4 h-4 text-[#9f1239]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
-                </svg>
-            </button>
-            <button id="logoutBtn" onclick="logout()" title="خروج"
-                    class="hidden grid size-8 sm:size-9 place-items-center rounded-full bg-[#fbf8f5] hover:bg-[#e5dacb] text-[#9f1239] border border-[#dfd3c3] transition active:scale-95">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-                </svg>
-            </button>
-
-            <!-- زر النبض (الرئيسية) -->
-            <button type="button" id="navHomeBtn" onclick="switchMainView('home')" title="النبض"
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#9f1239] text-white shadow-sm shadow-rose-900/20 transition-all active:scale-90">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-                </svg>
-            </button>
-
-            <!-- زر صفحة أصدقاء النبض المستقلة -->
-            <button type="button" id="navFriendsBtn" onclick="switchMainView('friends')" title="أصدقاء النبض"
-                    class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-                <span id="friendsReqDot" class="hidden absolute right-1.5 top-1.5 size-2 rounded-full bg-[#9f1239] ring-2 ring-[#f5efe6]"></span>
-            </button>
-
-            <!-- زر عدسة البحث -->
-            <button type="button" id="navSearchBtn" onclick="switchMainView('search')" title="بحث"
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </svg>
-            </button>
-
+    <!-- Header العلوي الخفيف (الشعار + ملفي فقط) -->
+    <header class="w-full max-w-md mx-auto px-3.5 sm:px-5 pt-4 sm:pt-5 flex justify-between items-center gap-2">
+        <div class="flex items-center gap-2">
             <!-- زر البروفايل الشخصي -->
             <button type="button" id="navProfileBtn" onclick="switchMainView('profile')" title="ملفي"
-                    class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
+                    class="relative grid size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                 </svg>
                 <span id="profileAlertDot" class="hidden absolute right-1.5 top-1.5 size-2 rounded-full bg-[#9f1239] ring-2 ring-[#f5efe6]"></span>
-            </button>
-
-            <!-- أيقونة الإشعارات -->
-            <button id="notificationBellBtn" onclick="handleBellClick()" title="الإشعارات" 
-                    class="relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] transition border border-[#dfd3c3] shadow-2xs active:scale-90">
-                <svg id="bellSvgIcon" class="w-4 h-4 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
-                </svg>
-                <span id="bellBadge" class="hidden absolute right-1.5 top-1.5 flex size-2.5">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full size-2.5 bg-[#9f1239] ring-2 ring-[#f5efe6]"></span>
-                </span>
-            </button>
-
-            <!-- زر نغمة النبض للمستقبل -->
-            <button id="soundToggleBtn" onclick="toggleSoundEffect()" title="صوت النبض للمستقبل" 
-                    class="grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] transition border border-[#dfd3c3] shadow-2xs active:scale-90">
-                <span id="soundIcon" class="flex items-center justify-center"></span>
             </button>
         </div>
 
@@ -424,7 +381,7 @@
     </header>
 
     <!-- Main Workspace -->
-    <main class="w-full max-w-md mx-auto px-3.5 sm:px-4 py-4 flex-grow">
+    <main class="w-full max-w-md mx-auto px-3.5 sm:px-4 py-3.5 flex-grow">
 
         <!-- ==================== VIEW 1: HOME ==================== -->
         <div id="viewHome" class="space-y-3.5">
@@ -582,7 +539,7 @@
                         </span>
                     </div>
                     <h2 class="text-sm font-black text-slate-900 flex items-center gap-1.5">
-                        <span>أصدقاء النبض</span>
+                        <span>المقربون</span>
                         <span class="inline-block size-1.5 rounded-full bg-[#9f1239]"></span>
                     </h2>
                 </div>
@@ -801,6 +758,40 @@
                     </div>
                 </div>
 
+                <!-- إعدادات الصوت والحساب داخل صفحة ملفي -->
+                <div class="bg-[#fbf8f5] rounded-2xl p-3.5 border border-[#dfd3c3] space-y-3">
+                    <div class="flex items-center justify-between gap-2">
+                        <button type="button" id="soundToggleBtn" onclick="toggleSoundEffect()"
+                                class="px-3 py-1.5 rounded-xl bg-[#f5efe6] hover:bg-[#e5dacb] text-slate-800 border border-[#dfd3c3] text-[10.5px] font-bold transition active:scale-95 inline-flex items-center gap-1.5 shrink-0">
+                            <span id="soundIcon" class="flex items-center justify-center"></span>
+                            <span id="soundLabelText">مفعّل</span>
+                        </button>
+                        <div class="text-right">
+                            <p class="text-[11px] font-bold text-slate-800">صوت النبض للمستقبل</p>
+                            <p class="text-[9.5px] text-stone-500">تشغيل صوت النبض لحظة وصول نبضة جديدة</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-[#e7ddd0]"></div>
+
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <button id="openAuthModalBtn" onclick="openAuthModal()"
+                                    class="px-3 py-1.5 rounded-xl bg-[#f5efe6] hover:bg-[#e5dacb] text-[#9f1239] border border-[#dfd3c3] text-[10.5px] font-bold transition active:scale-95">
+                                حفظ الحساب
+                            </button>
+                            <button id="logoutBtn" onclick="logout()"
+                                    class="hidden px-3 py-1.5 rounded-xl bg-[#f5efe6] hover:bg-[#e5dacb] text-slate-700 border border-[#dfd3c3] text-[10.5px] font-bold transition active:scale-95">
+                                خروج
+                            </button>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[11px] font-bold text-slate-800">حماية الحساب والرمز</p>
+                            <p class="text-[9.5px] text-stone-500">ربط رمزك بحساب Google أو البريد الإلكتروني</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="pt-1">
                     <button id="handleActionBtn" onclick="registerHandle()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-2xl text-xs shadow-md transition active:scale-[0.98] inline-flex items-center justify-center gap-1.5">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
@@ -814,6 +805,48 @@
         </div>
 
     </main>
+
+    <!-- الشريط السفلي الثابت غير العائم (٤ أيقونات: النبض، المقربون، البحث، الجرس) -->
+    <nav class="fixed-bottom-nav" aria-label="التنقل السفلي">
+        <div class="w-full max-w-md mx-auto h-[62px] px-4 flex items-center justify-around">
+            <!-- 1. النبض -->
+            <button type="button" id="navHomeBtn" onclick="switchMainView('home')" title="النبض"
+                    class="grid size-10 place-items-center rounded-full bg-[#9f1239] text-white shadow-sm transition-all active:scale-90">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </button>
+
+            <!-- 2. المقربون -->
+            <button type="button" id="navFriendsBtn" onclick="switchMainView('friends')" title="المقربون"
+                    class="relative grid size-10 place-items-center rounded-full bg-[#fbf8f5] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] transition-all active:scale-90">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span id="friendsReqDot" class="hidden absolute right-1.5 top-1.5 size-2 rounded-full bg-[#9f1239] ring-2 ring-[#fbf8f5]"></span>
+            </button>
+
+            <!-- 3. البحث -->
+            <button type="button" id="navSearchBtn" onclick="switchMainView('search')" title="البحث"
+                    class="grid size-10 place-items-center rounded-full bg-[#fbf8f5] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] transition-all active:scale-90">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+            </button>
+
+            <!-- 4. الجرس -->
+            <button id="notificationBellBtn" onclick="handleBellClick()" title="الجرس"
+                    class="relative grid size-10 place-items-center rounded-full bg-[#fbf8f5] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] transition-all active:scale-90">
+                <svg id="bellSvgIcon" class="w-4 h-4 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                </svg>
+                <span id="bellBadge" class="hidden absolute right-1.5 top-1.5 flex size-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full size-2.5 bg-[#9f1239] ring-2 ring-[#fbf8f5]"></span>
+                </span>
+            </button>
+        </div>
+    </nav>
 
     <!-- نافذة اختيار الأصدقاء والرسالة القصيرة بعد فك الضغط عن القلب -->
     <div id="sendPulseSheetModal" class="hidden fixed inset-0 bg-slate-900/45 backdrop-blur-xs z-50 flex items-center justify-center p-4">
@@ -884,7 +917,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="mt-2 text-center text-[11px] text-stone-500 py-3">
+    <footer class="mt-2 text-center text-[11px] text-stone-500 py-2">
         Feely © 2026
     </footer>
 
@@ -992,8 +1025,8 @@
             heartFill: '<svg class="w-3.5 h-3.5 fill-[#9f1239] inline-block" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
             heartMed: '<svg class="w-4 h-4 fill-[#9f1239] inline-block" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
             heartSmall: '<svg class="w-2.5 h-2.5 fill-[#9f1239] inline-block" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
-            soundOn: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>',
-            soundOff: '<svg class="w-4 h-4 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>',
+            soundOn: '<svg class="w-3.5 h-3.5 text-[#9f1239]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>',
+            soundOff: '<svg class="w-3.5 h-3.5 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>',
             share: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
             check: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
             incognitoIcon: '<svg class="w-4 h-4 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M5 11l2-6c.3-.9 1.1-1.5 2-1.5h6c.9 0 1.7.6 2 1.5l2 6"/><circle cx="7.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/><path d="M10 16.5h4"/></svg>',
@@ -1075,6 +1108,7 @@
             if (reqDot) {
                 reqDot.classList.toggle('hidden', incomingLinkRequests.length === 0);
             }
+            updateBellBadgeState();
 
             if (linkedPartnerHandle) {
                 if (homeChip) {
@@ -1136,9 +1170,10 @@
 
         function listenForSoulmateState(handle) {
             if (!handle) return;
-            db.ref('links/' + handle).on('value', snap => {
+            const cleanHandle = handle.trim().toUpperCase();
+            db.ref('links/' + cleanHandle).on('value', snap => {
                 const partner = snap.val();
-                linkedPartnerHandle = partner ? String(partner).toUpperCase() : null;
+                linkedPartnerHandle = partner ? String(partner).trim().toUpperCase() : null;
                 if (linkedPartnerHandle) {
                     localStorage.setItem('feely_linked_partner', linkedPartnerHandle);
                     outgoingLinkTarget = null;
@@ -1157,16 +1192,16 @@
                 applySoulmateUI();
             });
 
-            db.ref('linkRequests/' + handle).on('value', snap => {
+            db.ref('linkRequests/' + cleanHandle).on('value', snap => {
                 const data = snap.val() || {};
-                incomingLinkRequests = Object.keys(data).filter(k => data[k]).map(k => k.toUpperCase());
+                incomingLinkRequests = Object.keys(data).filter(k => data[k]).map(k => k.trim().toUpperCase());
                 applySoulmateUI();
             });
         }
 
         function sendSoulmateRequest() {
             if (!userHandle || !currentUser) {
-                return showToast('فعّل رمزك أولاً', 'error');
+                return showToast('فعّل رمزك أولاً من صفحة ملفي', 'error');
             }
             if (linkedPartnerHandle) {
                 return showToast(`أنت مرتبط بـ (${linkedPartnerHandle})`, 'error');
@@ -1192,6 +1227,8 @@
                     if (input) input.value = '';
                     applySoulmateUI();
                     showToast(`تم إرسال طلب ارتباط (∞) إلى (${target})`);
+                }).catch(err => {
+                    showToast(err.code === 'PERMISSION_DENIED' ? 'تعذر الإرسال: راجع صلاحيات قاعدة البيانات' : err.message, 'error');
                 });
             });
         }
@@ -1214,6 +1251,8 @@
                 checkTargetStreak(cleanReq);
                 applySoulmateUI();
                 showToast(`تم الارتباط (∞) مع (${cleanReq})`);
+            }).catch(err => {
+                showToast(err.code === 'PERMISSION_DENIED' ? 'تعذر القبول: راجع صلاحيات قاعدة البيانات' : err.message, 'error');
             });
         }
 
@@ -1621,14 +1660,15 @@
             const bellBtn = document.getElementById('notificationBellBtn');
             if (!bellBadge || !bellBtn) return;
 
-            if (unreadPulsesCount > 0) {
+            const hasAlert = unreadPulsesCount > 0 || incomingLinkRequests.length > 0;
+            if (hasAlert) {
                 bellBadge.classList.remove('hidden');
                 bellBtn.classList.add('text-[#9f1239]', 'border-[#b91c3c]', 'bg-[#fbf8f5]');
-                bellBtn.classList.remove('text-slate-600', 'bg-[#f5efe6]');
+                bellBtn.classList.remove('text-slate-600');
             } else {
                 bellBadge.classList.add('hidden');
                 bellBtn.classList.remove('text-[#9f1239]', 'border-[#b91c3c]', 'bg-[#fbf8f5]');
-                bellBtn.classList.add('text-slate-600', 'bg-[#f5efe6]');
+                bellBtn.classList.add('text-slate-600');
             }
         }
 
@@ -1639,6 +1679,12 @@
                         initPushNotifications(userHandle);
                     }
                 });
+            }
+
+            if (incomingLinkRequests.length > 0) {
+                switchMainView('friends');
+                showToast(`لديك طلب ارتباط (∞) من (${incomingLinkRequests[0]})`);
+                return;
             }
 
             if (unreadPulsesCount > 0) {
@@ -2280,7 +2326,7 @@
             openSendPulseSheet(selectedScore);
         }
 
-        // ================= TOP HEADER NAVIGATION =================
+        // ================= VIEW NAVIGATION (BOTTOM BAR + PROFILE) =================
         function switchMainView(viewName) {
             currentMainView = viewName;
 
@@ -2291,25 +2337,37 @@
                 profile: document.getElementById('viewProfile')
             };
 
-            const buttons = {
+            const bottomNavButtons = {
                 home: document.getElementById('navHomeBtn'),
                 friends: document.getElementById('navFriendsBtn'),
-                search: document.getElementById('navSearchBtn'),
-                profile: document.getElementById('navProfileBtn')
+                search: document.getElementById('navSearchBtn')
             };
 
-            const activeBtnClass = "relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#9f1239] text-white shadow-sm shadow-rose-900/20 transition-all active:scale-90";
-            const inactiveBtnClass = "relative grid size-8 sm:size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90";
+            const activeBottomBtnClass = "relative grid size-10 place-items-center rounded-full bg-[#9f1239] text-white shadow-sm transition-all active:scale-90";
+            const inactiveBottomBtnClass = "relative grid size-10 place-items-center rounded-full bg-[#fbf8f5] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] transition-all active:scale-90";
 
             Object.keys(views).forEach(key => {
                 if (key === viewName) {
                     views[key].classList.remove('hidden');
-                    buttons[key].className = activeBtnClass;
                 } else {
                     views[key].classList.add('hidden');
-                    buttons[key].className = inactiveBtnClass;
                 }
             });
+
+            Object.keys(bottomNavButtons).forEach(key => {
+                if (key === viewName) {
+                    bottomNavButtons[key].className = activeBottomBtnClass;
+                } else {
+                    bottomNavButtons[key].className = inactiveBottomBtnClass;
+                }
+            });
+
+            const profileBtn = document.getElementById('navProfileBtn');
+            if (profileBtn) {
+                profileBtn.className = viewName === 'profile'
+                    ? "relative grid size-9 place-items-center rounded-full bg-[#9f1239] text-white shadow-sm transition-all active:scale-90"
+                    : "relative grid size-9 place-items-center rounded-full bg-[#f5efe6] text-slate-600 hover:text-[#9f1239] border border-[#dfd3c3] shadow-2xs transition-all active:scale-90";
+            }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -2558,13 +2616,16 @@
         // ================= INTERACTIVE EFFECTS (RECEIVER-ONLY HEARTBEAT SOUND) =================
         function updateSoundUI() {
             const icon = document.getElementById('soundIcon');
+            const label = document.getElementById('soundLabelText');
             if (icon) icon.innerHTML = isSoundEnabled ? ICONS.soundOn : ICONS.soundOff;
+            if (label) label.textContent = isSoundEnabled ? 'مفعّل' : 'مكتوم';
         }
 
         function toggleSoundEffect() {
             isSoundEnabled = !isSoundEnabled;
             localStorage.setItem('feely_sound_enabled', isSoundEnabled);
             updateSoundUI();
+            if (navigator.vibrate) navigator.vibrate(10);
         }
 
         function playHeartbeatSound() {
@@ -2655,7 +2716,7 @@
                         localStorage.setItem('feely_user_avatar', myAvatarData);
                     }
                     if (userData.handle) {
-                        const savedHandle = userData.handle;
+                        const savedHandle = String(userData.handle).trim().toUpperCase();
                         userHandle = savedHandle;
                         localStorage.setItem('feely_user_handle', userHandle);
                         if (myAvatarData) {
@@ -2670,8 +2731,11 @@
                         initPushNotifications(userHandle);
                         renderFriendsManagePage();
                     } else if (userHandle) {
-                        db.ref('handles/' + userHandle).once('value', hSnap => {
+                        const cleanStoredHandle = userHandle.trim().toUpperCase();
+                        db.ref('handles/' + cleanStoredHandle).once('value', hSnap => {
                             if (hSnap.exists() && hSnap.val() === user.uid) {
+                                userHandle = cleanStoredHandle;
+                                localStorage.setItem('feely_user_handle', userHandle);
                                 db.ref('users/' + user.uid + '/handle').set(userHandle);
                                 if (myAvatarData) {
                                     cacheAvatarForHandle(userHandle, myAvatarData);
